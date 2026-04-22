@@ -82,8 +82,10 @@
         <div class="glass p-8 rounded-3xl">
             <h2 class="text-2xl font-bold mb-2 italic underline uppercase text-white">Latest Drops</h2>
             
-            <div id="teaser-message" class="text-sm font-medium text-gray-400 italic mb-8 transition-colors duration-300">
-                ⚡ Production Drops, bridges, and switch-ups in one quick clip. DM for the full HQ beat!
+            <div id="teaser-message" class="text-sm font-medium italic mb-8 transition-all">
+            <span id="shine-wrapper" class="shine-text">
+            ⚡ Production Drops, bridges, and switch-ups in one quick clip. DM for the full HQ beat!
+            </span>
             </div>
             
             <div class="space-y-4">
@@ -129,25 +131,37 @@
         <p class="text-xs text-gray-600">© 2026 PARAGLYPH.TOP</p>
     </footer>
 
-    <script>
-        document.addEventListener('play', function(e){
-            const teaser = document.getElementById('teaser-message');
 
-            // 1. Stop other tracks
-            var audios = document.getElementsByTagName('audio');
-            for(var i = 0; i < audios.length; i++){
-                if(audios[i] != e.target){
-                    audios[i].pause();
-                }
-            }
 
-            // 2. Trigger the "Jolt" animation on the message
-            if(teaser) {
-                teaser.classList.remove('jolt-animation');
-                void teaser.offsetWidth; // Trigger reflow
-                teaser.classList.add('jolt-animation');
+<script>
+    document.addEventListener('play', function(e){
+        const teaser = document.getElementById('teaser-message');
+        const shine = document.getElementById('shine-wrapper');
+
+        // 1. Stop other tracks
+        var audios = document.getElementsByTagName('audio');
+        for(var i = 0; i < audios.length; i++){
+            if(audios[i] != e.target){
+                audios[i].pause();
             }
-        }, true);
-    </script>
+        }
+
+        // 2. Trigger the Jolt
+        if(teaser) {
+            teaser.classList.remove('jolt-animation');
+            void teaser.offsetWidth; 
+            teaser.classList.add('jolt-animation');
+        }
+
+        // 3. Trigger the Shine Sweep
+        if(shine) {
+            shine.classList.remove('animate-shine');
+            void shine.offsetWidth; 
+            shine.classList.add('animate-shine');
+        }
+    }, true);
+</script>
+
+    
 </body>
 </html>
