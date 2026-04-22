@@ -125,17 +125,40 @@ audio {
         <p class="text-xs text-gray-600">© 2026 PARAGLYPH.TOP</p>
     </footer>
 
+
+
+    
 <script>
-    // This script ensures only one audio track plays at a time
+const toast = document.getElementById('teaser-toast');
+
     document.addEventListener('play', function(e){
+        // 1. Logic to stop other tracks
         var audios = document.getElementsByTagName('audio');
-        for(var i = 0, len = audios.length; i < len;i++){
+        for(var i = 0, len = audios.length; i < len; i++){
             if(audios[i] != e.target){
                 audios[i].pause();
             }
         }
+
+        // 2. Show the "Teaser" pop-up
+        toast.classList.remove('opacity-0');
+        toast.classList.add('opacity-100');
+
+        // 3. Hide it again after 4 seconds
+        setTimeout(() => {
+            toast.classList.remove('opacity-100');
+            toast.classList.add('opacity-0');
+        }, 4000);
+        
     }, true);
 </script>
+
+
+
+    
+<div id="teaser-toast" class="fixed bottom-10 left-1/2 -translate-x-1/2 glass px-6 py-3 rounded-full text-sm font-medium text-white opacity-0 transition-opacity duration-500 pointer-events-none z-50 border border-white/20 shadow-2xl">
+  Production Drops, bridges, and switch-ups in one quick clip. DM for the full HQ beat! 🥁🔥
+</div>
     
 </body>
 </html>
