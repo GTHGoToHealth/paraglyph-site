@@ -9,33 +9,14 @@
         body { background-color: #0a0a0a; color: white; font-family: 'Inter', sans-serif; overflow-x: hidden; }
         .glass { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.1); }
 
-        /* --- PRELOADER STYLES --- */
-        #preloader {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: #0a0a0a;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 9999;
-            transition: opacity 0.8s ease;
+        /* --- SMOOTH ENTRANCE (Replaces Preloader) --- */
+        .fade-in-section {
+            animation: fadeIn 1.2s ease-out forwards;
         }
 
-        .loader-bar {
-            width: 40px;
-            height: 40px;
-            border: 3px solid rgba(255,255,255,0.1);
-            border-top: 3px solid white;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         /* --- LOGO & SHINE --- */
@@ -52,7 +33,7 @@
         }
 
         .logo-image {
-            width: 600px; /* Increased size */
+            width: 600px;
             height: auto;
             display: block;
             background: #222222; 
@@ -80,7 +61,7 @@
         }
 
         .bio-text {
-            margin-top: -80px; /* Pulls text higher to hide empty space in PNG */
+            margin-top: -80px;
             position: relative;
             z-index: 10;
         }
@@ -108,7 +89,7 @@
             audio { width: 300px; margin-top: 0; }
         }
 
-        /* --- ANIMATIONS --- */
+        /* --- INTERACTIVE ANIMATIONS --- */
         @keyframes zoom-jolt {
             0% { transform: scale(1); }
             30% { transform: scale(1.1); }
@@ -142,13 +123,9 @@
 </head>
 <body class="antialiased">
 
-    <div id="preloader">
-        <div class="loader-bar"></div>
-    </div>
-
-    <section class="min-h-screen flex flex-col items-center justify-center px-6 text-center">
+    <section class="min-h-screen flex flex-col items-center justify-center px-6 text-center fade-in-section">
         <div class="logo-shine-container">
-            <img src="logo.png" class="logo-image opacity-100" alt="Paraglyph Logo" id="main-logo">
+            <img src="logo.png" class="logo-image opacity-100" alt="Paraglyph Logo" loading="lazy">
             <div class="logo-shine-overlay"></div>
         </div>
         
@@ -178,7 +155,7 @@
                         <p class="font-bold text-lg text-white">Oseanslo - Prod. by Paraglyph</p>
                         <p class="text-xs text-gray-500 uppercase tracking-widest">140 BPM - Dark Trap</p>
                     </div>
-                    <audio controls>
+                    <audio controls preload="none">
                         <source src="https://www.dropbox.com/scl/fi/7lvw70kqbjlllw8113o6v/Oseanslo-UK-Drill-With-Hat-Movement-26-feb-26.wav?rlkey=wrak59iy3rbd6adv3u5laalo1&st=6j8ge1zf&raw=1" type="audio/mpeg">
                     </audio>
                 </div>
@@ -188,11 +165,71 @@
                         <p class="font-bold text-lg text-white">Seegrande - Prod. by Paraglyph</p>
                         <p class="text-xs text-gray-500 uppercase tracking-widest">140 BPM - Orchestral Trap</p>
                     </div>
-                    <audio controls>
+                    <audio controls preload="none">
                         <source src="https://www.dropbox.com/scl/fi/asm30wzqm5zami2wzhmxf/Central-Cee-Type-140BPM-Seegrande-For-DropBox-Mix-Master.wav?rlkey=8alm7lrmo377zb7ndaks8aujr&st=t0vd7i4g&raw=1" type="audio/mpeg">
                     </audio>
                 </div>
 
                 <div class="beat-card p-4 bg-white/5 rounded-xl hover:bg-white/10 transition mb-4">
                     <div class="flex-1">
-                        <p class="font-bold text-lg text-white">Glitch
+                        <p class="font-bold text-lg text-white">Glitchuck - Prod. by Paraglyph</p>
+                        <p class="text-xs text-gray-500 uppercase tracking-widest">140 BPM - HyperPop</p>
+                    </div>
+                    <audio controls preload="none">
+                        <source src="https://www.dropbox.com/scl/fi/kzcns9tm01ylp597ktt41/Glitch-140-BPM-RnB-Beat-DropBox-Master.wav?rlkey=ertxg6bfxmf7mxaczu2128md6&st=bpmhjwub&raw=1" type="audio/mpeg">
+                    </audio>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="py-10 border-t border-white/10 text-center">
+        <div class="flex flex-col md:flex-row justify-center items-center space-y-4 md:space-y-0 md:space-x-8 text-gray-400 text-sm font-bold">
+            <a href="https://www.instagram.com/theparaglyph/" target="_blank" class="hover:text-white transition">INSTAGRAM</a>
+            <a href="https://wa.me/917021539281?text=Hi%20Paraglyph!%20I'm%20interested%20in%20working%20together" target="_blank" class="hover:text-white transition">WHATSAPP</a>
+            <a href="mailto:theparaglyph@gmail.com?subject=Let's%20Work%20Together!" class="hover:text-white transition">EMAIL</a>
+        </div>
+        <p class="text-xs text-gray-600 mt-6">© PARAGLYPH - Music Producer</p>
+    </footer>
+
+    <script>
+        // Use an Intersection Observer for a "Lazy Load" effect on the player section
+        const playerSection = document.querySelector('#player');
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('fade-in-section');
+                }
+            });
+        }, { threshold: 0.1 });
+
+        observer.observe(playerSection);
+
+        // Reset scroll position
+        if (window.location.hash) {
+            window.scrollTo(0, 0);
+        }
+
+        document.addEventListener('play', function(e){
+            const teaser = document.getElementById('teaser-message');
+            const shine = document.getElementById('shine-wrapper');
+            var audios = document.getElementsByTagName('audio');
+            for(var i = 0; i < audios.length; i++){
+                if(audios[i] != e.target){
+                    audios[i].pause();
+                }
+            }
+            if(teaser) {
+                teaser.classList.remove('animate-zoom-jolt');
+                void teaser.offsetWidth; 
+                teaser.classList.add('animate-zoom-jolt');
+            }
+            if(shine) {
+                shine.classList.remove('animate-shine-bright');
+                void shine.offsetWidth; 
+                shine.classList.add('animate-shine-bright');
+            }
+        }, true);
+    </script>
+</body>
+</html>
