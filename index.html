@@ -9,7 +9,7 @@
         body { background-color: #0a0a0a; color: white; font-family: 'Inter', sans-serif; overflow-x: hidden; }
         .glass { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.1); }
 
-        /* Logo Shine Effect - Back and Forth */
+        /* Logo Shine Effect - Faster Back and Forth */
         .logo-shine-container {
             position: relative;
             display: inline-block;
@@ -20,6 +20,8 @@
             mask-size: contain;
             -webkit-mask-repeat: no-repeat;
             mask-repeat: no-repeat;
+            /* Tightened spacing here */
+            margin-bottom: -10px; 
         }
 
         .logo-image {
@@ -42,8 +44,8 @@
                 rgba(255,255,255,0) 100%
             );
             transform: skewX(-25deg);
-            /* 'alternate' makes it go Right-to-Left after going Left-to-Right */
-            animation: continuous-shine 6s infinite ease-in-out alternate;
+            /* Speed changed from 6s to 3s */
+            animation: continuous-shine 3s infinite ease-in-out alternate;
         }
 
         @keyframes continuous-shine {
@@ -119,18 +121,21 @@
             .logo-image { 
                 width: 85vw; 
             }
+            .logo-shine-container {
+                margin-bottom: -5px;
+            }
         }
     </style>
 </head>
 <body class="antialiased">
 
     <section class="min-h-screen flex flex-col items-center justify-center px-6 text-center">
-        <div class="logo-shine-container mb-2">
+        <div class="logo-shine-container">
             <img src="logo.png" class="logo-image opacity-100" alt="Paraglyph Logo">
             <div class="logo-shine-overlay"></div>
         </div>
         
-        <p class="text-gray-400 text-lg mb-6 max-w-md">
+        <p class="text-gray-400 text-lg mb-6 max-w-md pt-0 mt-0">
             From IIT-B to Beats!<br>
             Crafting original sounds with Wavetable Synthesis.<br>
             Less Splice, More Spice 🔥
@@ -192,11 +197,8 @@
     </footer>
 
     <script>
-        // Force scroll to top on first load to prevent skipping the Hero section
         window.onload = function() {
-            if (window.location.hash) {
-                window.scrollTo(0, 0);
-            }
+            window.scrollTo(0, 0);
         };
 
         document.addEventListener('play', function(e){
