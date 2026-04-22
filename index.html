@@ -74,7 +74,7 @@ audio {
                         <p class="text-xs text-gray-500 uppercase tracking-widest">140 BPM - Dark Trap</p>
                     </div>
                     <audio controls>
-                        <source src="https://www.dropbox.com/scl/fi/7lvw70kqbjlllw8113o6v/Oseanslo-UK-Drill-With-Hat-Movement-26-feb-26.wav?rlkey=wrak59iy3rbd6adv3u5laalo1&st=6j8ge1zf&raw=1"audio/mpeg">
+                        <source src="https://www.dropbox.com/scl/fi/7lvw70kqbjlllw8113o6v/Oseanslo-UK-Drill-With-Hat-Movement-26-feb-26.wav?rlkey=wrak59iy3rbd6adv3u5laalo1&st=6j8ge1zf&raw=1" type=audio/mpeg">
                     </audio>
                 </div>
 
@@ -85,7 +85,7 @@ audio {
                         <p class="text-xs text-gray-500 uppercase tracking-widest">140 BPM - Orchestral Trap</p>
                     </div>
                     <audio controls>
-                        <source src="https://www.dropbox.com/scl/fi/asm30wzqm5zami2wzhmxf/Central-Cee-Type-140BPM-Seegrande-For-DropBox-Mix-Master.wav?rlkey=8alm7lrmo377zb7ndaks8aujr&st=t0vd7i4g&raw=1"audio/mpeg">
+                        <source src="https://www.dropbox.com/scl/fi/asm30wzqm5zami2wzhmxf/Central-Cee-Type-140BPM-Seegrande-For-DropBox-Mix-Master.wav?rlkey=8alm7lrmo377zb7ndaks8aujr&st=t0vd7i4g&raw=1" type=audio/mpeg">
                     </audio>
                 </div>
 
@@ -95,7 +95,7 @@ audio {
                         <p class="text-xs text-gray-500 uppercase tracking-widest">140 BPM - HyperPop</p>
                     </div>
                     <audio controls>
-                        <source src="https://www.dropbox.com/scl/fi/kzcns9tm01ylp597ktt41/Glitch-140-BPM-RnB-Beat-DropBox-Master.wav?rlkey=ertxg6bfxmf7mxaczu2128md6&st=bpmhjwub&raw=1"audio/mpeg">
+                        <source src="https://www.dropbox.com/scl/fi/kzcns9tm01ylp597ktt41/Glitch-140-BPM-RnB-Beat-DropBox-Master.wav?rlkey=ertxg6bfxmf7mxaczu2128md6&st=bpmhjwub&raw=1" type=audio/mpeg">
                     </audio>
                 </div>
 
@@ -127,11 +127,19 @@ audio {
 
 
 
+<div id="teaser-toast" class="fixed bottom-10 left-1/2 -translate-x-1/2 glass px-6 py-3 rounded-full text-sm font-medium text-white opacity-0 transition-opacity duration-500 pointer-events-none z-50 border border-white/20 shadow-2xl">
+  Production Drops, bridges, and switch-ups in one quick clip. DM for the full HQ beat! 🥁🔥
+</div>
+
+
+    
+
     
 <script>
-const toast = document.getElementById('teaser-toast');
+document.addEventListener('play', function(e){
+        // Select the toast inside the function to ensure it is found
+        const toast = document.getElementById('teaser-toast');
 
-    document.addEventListener('play', function(e){
         // 1. Logic to stop other tracks
         var audios = document.getElementsByTagName('audio');
         for(var i = 0, len = audios.length; i < len; i++){
@@ -141,14 +149,16 @@ const toast = document.getElementById('teaser-toast');
         }
 
         // 2. Show the "Teaser" pop-up
-        toast.classList.remove('opacity-0');
-        toast.classList.add('opacity-100');
+        if(toast) {
+            toast.classList.remove('opacity-0');
+            toast.classList.add('opacity-100');
 
-        // 3. Hide it again after 4 seconds
-        setTimeout(() => {
-            toast.classList.remove('opacity-100');
-            toast.classList.add('opacity-0');
-        }, 4000);
+            // 3. Hide it again after 4 seconds
+            setTimeout(() => {
+                toast.classList.remove('opacity-100');
+                toast.classList.add('opacity-0');
+            }, 4000);
+        }
         
     }, true);
 </script>
@@ -156,9 +166,7 @@ const toast = document.getElementById('teaser-toast');
 
 
     
-<div id="teaser-toast" class="fixed bottom-10 left-1/2 -translate-x-1/2 glass px-6 py-3 rounded-full text-sm font-medium text-white opacity-0 transition-opacity duration-500 pointer-events-none z-50 border border-white/20 shadow-2xl">
-  Production Drops, bridges, and switch-ups in one quick clip. DM for the full HQ beat! 🥁🔥
-</div>
+
     
 </body>
 </html>
