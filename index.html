@@ -180,10 +180,10 @@ audio {
 
     
 <script>
-document.addEventListener('play', function(e){
+    document.addEventListener('play', function(e){
         const teaser = document.getElementById('teaser-message');
 
-        // 1. Logic to stop other tracks
+        // 1. Stop other tracks
         var audios = document.getElementsByTagName('audio');
         for(var i = 0, len = audios.length; i < len; i++){
             if(audios[i] != e.target){
@@ -191,9 +191,16 @@ document.addEventListener('play', function(e){
             }
         }
 
-        // 2. Reveal the message under the heading
+        // 2. Trigger the "Jolt" animation
         if(teaser) {
-            teaser.classList.add('visible');
+            // Remove the class if it's already there (to reset the animation)
+            teaser.classList.remove('jolt-animation');
+            
+            // Trigger a "reflow" so the browser notices the class was removed
+            void teaser.offsetWidth; 
+            
+            // Re-add the class
+            teaser.classList.add('jolt-animation');
         }
         
     }, true);
