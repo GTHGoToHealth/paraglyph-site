@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Paraglyph | Official Beats</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { background-color: #0a0a0a; color: white; font-family: 'Inter', sans-serif; }
+        .glass { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.1); }
+    </style>
+</head>
+<body class="antialiased">
+
+    <section class="min-h-screen flex flex-col items-center justify-center px-6 text-center">
+        <h1 class="text-6xl md:text-8xl font-black tracking-tighter mb-4 bg-gradient-to-r from-white to-gray-500 bg-clip-text text-transparent">
+            PARAGLYPH
+        </h1>
+        <p class="text-gray-400 text-lg mb-8 max-w-md">High-fidelity production for the next generation of sound.</p>
+        <a href="#player" class="bg-white text-black px-8 py-4 rounded-full font-bold hover:scale-105 transition-transform">LISTEN NOW</a>
+    </section>
+
+    <section id="player" class="py-20 px-6 max-w-4xl mx-auto">
+        <div class="glass p-8 rounded-3xl">
+            <h2 class="text-2xl font-bold mb-6 italic underline uppercase">Latest Drops</h2>
+            
+            <div class="space-y-4">
+                <div class="flex items-center justify-between p-4 bg-white/5 rounded-xl hover:bg-white/10 transition">
+                    <div>
+                        <p class="font-bold">Neon Horizon</p>
+                        <p class="text-xs text-gray-500">140 BPM - Melodic Trap</p>
+                    </div>
+                    <audio controls class="h-8 w-48 brightness-75 contrast-125">
+                        <source src="YOUR_DIRECT_AUDIO_URL_HERE.mp3" type="audio/mpeg">
+                    </audio>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="py-20 px-6 max-w-4xl mx-auto text-center">
+        <h2 class="text-4xl font-black mb-12">IN THE STUDIO</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="aspect-[9/16] glass rounded-2xl flex items-center justify-center text-gray-600 italic">
+                [Instagram Reel Embed 1]
+            </div>
+            <div class="aspect-[9/16] glass rounded-2xl flex items-center justify-center text-gray-600 italic">
+                [Instagram Reel Embed 2]
+            </div>
+        </div>
+    </section>
+
+    <footer class="py-10 border-t border-white/10 text-center">
+        <div class="flex justify-center space-x-6 mb-4 text-gray-400">
+            <a href="#" class="hover:text-white">INSTAGRAM</a>
+            <a href="#" class="hover:text-white">BEATSTARS</a>
+            <a href="#" class="hover:text-white">YOUTUBE</a>
+        </div>
+        <p class="text-xs text-gray-600">© 2026 PARAGLYPH.TOP</p>
+    </footer>
+
+</body>
+</html>
