@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+    <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -49,6 +49,29 @@ audio {
         margin-top: 10px;
     }
 }
+
+
+@keyframes pulse-soft {
+    0% { transform: scale(1); opacity: 0.8; }
+    50% { transform: scale(1.02); opacity: 1; }
+    100% { transform: scale(1); opacity: 0.8; }
+}
+
+.attention-pulse {
+    animation: pulse-soft 2s infinite ease-in-out;
+}
+
+#teaser-message {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.5s ease-out, margin 0.5s ease;
+}
+
+#teaser-message.visible {
+    max-height: 100px; /* Adjust based on text length */
+    margin-bottom: 1.5rem;
+}
+        
     </style>
 </head>
 <body class="antialiased">
@@ -64,6 +87,12 @@ audio {
     <section id="player" class="py-20 px-6 max-w-4xl mx-auto">
         <div class="glass p-8 rounded-3xl">
             <h2 class="text-2xl font-bold mb-6 italic underline uppercase">Latest Drops</h2>
+
+              <div id="teaser-message" class="text-sm font-medium text-green-400 italic">
+                <div class="attention-pulse">
+                ⚡ Production Drops, bridges, and switch-ups in one quick clip. DM for the full HQ beat!
+                </div>
+                </div>
             
             <div class="space-y-4">
 
@@ -137,8 +166,7 @@ audio {
     
 <script>
 document.addEventListener('play', function(e){
-        // Select the toast inside the function to ensure it is found
-        const toast = document.getElementById('teaser-toast');
+        const teaser = document.getElementById('teaser-message');
 
         // 1. Logic to stop other tracks
         var audios = document.getElementsByTagName('audio');
@@ -148,16 +176,9 @@ document.addEventListener('play', function(e){
             }
         }
 
-        // 2. Show the "Teaser" pop-up
-        if(toast) {
-            toast.classList.remove('opacity-0');
-            toast.classList.add('opacity-100');
-
-            // 3. Hide it again after 4 seconds
-            setTimeout(() => {
-                toast.classList.remove('opacity-100');
-                toast.classList.add('opacity-0');
-            }, 4000);
+        // 2. Reveal the message under the heading
+        if(teaser) {
+            teaser.classList.add('visible');
         }
         
     }, true);
