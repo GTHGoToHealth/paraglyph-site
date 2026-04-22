@@ -35,18 +35,37 @@
             }
         }
 
-        /* The Attention-Grabbing Jolt */
-        @keyframes jolt {
-            0% { transform: translateY(0); }
-            25% { transform: translateY(-5px) scale(1.02); color: #00ff41; }
-            50% { transform: translateY(0); }
-            75% { transform: translateY(-2px); }
-            100% { transform: translateY(0); }
-        }
+       /* The Shine Effect */
+.shine-text {
+    background: linear-gradient(to right, #9ca3af 0%, #9ca3af 40%, #ffffff 50%, #9ca3af 60%, #9ca3af 100%);
+    background-size: 200% auto;
+    color: transparent;
+    -webkit-background-clip: text;
+    background-clip: text;
+    display: inline-block;
+}
 
-        .jolt-animation {
-            animation: jolt 0.5s ease-in-out;
-        }
+@keyframes shine-sweep {
+    to {
+        background-position: -200% center;
+    }
+}
+
+.animate-shine {
+    animation: shine-sweep 0.8s linear;
+}
+
+/* Updated Jolt to work with the Shine */
+@keyframes jolt {
+    0% { transform: translateY(0); }
+    25% { transform: translateY(-5px); }
+    50% { transform: translateY(0); }
+    100% { transform: translateY(0); }
+}
+
+.jolt-animation {
+    animation: jolt 0.5s ease-in-out;
+}
     </style>
 </head>
 <body class="antialiased">
