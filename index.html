@@ -35,140 +35,37 @@
             }
         }
 
-
-
-
-/* The "Zoom & Jolt" Combo */
-@keyframes zoom-jolt {
-    0% { transform: scale(1); }
-    30% { transform: scale(1.15); color: #ffffff; } /* The Zoom factor */
-    50% { transform: scale(1); }
-    100% { transform: scale(1); }
-}
-
-/* The Brighter Shine with Glow */
-.shine-text {
-    background: linear-gradient(to right, #6b7280 0%, #6b7280 40%, #ffffff 50%, #6b7280 60%, #6b7280 100%);
-    background-size: 120% auto;
-    color: transparent;
-    -webkit-background-clip: text;
-    background-clip: text;
-    display: inline-block;
-    transition: text-shadow 0.2s ease;
-}
-
-@keyframes shine-sweep {
-    0% { background-position: 200% center; filter: drop-shadow(0 0 0px #fff); }
-    50% { filter: drop-shadow(0 0 1px #ffffff); } /* The "Bright" Glow */
-    100% { background-position: -200% center; filter: drop-shadow(0 0 0px #fff); }
-}
-
-.animate-zoom-jolt {
-    animation: zoom-jolt 0.8s ease-out;
-}
-
-.animate-shine-bright {
-    animation: shine-sweep 1.8s ease-in-out;
-}
-
-
-        
-    </style>
-</head>
-<body class="antialiased">
-
-    <section class="min-h-screen flex flex-col items-center justify-center px-6 text-center">
-        <h1 class="text-6xl md:text-8xl font-black tracking-tighter mb-4 bg-gradient-to-r from-white to-gray-500 bg-clip-text text-transparent">
-            PARAGLYPH
-        </h1>
-        <p class="text-gray-400 text-lg mb-8 max-w-md">High-fidelity production for the next generation of sound.</p>
-        <a href="#player" class="bg-white text-black px-8 py-4 rounded-full font-bold hover:scale-105 transition-transform">LISTEN NOW</a>
-    </section>
-
-    <section id="player" class="py-20 px-6 max-w-4xl mx-auto">
-        <div class="glass p-8 rounded-3xl">
-            <h2 class="text-2xl font-bold mb-2 italic underline uppercase text-white">Latest Drops</h2>
-            
-<div id="teaser-message" class="text-sm font-medium italic mb-8 flex justify-center">
-    <span id="shine-wrapper" class="shine-text">
-        ⚡ Production Drops, bridges, and switch-ups in one quick clip. DM for the full HQ beat!
-    </span>
-</div>
-            
-            <div class="space-y-4">
-                <div class="beat-card p-4 bg-white/5 rounded-xl hover:bg-white/10 transition mb-4">
-                    <div class="flex-1">
-                        <p class="font-bold text-lg text-white">Oseanslo - Prod. by Paraglyph</p>
-                        <p class="text-xs text-gray-500 uppercase tracking-widest">140 BPM - Dark Trap</p>
-                    </div>
-                    <audio controls>
-                        <source src="https://www.dropbox.com/scl/fi/7lvw70kqbjlllw8113o6v/Oseanslo-UK-Drill-With-Hat-Movement-26-feb-26.wav?rlkey=wrak59iy3rbd6adv3u5laalo1&st=6j8ge1zf&raw=1" type="audio/mpeg">
-                    </audio>
-                </div>
-
-                <div class="beat-card p-4 bg-white/5 rounded-xl hover:bg-white/10 transition mb-4">
-                    <div class="flex-1">
-                        <p class="font-bold text-lg text-white">Seegrande - Prod. by Paraglyph</p>
-                        <p class="text-xs text-gray-500 uppercase tracking-widest">140 BPM - Orchestral Trap</p>
-                    </div>
-                    <audio controls>
-                        <source src="https://www.dropbox.com/scl/fi/asm30wzqm5zami2wzhmxf/Central-Cee-Type-140BPM-Seegrande-For-DropBox-Mix-Master.wav?rlkey=8alm7lrmo377zb7ndaks8aujr&st=t0vd7i4g&raw=1" type="audio/mpeg">
-                    </audio>
-                </div>
-
-                <div class="beat-card p-4 bg-white/5 rounded-xl hover:bg-white/10 transition mb-4">
-                    <div class="flex-1">
-                        <p class="font-bold text-lg text-white">Glitchuck - Prod. by Paraglyph</p>
-                        <p class="text-xs text-gray-500 uppercase tracking-widest">140 BPM - HyperPop</p>
-                    </div>
-                    <audio controls>
-                        <source src="https://www.dropbox.com/scl/fi/kzcns9tm01ylp597ktt41/Glitch-140-BPM-RnB-Beat-DropBox-Master.wav?rlkey=ertxg6bfxmf7mxaczu2128md6&st=bpmhjwub&raw=1" type="audio/mpeg">
-                    </audio>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <footer class="py-10 border-t border-white/10 text-center">
-        <div class="flex justify-center space-x-6 mb-4 text-gray-400 text-sm font-bold">
-            <a href="https://instagram.com/yourprofile" class="hover:text-white transition">INSTAGRAM</a>
-            <a href="#" class="hover:text-white transition">WHATSAPP</a>
-            <a href="#" class="hover:text-white transition">EMAIL</a>
-        </div>
-        <p class="text-xs text-gray-600">© PARAGLYPH - Music Producer</p>
-    </footer>
-
-
-
-<script>
-    document.addEventListener('play', function(e){
-        const teaser = document.getElementById('teaser-message');
-        const shine = document.getElementById('shine-wrapper');
-
-        // 1. Stop other tracks
-        var audios = document.getElementsByTagName('audio');
-        for(var i = 0; i < audios.length; i++){
-            if(audios[i] != e.target){
-                audios[i].pause();
-            }
+        /* ZOOM & JOLT ANIMATION */
+        @keyframes zoom-jolt {
+            0% { transform: scale(1); }
+            30% { transform: scale(1.1); }
+            50% { transform: scale(1); }
+            100% { transform: scale(1); }
         }
 
-        // 2. Trigger the Zoom Jolt
-        if(teaser) {
-            teaser.classList.remove('animate-zoom-jolt');
-            void teaser.offsetWidth; 
-            teaser.classList.add('animate-zoom-jolt');
+        .animate-zoom-jolt {
+            animation: zoom-jolt 0.6s ease-out;
         }
 
-        // 3. Trigger the Brighter Shine
-        if(shine) {
-            shine.classList.remove('animate-shine-bright');
-            void shine.offsetWidth; 
-            shine.classList.add('animate-shine-bright');
+        /* SHARP & SLOW SHINE */
+        .shine-text {
+            /* Tightened the percentage stops (45%, 50%, 55%) for a sharper beam */
+            background: linear-gradient(
+                to right, 
+                #6b7280 0%, 
+                #6b7280 45%, 
+                #ffffff 50%, 
+                #6b7280 55%, 
+                #6b7280 100%
+            );
+            background-size: 200% auto;
+            color: transparent;
+            -webkit-background-clip: text;
+            background-clip: text;
+            display: inline-block;
         }
-    }, true);
-</script> 
 
-    
-</body>
-</html>
+        @keyframes shine-sweep {
+            0% { background-position: 200% center; }
+            100% { background-position: -200% center; }
+        }
