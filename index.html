@@ -1,4 +1,4 @@
-    <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -9,86 +9,44 @@
         body { background-color: #0a0a0a; color: white; font-family: 'Inter', sans-serif; }
         .glass { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.1); }
 
-/* Force the audio player to fill all available horizontal space */
-audio {
-    width: 100%;
-    display: block;
-    margin-top: 12px;
-    filter: invert(100%) hue-rotate(180deg) brightness(1.5);
-}
+        /* Audio Player Styling */
+        audio {
+            width: 100%;
+            display: block;
+            margin-top: 12px;
+            filter: invert(100%) hue-rotate(180deg) brightness(1.5);
+        }
 
-/* Ensure the container doesn't restrict the children */
-.beat-card {
-    display: flex;
-    flex-direction: column; 
-    width: 100%;
-}
+        .beat-card {
+            display: flex;
+            flex-direction: column; 
+            width: 100%;
+        }
 
-/* Desktop optimization: if the screen is wide, keep them side-by-side */
-@media (min-width: 768px) {
-    .beat-card {
-        flex-direction: row;
-        justify-content: space-between;
-        align-items: center;
-    }
-    audio {
-        width: 300px; /* On desktop, a giant bar looks weird, so we limit it */
-        margin-top: 0;
-    }
-}
-
-        
-
-@media (max-width: 640px) {
-    .flex-row-mobile {
-        flex-direction: column;
-        align-items: flex-start;
-    }
-    audio {
-        max-width: 100%;
-        margin-top: 10px;
-    }
-}
-
-
-@keyframes pulse-soft {
-    0% { transform: scale(1); opacity: 0.8; }
-    50% { transform: scale(1.02); opacity: 1; }
-    100% { transform: scale(1); opacity: 0.8; }
-}
-
-.attention-pulse {
-    animation: pulse-soft 2s infinite ease-in-out;
-}
-
-#teaser-message {
-    max-height: 0;
-    overflow: hidden;
-    transition: max-height 0.5s ease-out, margin 0.5s ease;
-}
-
-#teaser-message.visible {
-    max-height: 100px; /* Adjust based on text length */
-    margin-bottom: 1.5rem;
-}
+        @media (min-width: 768px) {
+            .beat-card {
+                flex-direction: row;
+                justify-content: space-between;
+                align-items: center;
+            }
+            audio {
+                width: 300px;
+                margin-top: 0;
+            }
+        }
 
         /* The Attention-Grabbing Jolt */
-@keyframes jolt {
-    0% { transform: translateY(0); }
-    25% { transform: translateY(-5px) scale(1.05); color: #00ff41; } /* Changes color briefly to green */
-    50% { transform: translateY(0); }
-    75% { transform: translateY(-2px); }
-    100% { transform: translateY(0); }
-}
+        @keyframes jolt {
+            0% { transform: translateY(0); }
+            25% { transform: translateY(-5px) scale(1.02); color: #00ff41; }
+            50% { transform: translateY(0); }
+            75% { transform: translateY(-2px); }
+            100% { transform: translateY(0); }
+        }
 
-.jolt-animation {
-    animation: jolt 0.5s ease-in-out;
-}
-
-.teaser-text {
-    transition: color 0.3s ease;
-}
-        
+        .jolt-animation {
+            animation: jolt 0.5s ease-in-out;
+        }
     </style>
 </head>
 <body class="antialiased">
@@ -103,25 +61,22 @@ audio {
 
     <section id="player" class="py-20 px-6 max-w-4xl mx-auto">
         <div class="glass p-8 rounded-3xl">
-            <h2 class="text-2xl font-bold mb-6 italic underline uppercase">Latest Drops</h2>
-
-            <div id="teaser-message" class="teaser-text text-sm font-medium text-gray-400 italic mb-6">
-            ⚡ Production Drops, bridges, and switch-ups in one quick clip. DM for the full HQ beat!
+            <h2 class="text-2xl font-bold mb-2 italic underline uppercase text-white">Latest Drops</h2>
+            
+            <div id="teaser-message" class="text-sm font-medium text-gray-400 italic mb-8 transition-colors duration-300">
+                ⚡ Production Drops, bridges, and switch-ups in one quick clip. DM for the full HQ beat!
             </div>
             
             <div class="space-y-4">
-
-
                 <div class="beat-card p-4 bg-white/5 rounded-xl hover:bg-white/10 transition mb-4">
                     <div class="flex-1">
                         <p class="font-bold text-lg text-white">Oseanslo - Prod. by Paraglyph</p>
                         <p class="text-xs text-gray-500 uppercase tracking-widest">140 BPM - Dark Trap</p>
                     </div>
                     <audio controls>
-                        <source src="https://www.dropbox.com/scl/fi/7lvw70kqbjlllw8113o6v/Oseanslo-UK-Drill-With-Hat-Movement-26-feb-26.wav?rlkey=wrak59iy3rbd6adv3u5laalo1&st=6j8ge1zf&raw=1" type=audio/mpeg">
+                        <source src="https://www.dropbox.com/scl/fi/7lvw70kqbjlllw8113o6v/Oseanslo-UK-Drill-With-Hat-Movement-26-feb-26.wav?rlkey=wrak59iy3rbd6adv3u5laalo1&st=6j8ge1zf&raw=1" type="audio/mpeg">
                     </audio>
                 </div>
-
 
                 <div class="beat-card p-4 bg-white/5 rounded-xl hover:bg-white/10 transition mb-4">
                     <div class="flex-1">
@@ -129,7 +84,7 @@ audio {
                         <p class="text-xs text-gray-500 uppercase tracking-widest">140 BPM - Orchestral Trap</p>
                     </div>
                     <audio controls>
-                        <source src="https://www.dropbox.com/scl/fi/asm30wzqm5zami2wzhmxf/Central-Cee-Type-140BPM-Seegrande-For-DropBox-Mix-Master.wav?rlkey=8alm7lrmo377zb7ndaks8aujr&st=t0vd7i4g&raw=1" type=audio/mpeg">
+                        <source src="https://www.dropbox.com/scl/fi/asm30wzqm5zami2wzhmxf/Central-Cee-Type-140BPM-Seegrande-For-DropBox-Mix-Master.wav?rlkey=8alm7lrmo377zb7ndaks8aujr&st=t0vd7i4g&raw=1" type="audio/mpeg">
                     </audio>
                 </div>
 
@@ -139,77 +94,41 @@ audio {
                         <p class="text-xs text-gray-500 uppercase tracking-widest">140 BPM - HyperPop</p>
                     </div>
                     <audio controls>
-                        <source src="https://www.dropbox.com/scl/fi/kzcns9tm01ylp597ktt41/Glitch-140-BPM-RnB-Beat-DropBox-Master.wav?rlkey=ertxg6bfxmf7mxaczu2128md6&st=bpmhjwub&raw=1" type=audio/mpeg">
+                        <source src="https://www.dropbox.com/scl/fi/kzcns9tm01ylp597ktt41/Glitch-140-BPM-RnB-Beat-DropBox-Master.wav?rlkey=ertxg6bfxmf7mxaczu2128md6&st=bpmhjwub&raw=1" type="audio/mpeg">
                     </audio>
                 </div>
-
-
-            </div>
-        </div>
-    </section>
-
-    <section class="py-20 px-6 max-w-4xl mx-auto text-center">
-        <h2 class="text-4xl font-black mb-12">IN THE STUDIO</h2>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div class="aspect-[9/16] glass rounded-2xl flex items-center justify-center text-gray-600 italic">
-                [Instagram Reel Embed 1]
-            </div>
-            <div class="aspect-[9/16] glass rounded-2xl flex items-center justify-center text-gray-600 italic">
-                [Instagram Reel Embed 2]
             </div>
         </div>
     </section>
 
     <footer class="py-10 border-t border-white/10 text-center">
-        <div class="flex justify-center space-x-6 mb-4 text-gray-400">
-            <a href="#" class="hover:text-white">INSTAGRAM</a>
-            <a href="#" class="hover:text-white">BEATSTARS</a>
-            <a href="#" class="hover:text-white">YOUTUBE</a>
+        <div class="flex justify-center space-x-6 mb-4 text-gray-400 text-sm font-bold">
+            <a href="https://instagram.com/yourprofile" class="hover:text-white transition">INSTAGRAM</a>
+            <a href="#" class="hover:text-white transition">BEATSTARS</a>
+            <a href="#" class="hover:text-white transition">YOUTUBE</a>
         </div>
         <p class="text-xs text-gray-600">© 2026 PARAGLYPH.TOP</p>
     </footer>
 
+    <script>
+        document.addEventListener('play', function(e){
+            const teaser = document.getElementById('teaser-message');
 
-
-<div id="teaser-toast" class="fixed bottom-10 left-1/2 -translate-x-1/2 glass px-6 py-3 rounded-full text-sm font-medium text-white opacity-0 transition-opacity duration-500 pointer-events-none z-50 border border-white/20 shadow-2xl">
-  Production Drops, bridges, and switch-ups in one quick clip. DM for the full HQ beat! 🥁🔥
-</div>
-
-
-    
-
-    
-<script>
-    document.addEventListener('play', function(e){
-        const teaser = document.getElementById('teaser-message');
-
-        // 1. Stop other tracks
-        var audios = document.getElementsByTagName('audio');
-        for(var i = 0, len = audios.length; i < len; i++){
-            if(audios[i] != e.target){
-                audios[i].pause();
+            // 1. Stop other tracks
+            var audios = document.getElementsByTagName('audio');
+            for(var i = 0; i < audios.length; i++){
+                if(audios[i] != e.target){
+                    audios[i].pause();
+                }
             }
-        }
 
-        // 2. Trigger the "Jolt" animation
-        if(teaser) {
-            // Remove the class if it's already there (to reset the animation)
-            teaser.classList.remove('jolt-animation');
-            
-            // Trigger a "reflow" so the browser notices the class was removed
-            void teaser.offsetWidth; 
-            
-            // Re-add the class
-            teaser.classList.add('jolt-animation');
-        }
-        
-    }, true);
-</script>
-
-
-
-    
-
-    
+            // 2. Trigger the "Jolt" animation on the message
+            if(teaser) {
+                teaser.classList.remove('jolt-animation');
+                void teaser.offsetWidth; // Trigger reflow
+                teaser.classList.add('jolt-animation');
+            }
+        }, true);
+    </script>
 </body>
 </html>
