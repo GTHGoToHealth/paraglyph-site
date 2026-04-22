@@ -8,6 +8,23 @@
     <style>
         body { background-color: #0a0a0a; color: white; font-family: 'Inter', sans-serif; }
         .glass { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.1); }
+    /* This makes the audio player wider and cleaner on mobile */
+audio {
+    width: 100%;
+    max-width: 250px;
+    filter: invert(100%) hue-rotate(180deg) brightness(1.5); /* Makes it match a dark theme better */
+}
+
+@media (max-width: 640px) {
+    .flex-row-mobile {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    audio {
+        max-width: 100%;
+        margin-top: 10px;
+    }
+}
     </style>
 </head>
 <body class="antialiased">
@@ -77,5 +94,17 @@
         <p class="text-xs text-gray-600">© 2026 PARAGLYPH.TOP</p>
     </footer>
 
+<script>
+    // This script ensures only one audio track plays at a time
+    document.addEventListener('play', function(e){
+        var audios = document.getElementsByTagName('audio');
+        for(var i = 0, len = audios.length; i < len;i++){
+            if(audios[i] != e.target){
+                audios[i].pause();
+            }
+        }
+    }, true);
+</script>
+    
 </body>
 </html>
