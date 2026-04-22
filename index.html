@@ -9,59 +9,51 @@
         body { background-color: #0a0a0a; color: white; font-family: 'Inter', sans-serif; }
         .glass { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.1); }
 
-
-
-        
         /* Logo Shine Effect */
-.logo-shine-container {
-    position: relative;
-    display: inline-block;
-    overflow: hidden;
-    /* Replace with your actual logo URL */
-    -webkit-mask-image: url('logo.png');
-    mask-image: url('logo.png');
-    -webkit-mask-size: contain;
-    mask-size: contain;
-    -webkit-mask-repeat: no-repeat;
-    mask-repeat: no-repeat;
-}
+        .logo-shine-container {
+            position: relative;
+            display: inline-block;
+            overflow: hidden;
+            /* Using the PNG as a mask creates the shape for the shine */
+            -webkit-mask-image: url('logo.png');
+            mask-image: url('logo.png');
+            -webkit-mask-size: contain;
+            mask-size: contain;
+            -webkit-mask-repeat: no-repeat;
+            mask-repeat: no-repeat;
+        }
 
-.logo-image {
-    width: 300px; /* Adjust size as needed */
-    height: auto;
-    display: block;
-    background: #ffffff; /* Base color of your logo */
-}
+        .logo-image {
+            width: 500px;
+            height: auto;
+            display: block;
+            /* Darker base color makes the white shine visible */
+            background: #222222; 
+        }
 
-/* The Slow Moving Shine */
-.logo-shine-overlay {
-    position: absolute;
-    top: 0;
-    left: -150%;
-    width: 50%;
-    height: 100%;
-    background: linear-gradient(
-        to right, 
-        rgba(255,255,255,0) 0%, 
-        rgba(255,255,255,0.8) 50%, 
-        rgba(255,255,255,0) 100%
-    );
-    transform: skewX(-25deg);
-    animation: slow-shine 4s infinite; /* 4 seconds for a slow, premium feel */
-}
+        .logo-shine-overlay {
+            position: absolute;
+            top: 0;
+            left: -150%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                to right, 
+                rgba(255,255,255,0) 0%, 
+                rgba(255,255,255,1) 50%, 
+                rgba(255,255,255,0) 100%
+            );
+            transform: skewX(-25deg);
+            animation: slow-shine 4s infinite ease-in-out;
+        }
 
-@keyframes slow-shine {
-    0% { left: -150%; }
-    30% { left: 150%; } /* Movement happens */
-    100% { left: 150%; } /* Pause before next shine */
-}
+        @keyframes slow-shine {
+            0% { left: -150%; }
+            40% { left: 150%; } /* The shine sweep */
+            100% { left: 150%; } /* Pause duration */
+        }
 
-
-        
-
-
-        
-/* Audio Player Styling */
+        /* Audio Player Styling */
         audio {
             width: 100%;
             display: block;
@@ -101,7 +93,6 @@
 
         /* SHARP & SLOW SHINE */
         .shine-text {
-            /* Tightened the percentage stops (45%, 50%, 55%) for a sharper beam */
             background: linear-gradient(
                 to right, 
                 #6b7280 0%, 
@@ -123,40 +114,30 @@
         }
 
         .animate-shine-bright {
-            /* Increased duration to 2.5s for a slower effect */
             animation: shine-sweep 2.5s ease-in-out;
         }
 
-
-        /* Add this at the bottom of the style section */
-    @media (max-width: 640px) {
-        .logo-image { 
-            width: 200px; /* This makes the logo smaller on phones */
+        /* Mobile Adjustments */
+        @media (max-width: 640px) {
+            .logo-image { 
+                width: 85vw; 
+            }
         }
-    }
-
-
-        
     </style>
 </head>
 <body class="antialiased">
 
-    /* Logo PNG and Shining */
     <section class="min-h-screen flex flex-col items-center justify-center px-6 text-center">
-    <div class="logo-shine-container mb-6">
-        <img src="logo.png" class="logo-image opacity-100" alt="Paraglyph Logo">
-        <div class="logo-shine-overlay"></div>
-    </div>
-    
-    <p class="text-gray-400 text-lg mb-8 max-w-md">High-fidelity production for the next generation of sound.</p>
-    <a href="#player" class="bg-white text-black px-8 py-4 rounded-full font-bold hover:scale-105 transition-transform">LISTEN NOW</a>
-    </section>
-
+        <div class="logo-shine-container mb-6">
+            <img src="logo.png" class="logo-image opacity-100" alt="Paraglyph Logo">
+            <div class="logo-shine-overlay"></div>
+        </div>
         
-        <p class="text-gray-400 text-lg mb-8 max-w-md">From IIT-B to Beats!<br>
-Crafting original sounds with Wavetable Synthesis.<br>
-Less Splice, More Spice 🔥
-</p>
+        <p class="text-gray-400 text-lg mb-8 max-w-md">
+            From IIT-B to Beats!<br>
+            Crafting original sounds with Wavetable Synthesis.<br>
+            Less Splice, More Spice 🔥
+        </p>
         <a href="#player" class="bg-white text-black px-8 py-4 rounded-full font-bold hover:scale-105 transition-transform">LISTEN NOW</a>
     </section>
 
@@ -166,7 +147,7 @@ Less Splice, More Spice 🔥
             
             <div id="teaser-message" class="text-sm font-medium italic mb-8 inline-block">
                 <span id="shine-wrapper" class="shine-text">
-                    ‼️These are short previews featuring the intro, main drop, bridge, and switch-ups from the full track. DM for the full track.
+                    ‼️ These are short previews featuring the intro, drop, and switch-ups. DM for the full track.
                 </span>
             </div>
             
@@ -205,12 +186,12 @@ Less Splice, More Spice 🔥
     </section>
 
     <footer class="py-10 border-t border-white/10 text-center">
-        <div class="flex justify-center space-x-6 mb-4 text-gray-400 text-sm font-bold">
-            <a href="https://www.instagram.com/theparaglyph/" target="_blank" class="hover:text-white transition" class="hover:text-white transition">INSTAGRAM</a>
-            <a href="https://wa.me/917021539281?text=Hi%20Paraglyph!%20I%20want%20to%20inquire%20about%20a%working%20together" class="hover:text-white transition">WHATSAPP</a>
+        <div class="flex flex-col md:flex-row justify-center items-center space-y-4 md:space-y-0 md:space-x-8 text-gray-400 text-sm font-bold">
+            <a href="https://www.instagram.com/theparaglyph/" target="_blank" class="hover:text-white transition">INSTAGRAM</a>
+            <a href="https://wa.me/917021539281?text=Hi%20Paraglyph!%20I'm%20interested%20in%20working%20together" target="_blank" class="hover:text-white transition">WHATSAPP</a>
             <a href="mailto:theparaglyph@gmail.com?subject=Let's%20Work%20Together!" class="hover:text-white transition">EMAIL</a>
         </div>
-        <p class="text-xs text-gray-600">© PARAGLYPH - Music Producer</p>
+        <p class="text-xs text-gray-600 mt-6">© PARAGLYPH - Music Producer</p>
     </footer>
 
     <script>
@@ -218,7 +199,6 @@ Less Splice, More Spice 🔥
             const teaser = document.getElementById('teaser-message');
             const shine = document.getElementById('shine-wrapper');
 
-            // 1. Stop other tracks
             var audios = document.getElementsByTagName('audio');
             for(var i = 0; i < audios.length; i++){
                 if(audios[i] != e.target){
@@ -226,14 +206,12 @@ Less Splice, More Spice 🔥
                 }
             }
 
-            // 2. Trigger Zoom Jolt
             if(teaser) {
                 teaser.classList.remove('animate-zoom-jolt');
                 void teaser.offsetWidth; 
                 teaser.classList.add('animate-zoom-jolt');
             }
 
-            // 3. Trigger Sharp, Slow Shine
             if(shine) {
                 shine.classList.remove('animate-shine-bright');
                 void shine.offsetWidth; 
