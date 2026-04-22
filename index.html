@@ -8,12 +8,36 @@
     <style>
         body { background-color: #0a0a0a; color: white; font-family: 'Inter', sans-serif; }
         .glass { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.1); }
-    /* This makes the audio player wider and cleaner on mobile */
+
+/* Force the audio player to fill all available horizontal space */
 audio {
     width: 100%;
-    max-width: 250px;
-    filter: invert(100%) hue-rotate(180deg) brightness(1.5); /* Makes it match a dark theme better */
+    display: block;
+    margin-top: 12px;
+    filter: invert(100%) hue-rotate(180deg) brightness(1.5);
 }
+
+/* Ensure the container doesn't restrict the children */
+.beat-card {
+    display: flex;
+    flex-direction: column; 
+    width: 100%;
+}
+
+/* Desktop optimization: if the screen is wide, keep them side-by-side */
+@media (min-width: 768px) {
+    .beat-card {
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+    }
+    audio {
+        width: 300px; /* On desktop, a giant bar looks weird, so we limit it */
+        margin-top: 0;
+    }
+}
+
+        
 
 @media (max-width: 640px) {
     .flex-row-mobile {
@@ -42,33 +66,40 @@ audio {
             <h2 class="text-2xl font-bold mb-6 italic underline uppercase">Latest Drops</h2>
             
             <div class="space-y-4">
-                <div class="flex flex-row-mobile items-center justify-between p-4 bg-white/5 rounded-xl hover:bg-white/10 transition">
-                    <div>
-                        <p class="font-bold">Oseanslo - Prod. by Paraglyph</p>
-                        <p class="text-xs text-gray-500">140 BPM - Dark Trap</p>
+
+
+                <div class="beat-card p-4 bg-white/5 rounded-xl hover:bg-white/10 transition mb-4">
+                    <div class="flex-1">
+                        <p class="font-bold text-lg text-white">Oseanslo - Prod. by Paraglyph</p>
+                        <p class="text-xs text-gray-500 uppercase tracking-widest">140 BPM - Dark Trap</p>
                     </div>
-                    <audio controls class="h-8 w-48 brightness-75 contrast-125">
+                    <audio controls>
                         <source src="https://www.dropbox.com/scl/fi/7lvw70kqbjlllw8113o6v/Oseanslo-UK-Drill-With-Hat-Movement-26-feb-26.wav?rlkey=wrak59iy3rbd6adv3u5laalo1&st=6j8ge1zf&raw=1"audio/mpeg">
                     </audio>
                 </div>
-                <div class="flex flex-row-mobile items-center justify-between p-4 bg-white/5 rounded-xl hover:bg-white/10 transition">
-                    <div>
-                        <p class="font-bold">Seegrande - Prod. by Paraglyph</p>
-                        <p class="text-xs text-gray-500">140 BPM - Orchestral Trap</p>
+
+
+                <div class="beat-card p-4 bg-white/5 rounded-xl hover:bg-white/10 transition mb-4">
+                    <div class="flex-1">
+                        <p class="font-bold text-lg text-white">Seegrande - Prod. by Paraglyph</p>
+                        <p class="text-xs text-gray-500 uppercase tracking-widest">140 BPM - Orchestral Trap</p>
                     </div>
-                    <audio controls class="h-8 w-48 brightness-75 contrast-125">
+                    <audio controls>
                         <source src="https://www.dropbox.com/scl/fi/asm30wzqm5zami2wzhmxf/Central-Cee-Type-140BPM-Seegrande-For-DropBox-Mix-Master.wav?rlkey=8alm7lrmo377zb7ndaks8aujr&st=t0vd7i4g&raw=1"audio/mpeg">
                     </audio>
                 </div>
-                <div class="flex flex-row-mobile items-center justify-between p-4 bg-white/5 rounded-xl hover:bg-white/10 transition">
-                    <div>
-                        <p class="font-bold">Glitchuck - Prod. by Paraglyph</p>
-                        <p class="text-xs text-gray-500">140 BPM - HyperPop</p>
+
+                <div class="beat-card p-4 bg-white/5 rounded-xl hover:bg-white/10 transition mb-4">
+                    <div class="flex-1">
+                        <p class="font-bold text-lg text-white">Glitchuck - Prod. by Paraglyph</p>
+                        <p class="text-xs text-gray-500 uppercase tracking-widest">140 BPM - HyperPop</p>
                     </div>
-                    <audio controls class="h-8 w-48 brightness-75 contrast-125">
+                    <audio controls>
                         <source src="https://www.dropbox.com/scl/fi/kzcns9tm01ylp597ktt41/Glitch-140-BPM-RnB-Beat-DropBox-Master.wav?rlkey=ertxg6bfxmf7mxaczu2128md6&st=bpmhjwub&raw=1"audio/mpeg">
                     </audio>
                 </div>
+
+
             </div>
         </div>
     </section>
