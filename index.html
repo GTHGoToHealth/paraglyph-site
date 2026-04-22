@@ -71,6 +71,23 @@ audio {
     max-height: 100px; /* Adjust based on text length */
     margin-bottom: 1.5rem;
 }
+
+        /* The Attention-Grabbing Jolt */
+@keyframes jolt {
+    0% { transform: translateY(0); }
+    25% { transform: translateY(-5px) scale(1.05); color: #00ff41; } /* Changes color briefly to green */
+    50% { transform: translateY(0); }
+    75% { transform: translateY(-2px); }
+    100% { transform: translateY(0); }
+}
+
+.jolt-animation {
+    animation: jolt 0.5s ease-in-out;
+}
+
+.teaser-text {
+    transition: color 0.3s ease;
+}
         
     </style>
 </head>
@@ -88,11 +105,9 @@ audio {
         <div class="glass p-8 rounded-3xl">
             <h2 class="text-2xl font-bold mb-6 italic underline uppercase">Latest Drops</h2>
 
-              <div id="teaser-message" class="text-sm font-medium text-green-400 italic">
-                <div class="attention-pulse">
-                ⚡ Production Drops, bridges, and switch-ups in one quick clip. DM for the full HQ beat!
-                </div>
-                </div>
+            <div id="teaser-message" class="teaser-text text-sm font-medium text-gray-400 italic mb-6">
+            ⚡ Production Drops, bridges, and switch-ups in one quick clip. DM for the full HQ beat!
+            </div>
             
             <div class="space-y-4">
 
