@@ -31,12 +31,14 @@
         }
         @keyframes continuous-shine { 0% { left: -150%; } 100% { left: 150%; } }
 
-        /* --- REELS --- */
+        /* --- REELS: DIAGONAL LOCK --- */
         .reels-viewport {
             width: 100%; overflow-x: auto; display: flex;
             scroll-snap-type: x mandatory; scrollbar-width: none;
             padding: 0 45px; gap: 25px; -webkit-overflow-scrolling: touch;
-            touch-action: pan-x pan-y; 
+            /* FIX: Prevents diagonal drift */
+            touch-action: pan-x; 
+            overscroll-behavior-y: contain;
         }
         .reels-viewport::-webkit-scrollbar { display: none; }
         .reel-item { scroll-snap-align: center; scroll-snap-stop: always; flex: 0 0 280px; display: flex; flex-direction: column; align-items: center; }
@@ -49,7 +51,6 @@
 
         .video-ui { position: absolute; inset: 0; display: flex; justify-content: center; align-items: center; z-index: 20; pointer-events: none; }
         
-        /* PLAY TRIANGLE: Instant Hide on buffering */
         .play-triangle { 
             width: 0; height: 0; border-style: solid; border-width: 18px 0 18px 30px; 
             border-color: transparent transparent transparent rgba(255, 255, 255, 0.6); 
@@ -74,22 +75,25 @@
         .reel-card video { width: 100%; height: 100%; object-fit: cover; opacity: 0; transition: opacity 0.5s ease; z-index: 5; }
         .video-moving video { opacity: 1; }
 
-        /* POPUP: Smooth Animated Transition */
+        /* POPUP */
         .reel-popup { 
             font-size: 8.5px; color: #10b981; font-weight: 800; text-transform: uppercase; 
             background: rgba(0,0,0,0.8); border: 1px solid rgba(16, 185, 129, 0.3);
             padding: 8px 12px; border-radius: 8px; 
             margin-top: 15px; text-align: center; width: 260px; pointer-events: none;
-            /* Transition Logic */
             opacity: 0; transform: translateY(10px);
             transition: opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1), transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
         }
         .reel-popup.active { opacity: 1; transform: translateY(0); }
 
+        /* --- ARROW ANIMATIONS --- */
         .hint-arrow { position: absolute; top: 50%; transform: translateY(-50%); z-index: 100; opacity: 0.5; pointer-events: none; }
+        .hint-arrow svg { width: 40px; height: 40px; } 
         .arrow-left { left: 5px; animation: pulseL 2s infinite; display: none; }
         .arrow-right { right: 5px; animation: pulseR 2s infinite; }
-        .hint-arrow svg { width: 40px; height: 40px; } 
+
+        @keyframes pulseL { 0%, 100% { transform: translate(0, -50%); opacity: 0.3; } 50% { transform: translate(-10px, -50%); opacity: 0.8; } }
+        @keyframes pulseR { 0%, 100% { transform: translate(0, -50%); opacity: 0.3; } 50% { transform: translate(10px, -50%); opacity: 0.8; } }
 
         /* --- AUDIO --- */
         .beat-card { 
@@ -203,7 +207,6 @@
     <script>
         function scrollToId(id) { document.getElementById(id).scrollIntoView({ behavior: 'smooth' }); }
 
-        // --- MASTER MEDIA KILL ---
         function pauseAllMedia() {
             document.querySelectorAll('video, audio').forEach(m => { m.pause(); m.currentTime = 0; });
             document.querySelectorAll('.reel-card').forEach(c => c.classList.remove('video-moving', 'buffering'));
@@ -211,20 +214,14 @@
             document.querySelectorAll('.reel-popup').forEach(p => p.classList.remove('active'));
         }
 
-        // --- REELS ---
         function toggleVideo(card) {
             const v = card.querySelector('video');
             const popup = card.parentElement.querySelector('.reel-popup');
-            
             if (v.paused) {
-                // Clear existing
                 document.querySelectorAll('video').forEach(vid => { 
                     if(vid!==v){vid.pause(); vid.currentTime=0; vid.parentElement.classList.remove('video-moving','buffering'); vid.parentElement.parentElement.querySelector('.reel-popup').classList.remove('active');}
                 });
-                
-                // Switch State instantly to hide play button
                 card.classList.add('buffering');
-                
                 v.play().then(() => {
                     let itv = setInterval(() => {
                         if (v.currentTime > 0.05) { 
@@ -243,7 +240,6 @@
             }
         }
 
-        // --- AUDIO ---
         function handleCardClick(card) {
             const audio = card.querySelector('audio');
             if (audio.paused) { audio.play(); } else { audio.pause(); audio.currentTime = 0; }
@@ -253,19 +249,14 @@
             const card = audio.closest('.beat-card');
             const teaser = document.getElementById('teaser-message');
             const shine = document.getElementById('shine-wrapper');
-            
             document.querySelectorAll('audio').forEach(a => { if(a !== audio) { a.pause(); a.currentTime = 0; } });
             document.querySelectorAll('video').forEach(v => { v.pause(); v.currentTime = 0; });
             document.querySelectorAll('.reel-card').forEach(c => c.classList.remove('video-moving','buffering'));
             document.querySelectorAll('.reel-popup').forEach(p => p.classList.remove('active'));
             document.querySelectorAll('.beat-card').forEach(b => b.classList.remove('active-track'));
-            
             card.classList.add('active-track');
-            teaser.classList.remove('pop-active');
-            shine.classList.remove('shine-active');
-            void teaser.offsetWidth;
-            teaser.classList.add('pop-active');
-            shine.classList.add('shine-active');
+            teaser.classList.add('pop-active'); shine.classList.add('shine-active');
+            setTimeout(() => { teaser.classList.remove('pop-active'); shine.classList.remove('shine-active'); }, 2000);
         }
 
         function handleAudioPause(audio) {
@@ -273,7 +264,6 @@
             card.classList.remove('active-track');
         }
 
-        // --- OBSERVERS ---
         const reelsViewport = document.getElementById('reels-list');
         reelsViewport.addEventListener('scroll', () => {
             const pos = reelsViewport.scrollLeft;
@@ -290,7 +280,6 @@
         const reelAutoPlay = new IntersectionObserver(entries => {
             entries.forEach(e => {
                 const card = e.target.querySelector('.reel-card');
-                const popup = e.target.querySelector('.reel-popup');
                 if (e.isIntersecting) {
                     const sectionRect = document.getElementById('reels').getBoundingClientRect();
                     if (Math.abs(sectionRect.top) < 10) toggleVideo(card);
@@ -298,7 +287,7 @@
                     const v = card.querySelector('video');
                     v.pause(); v.currentTime = 0; 
                     card.classList.remove('video-moving', 'buffering');
-                    popup.classList.remove('active');
+                    card.parentElement.querySelector('.reel-popup').classList.remove('active');
                 }
             });
         }, { threshold: 0.95 });
