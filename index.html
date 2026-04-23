@@ -37,7 +37,7 @@
         .hero-content-block { transform: translateY(-80px); display: flex; flex-direction: column; align-items: center; }
         .bio-text { margin-top: -160px; position: relative; z-index: 10; }
 
-        /* --- REELS: FIXING THE FREEZE --- */
+        /* --- REELS: LOADING LOGIC --- */
         .reels-container { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; gap: 20px; width: 100%; padding: 20px 40px; scrollbar-width: none; }
         .reels-container::-webkit-scrollbar { display: none; }
         .reel-card { 
@@ -47,7 +47,6 @@
             position: relative; cursor: pointer; 
         }
         
-        /* Persistent Thumbnails */
         .reel-1 { background-image: url('Oseanslo4Thumbnail.jpg'); }
         .reel-2 { background-image: url('Seegrande4Thumbnail.jpg'); }
         .reel-3 { background-image: url('Glitchuck4Thumbnail.jpg'); }
@@ -58,7 +57,7 @@
             opacity: 0; transition: opacity 0.3s ease; z-index: 5;
         }
         
-        /* Only show video when JS adds the 'ready' class */
+        /* State: Video is actually playing/moving */
         .reel-card.video-moving video { opacity: 1; }
         
         .loading-spinner {
@@ -69,17 +68,21 @@
         }
         @keyframes spin { 0% { transform: translate(-50%, -50%) rotate(0deg); } 100% { transform: translate(-50%, -50%) rotate(360deg); } }
         
-        /* Show spinner during buffering OR until video actually moves */
+        /* Show spinner ONLY when buffering */
         .buffering .loading-spinner { display: block; }
 
         .video-ui { position: absolute; inset: 0; display: flex; justify-content: center; align-items: center; background: rgba(0,0,0,0.1); z-index: 10; }
         .play-triangle { 
             width: 0; height: 0; border-style: solid; border-width: 20px 0 20px 35px; 
             border-color: transparent transparent transparent rgba(255, 255, 255, 0.6); 
+            transition: opacity 0.2s;
         }
-        .pause-icon { position: absolute; bottom: 15px; right: 15px; opacity: 0; width: 12px; height: 12px; border-left: 3px solid #fff; border-right: 3px solid #fff; z-index: 20; }
         
-        .video-moving .play-triangle { opacity: 0; }
+        /* HIDE triangle if either playing OR loading */
+        .video-moving .play-triangle, 
+        .buffering .play-triangle { opacity: 0; pointer-events: none; }
+
+        .pause-icon { position: absolute; bottom: 15px; right: 15px; opacity: 0; width: 12px; height: 12px; border-left: 3px solid #fff; border-right: 3px solid #fff; z-index: 20; transition: opacity 0.2s; }
         .video-moving .pause-icon { opacity: 1; }
 
         /* --- AUDIO PAGES --- */
@@ -219,16 +222,15 @@
             
             if (video.paused) {
                 pauseAndResetAllMedia(video);
-                card.classList.add('buffering');
+                card.classList.add('buffering'); // Triangles hides here via CSS
                 video.play();
 
-                // MONITOR REAL PLAYBACK
-                const checkPlaying = setInterval(() => {
+                let checkInterval = setInterval(() => {
                     if (video.currentTime > 0.1 && !video.paused) {
                         card.classList.remove('buffering');
-                        card.classList.add('video-moving'); // Fades in video
+                        card.classList.add('video-moving'); 
                         video.muted = false;
-                        clearInterval(checkPlaying);
+                        clearInterval(checkInterval);
                     }
                 }, 100);
 
@@ -238,15 +240,12 @@
             }
         }
 
-        // Horizontal Observer
         const horizontalObserver = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 const video = entry.target.querySelector('video');
                 if (entry.isIntersecting) {
                     const pageInView = entry.target.closest('section').getBoundingClientRect().top === 0;
-                    if (pageInView) {
-                        toggleVideo(entry.target);
-                    }
+                    if (pageInView) toggleVideo(entry.target);
                 } else {
                     video.pause(); video.currentTime = 0;
                     entry.target.classList.remove('video-moving', 'buffering');
