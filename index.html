@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Paraglyph | IIT-B Sound Labs</title>
+    <title>Paraglyph | Sound Design</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         /* --- GLOBAL PHYSICS --- */
@@ -24,13 +24,13 @@
         }
         .glass { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.1); }
 
-        /* --- LOGO: SIGNIFICANTLY BIGGER + HIGH-ENERGY SHINE --- */
+        /* --- LOGO: FINAL SIZE + FAST RETURN SHINE --- */
         .logo-wrapper { 
             position: relative; 
-            width: 92vw; /* Increased from 75vw */
-            max-width: 550px; /* Increased from 400px */
+            width: 92vw; 
+            max-width: 550px; 
             aspect-ratio: 1/1; 
-            margin-bottom: -30px; /* Pull content closer */
+            z-index: 10;
         }
         .logo-image-bg { position: absolute; inset: 0; background: url('logo.png') center/contain no-repeat; z-index: 1; opacity: 0.1; }
         .logo-mask { 
@@ -42,17 +42,26 @@
         .logo-shine-overlay {
             position: absolute; top: 0; 
             width: 100%; height: 100%;
-            background: linear-gradient(to right, transparent, rgba(255,255,255,0.95), transparent);
-            /* NEW: Rapid Back-and-Forth Animation */
-            animation: high-energy-shine 1.8s infinite linear;
+            background: linear-gradient(to right, transparent, rgba(255,255,255,0.8), transparent);
+            transform: skewX(-25deg);
+            /* NEW: Tightened back-and-forth interval */
+            animation: fast-return-shine 3s infinite ease-in-out;
         }
         
-        @keyframes high-energy-shine {
-            0% { left: -100%; }     /* Start far left */
-            45% { left: 100%; }     /* Zip to right */
-            50% { left: 100%; }     /* Tiny pause at right */
-            95% { left: -100%; }    /* Zip back to left */
-            100% { left: -100%; }   /* Reset at left */
+        @keyframes fast-return-shine {
+            0% { left: -150%; }
+            35% { left: 150%; }  /* Swipes right */
+            40% { left: 150%; }  /* Minimal pause */
+            75% { left: -150%; } /* Swipes back left */
+            100% { left: -150%; } /* Pause before restarting */
+        }
+
+        /* --- HERO TEXT: POSITIONED UP --- */
+        .hero-content {
+            text-align: center;
+            padding: 0 24px;
+            margin-top: -60px; /* Pulls description UP toward the logo */
+            z-index: 20;
         }
 
         /* --- PAGE 2: REEL PAGE (LOCKED) --- */
@@ -89,7 +98,7 @@
         @keyframes pulseR { 0%, 100% { transform: translate(0, -50%); opacity: 0.3; } 50% { transform: translate(10px, -50%); opacity: 0.8; } }
         .bottom-hint { margin-top: 15px; z-index: 50; position: relative; }
 
-        /* --- AUDIO & SHINE --- */
+        /* --- AUDIO --- */
         .beat-card { display: flex; flex-direction: column; width: 100%; transition: all 0.3s ease; filter: brightness(0.9); padding: 1.1rem; background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255,255,255,0.05); border-radius: 1.5rem; cursor: pointer; }
         .beat-card.active-track { filter: brightness(1.3); background: rgba(255, 255, 255, 0.1); border-color: rgba(255,255,255,0.3); }
         .condensed-popup { display: none; font-size: 9px; color: #10b981; font-weight: 800; text-transform: uppercase; margin-top: 10px; text-align: center; }
@@ -115,9 +124,11 @@
             <div class="logo-image-bg"></div>
             <div class="logo-mask"><div class="logo-shine-overlay"></div></div>
         </div>
-        <div class="text-center px-6 max-w-lg">
-            <p class="text-white text-xl font-bold mb-2 tracking-tight">IIT-B Sound Labs</p>
-            <p class="text-gray-400 text-xs leading-relaxed mb-6">Wavetable Synthesis Specialist | Custom Splice Kits & Native Instruments Patches</p>
+        <div class="hero-content">
+            <h1 class="text-white text-xl font-bold mb-3 tracking-tight">From IIT-Bombay to Bomb Beats</h1>
+            <p class="text-gray-400 text-xs leading-relaxed uppercase tracking-widest mb-1">Crafting original sounds with</p>
+            <p class="text-white text-sm font-black uppercase tracking-tighter mb-5">Wavetable Synthesis</p>
+            <p class="text-gray-500 text-[10px] italic font-bold mb-8">No Splice, Just Spice 🔥</p>
             <button onclick="scrollToId('reels')" class="bg-white text-black px-10 py-4 rounded-full font-bold uppercase tracking-widest text-sm">View Reels</button>
         </div>
     </section>
