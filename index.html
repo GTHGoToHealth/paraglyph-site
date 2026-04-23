@@ -6,30 +6,34 @@
     <title>Paraglyph | Official Beats</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        /* CSS Snap System */
-        html {
+        /* TikTok-style Scroll Snapping - Cleaned for Zero Jerk */
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
             scroll-snap-type: y mandatory;
-            scroll-behavior: smooth;
+            background-color: #0a0a0a;
+            color: white;
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
         }
 
         section {
             scroll-snap-align: start;
-            scroll-snap-stop: always;
-            min-height: 100vh;
+            height: 100vh;
+            width: 100vw;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
+            position: relative;
         }
 
-        body { 
-            background-color: #0a0a0a; 
-            color: white; 
-            font-family: 'Inter', sans-serif; 
-            margin: 0;
+        .glass { 
+            background: rgba(255, 255, 255, 0.03); 
+            backdrop-filter: blur(10px); 
+            border: 1px solid rgba(255,255,255,0.1); 
         }
-
-        .glass { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.1); }
 
         /* --- LOGO: ORIGINAL COLORS + MASKED SHINE --- */
         .logo-wrapper {
@@ -66,9 +70,15 @@
 
         @keyframes continuous-shine { 0% { left: -120%; } 100% { left: 120%; } }
 
-        .bio-text { margin-top: -150px; position: relative; z-index: 10; width: 100%; text-align: center; }
+        /* Bio text adjustment to close the PNG gap */
+        .bio-text { 
+            margin-top: -160px; 
+            position: relative; 
+            z-index: 10; 
+            width: 100%;
+        }
 
-        /* --- AUDIO PLAYER --- */
+        /* --- AUDIO PLAYER FIXES --- */
         audio {
             width: 100%;
             filter: invert(100%) hue-rotate(180deg) brightness(1.5);
@@ -85,61 +95,57 @@
             audio { width: 300px; }
         }
 
-        /* --- SHINE TEXT --- */
         .shine-text {
             background: linear-gradient(to right, #6b7280 0%, #6b7280 45%, #ffffff 50%, #6b7280 55%, #6b7280 100%);
             background-size: 200% auto;
             color: transparent;
             -webkit-background-clip: text;
             background-clip: text;
-            display: inline-block;
         }
 
         @keyframes shine-sweep { 0% { background-position: 200% center; } 100% { background-position: -200% center; } }
         .animate-shine-bright { animation: shine-sweep 2.5s ease-in-out; }
 
+        /* Mobile specific fixes for alignment and logo size */
         @media (max-width: 640px) {
-            .logo-wrapper { width: 90vw; height: 90vw; }
-            .bio-text { margin-top: -110px; }
+            .logo-wrapper { width: 95vw; height: 95vw; }
+            .bio-text { margin-top: -120px; }
         }
-
-        /* Helper to ensure snap doesn't jerk */
-        * { box-sizing: border-box; }
     </style>
 </head>
 <body class="antialiased">
 
-    <section id="page-hero">
+    <section id="hero">
         <div class="logo-wrapper">
             <div class="logo-image-bg"></div>
             <div class="logo-shine-overlay"></div>
         </div>
         
-        <div class="bio-text px-6">
+        <div class="bio-text text-center px-6">
             <p class="text-gray-400 text-lg mb-6 max-w-md mx-auto">
                 From IIT-B to Beats!<br>
                 Crafting original sounds with Wavetable Synthesis.<br>
                 Less Splice, More Spice 🔥
             </p>
-            <button onclick="scrollToSection('page-player')" class="bg-white text-black px-8 py-4 rounded-full font-bold hover:scale-105 transition-transform uppercase tracking-widest mb-12">
+            <button onclick="scrollToSection('player')" class="bg-white text-black px-10 py-4 rounded-full font-bold hover:scale-105 transition-transform uppercase tracking-widest mb-10">
                 Listen Now
             </button>
-            <p class="text-gray-600 text-xs animate-bounce uppercase tracking-tighter">Scroll for Music ↓</p>
+            <p class="text-gray-600 text-[10px] animate-bounce uppercase tracking-[0.2em]">Scroll for Music ↓</p>
         </div>
     </section>
 
-    <section id="page-player">
-        <div class="glass p-8 rounded-3xl text-center w-full max-w-4xl mx-6">
+    <section id="player">
+        <div class="glass p-6 md:p-10 rounded-[2.5rem] text-center w-[92%] max-w-4xl">
             <h2 class="text-2xl font-bold mb-2 italic underline uppercase text-white">Latest Drops</h2>
             
-            <div id="teaser-message" class="text-sm font-medium italic mb-8 inline-block">
+            <div class="text-sm font-medium italic mb-8 inline-block">
                 <span id="shine-wrapper" class="shine-text text-center px-2">
                     ‼️ These are short previews. DM for the full track.
                 </span>
             </div>
             
-            <div class="space-y-4 text-left">
-                <div class="beat-card p-4 bg-white/5 rounded-xl hover:bg-white/10 transition mb-4">
+            <div class="space-y-4 text-left max-h-[50vh] overflow-y-auto pr-2">
+                <div class="beat-card p-4 bg-white/5 rounded-2xl hover:bg-white/10 transition">
                     <div class="flex-1">
                         <p class="font-bold text-lg text-white">Oseanslo</p>
                         <p class="text-xs text-gray-500 uppercase tracking-widest">140 BPM - Dark Trap</p>
@@ -149,7 +155,7 @@
                     </audio>
                 </div>
 
-                <div class="beat-card p-4 bg-white/5 rounded-xl hover:bg-white/10 transition mb-4">
+                <div class="beat-card p-4 bg-white/5 rounded-2xl hover:bg-white/10 transition">
                     <div class="flex-1">
                         <p class="font-bold text-lg text-white">Seegrande</p>
                         <p class="text-xs text-gray-500 uppercase tracking-widest">140 BPM - Orchestral Trap</p>
@@ -159,7 +165,7 @@
                     </audio>
                 </div>
 
-                <div class="beat-card p-4 bg-white/5 rounded-xl hover:bg-white/10 transition mb-4">
+                <div class="beat-card p-4 bg-white/5 rounded-2xl hover:bg-white/10 transition">
                     <div class="flex-1">
                         <p class="font-bold text-lg text-white">Glitchuck</p>
                         <p class="text-xs text-gray-500 uppercase tracking-widest">140 BPM - HyperPop</p>
@@ -170,46 +176,46 @@
                 </div>
             </div>
             
-            <p class="mt-8 text-gray-500 text-xs animate-bounce uppercase tracking-tighter">Scroll for Socials ↓</p>
+            <p class="mt-8 text-gray-500 text-[10px] animate-bounce uppercase tracking-[0.2em]">Scroll for Socials ↓</p>
         </div>
     </section>
 
-    <section id="page-socials">
+    <section id="socials">
         <h2 class="text-4xl font-black mb-12 tracking-tighter uppercase">Connect</h2>
         
-        <div class="flex flex-col space-y-6 w-full max-w-xs mx-auto px-6">
-            <a href="https://www.instagram.com/theparaglyph/" target="_blank" class="glass py-4 rounded-xl font-bold hover:bg-white hover:text-black transition-all">INSTAGRAM</a>
-            <a href="https://wa.me/917021539281?text=Hi%20Paraglyph!%20I'm%20interested%20in%20working%20together" target="_blank" class="glass py-4 rounded-xl font-bold hover:bg-white hover:text-black transition-all">WHATSAPP</a>
-            <a href="mailto:theparaglyph@gmail.com?subject=Let's%20Work%20Together!" class="glass py-4 rounded-xl font-bold hover:bg-white hover:text-black transition-all">EMAIL</a>
+        <div class="flex flex-col space-y-4 w-full max-w-[280px] items-center justify-center">
+            <a href="https://www.instagram.com/theparaglyph/" target="_blank" class="glass w-full py-5 rounded-2xl font-bold hover:bg-white hover:text-black transition-all flex items-center justify-center">INSTAGRAM</a>
+            <a href="https://wa.me/917021539281?text=Hi%20Paraglyph!%20I'm%20interested%20in%20working%20together" target="_blank" class="glass w-full py-5 rounded-2xl font-bold hover:bg-white hover:text-black transition-all flex items-center justify-center">WHATSAPP</a>
+            <a href="mailto:theparaglyph@gmail.com?subject=Let's%20Work%20Together!" class="glass w-full py-5 rounded-2xl font-bold hover:bg-white hover:text-black transition-all flex items-center justify-center">EMAIL</a>
         </div>
 
-        <div class="mt-20">
-            <p class="text-xs text-gray-600 uppercase tracking-widest">© PARAGLYPH</p>
-            <button onclick="scrollToSection('page-hero')" class="mt-4 text-gray-400 text-xs hover:text-white uppercase tracking-tighter">↑ Back to Top</button>
+        <div class="mt-20 text-center">
+            <p class="text-[10px] text-gray-600 uppercase tracking-widest">© PARAGLYPH</p>
+            <button onclick="scrollToSection('hero')" class="mt-6 text-gray-500 text-[10px] hover:text-white uppercase tracking-widest transition-colors">↑ Back to Top</button>
         </div>
     </section>
 
     <script>
-        // Smooth Section Navigator (Fixes the Jolt)
+        // Smooth Section Navigator (Manual scroll to avoid snap-fighting)
         function scrollToSection(id) {
-            const el = document.getElementById(id);
-            el.scrollIntoView({ behavior: 'smooth' });
+            const target = document.getElementById(id);
+            window.scrollTo({
+                top: target.offsetTop,
+                behavior: 'smooth'
+            });
         }
 
-        // Clean initial load
-        if (window.location.hash) {
-            window.scrollTo(0, 0);
-            history.replaceState(null, null, ' ');
-        }
+        // Clean initial load to prevent jerks
+        window.history.scrollRestoration = 'manual';
+        window.scrollTo(0, 0);
 
         document.addEventListener('play', function(e){
-            const teaser = document.getElementById('teaser-message');
             const shine = document.getElementById('shine-wrapper');
             var audios = document.getElementsByTagName('audio');
             for(var i = 0; i < audios.length; i++){
                 if(audios[i] != e.target) audios[i].pause();
             }
-            if(teaser) {
+            if(shine) {
                 shine.classList.remove('animate-shine-bright');
                 void shine.offsetWidth; 
                 shine.classList.add('animate-shine-bright');
