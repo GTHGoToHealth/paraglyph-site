@@ -36,26 +36,55 @@
         .hero-content-block { transform: translateY(-80px); display: flex; flex-direction: column; align-items: center; }
         .bio-text { margin-top: -160px; position: relative; z-index: 10; }
 
-        /* --- REELS: INFINITE & HINTS --- */
+        /* --- REELS: INFINITE LOOP & ARROWS --- */
         .reels-container { 
             display: flex; overflow-x: auto; scroll-snap-type: x mandatory; 
-            gap: 20px; width: 100%; padding: 20px 40px; scrollbar-width: none; 
+            gap: 40px; width: 100vw; padding: 0 calc(50vw - 140px);
+            scrollbar-width: none; scroll-behavior: smooth;
         }
         .reels-container::-webkit-scrollbar { display: none; }
+
+        .reel-item { scroll-snap-align: center; flex: 0 0 280px; display: flex; flex-direction: column; align-items: center; }
+        .reel-header { margin-bottom: 12px; text-align: center; }
+        .reel-title { font-weight: 900; text-transform: uppercase; font-size: 16px; color: #fff; letter-spacing: 1px; }
+        .reel-desc { font-size: 11px; color: #9ca3af; text-transform: uppercase; font-weight: 600; }
+
         .reel-card { 
-            scroll-snap-align: center; flex: 0 0 280px; aspect-ratio: 9/16; 
+            width: 280px; aspect-ratio: 9/16; 
             background-color: #000; background-size: cover; background-position: center;
             border-radius: 24px; overflow: hidden; border: 1px solid rgba(255,255,255,0.1); 
             position: relative; cursor: pointer; 
         }
-        
-        .reel-1 { background-image: url('Oseanslo4Thumbnail.jpg'); }
-        .reel-2 { background-image: url('Seegrande4Thumbnail.jpg'); }
-        .reel-3 { background-image: url('Glitchuck4Thumbnail.jpg'); }
+
+        .reel-footer { margin-top: 15px; height: 40px; text-align: center; width: 280px; }
+        .reel-popup { 
+            font-size: 8.5px; color: #10b981; font-weight: 800; text-transform: uppercase; 
+            letter-spacing: 0.05em; background: rgba(16, 185, 129, 0.1); 
+            border: 1px solid rgba(16, 185, 129, 0.2);
+            padding: 6px 12px; border-radius: 8px; line-height: 1.4;
+            opacity: 0; transition: opacity 0.4s;
+        }
+        .video-moving + .reel-footer .reel-popup { opacity: 1; }
+
+        /* Thumbnails */
+        .t-1 { background-image: url('Oseanslo4Thumbnail.jpg'); }
+        .t-2 { background-image: url('Seegrande4Thumbnail.jpg'); }
+        .t-3 { background-image: url('Glitchuck4Thumbnail.jpg'); }
 
         .reel-card video { width: 100%; height: 100%; object-fit: cover; position: absolute; inset: 0; opacity: 0; transition: opacity 0.3s ease; z-index: 5; }
         .reel-card.video-moving video { opacity: 1; }
         
+        /* PULSING ARROWS */
+        .swipe-arrow {
+            position: absolute; top: 50%; transform: translateY(-50%);
+            z-index: 100; opacity: 0.4; pointer-events: none;
+        }
+        .arrow-left { left: 15px; animation: pulseLeft 2s infinite; }
+        .arrow-right { right: 15px; animation: pulseRight 2s infinite; }
+
+        @keyframes pulseLeft { 0%, 100% { transform: translate(0, -50%); opacity: 0.4; } 50% { transform: translate(-8px, -50%); opacity: 0.8; } }
+        @keyframes pulseRight { 0%, 100% { transform: translate(0, -50%); opacity: 0.4; } 50% { transform: translate(8px, -50%); opacity: 0.8; } }
+
         .loading-spinner {
             position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
             width: 50px; height: 50px; border: 4px solid rgba(255,255,255,0.1); border-top: 4px solid #fff; border-radius: 50%;
@@ -65,19 +94,8 @@
         .buffering .loading-spinner { display: block; }
 
         .video-ui { position: absolute; inset: 0; display: flex; justify-content: center; align-items: center; background: rgba(0,0,0,0.1); z-index: 10; }
-        .play-triangle { width: 0; height: 0; border-style: solid; border-width: 20px 0 20px 35px; border-color: transparent transparent transparent rgba(255, 255, 255, 0.6); transition: opacity 0.2s; }
+        .play-triangle { width: 0; height: 0; border-style: solid; border-width: 18px 0 18px 30px; border-color: transparent transparent transparent rgba(255, 255, 255, 0.6); }
         .video-moving .play-triangle, .buffering .play-triangle { opacity: 0; }
-
-        /* Reel Metadata & Popup */
-        .reel-info { position: absolute; bottom: 40px; left: 0; right: 0; text-align: center; z-index: 20; padding: 0 10px; opacity: 0; transition: opacity 0.4s; }
-        .video-moving .reel-info { opacity: 1; }
-        .reel-title { font-weight: 900; text-transform: uppercase; font-size: 14px; letter-spacing: 1px; text-shadow: 0 2px 10px rgba(0,0,0,0.8); }
-        .reel-desc { font-size: 10px; color: #d1d5db; margin-bottom: 8px; font-weight: 500; }
-        .reel-popup { font-size: 8px; color: #10b981; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em; background: rgba(0,0,0,0.7); display: inline-block; padding: 6px 12px; border-radius: 6px; line-height: 1.4; max-width: 90%; }
-
-        /* Swipe Hint Arrow */
-        .swipe-hint { position: absolute; right: 15px; top: 50%; transform: translateY(-50%); z-index: 100; animation: hintBounce 1.5s infinite; opacity: 0.5; }
-        @keyframes hintBounce { 0%, 100% { transform: translate(0, -50%); } 50% { transform: translate(-8px, -50%); } }
 
         /* --- AUDIO --- */
         .beat-page { display: none; flex-direction: column; gap: 0.75rem; width: 100%; }
@@ -92,11 +110,12 @@
         @media (min-width: 768px) {
             .beat-card { flex-direction: row; flex-wrap: wrap; justify-content: space-between; align-items: center; padding-bottom: 28px; }
             .condensed-popup { width: 100%; order: 3; }
-            audio { width: 350px; margin-top: 0; }
-            .reel-card { flex: 0 0 320px; }
+            audio { width: 350px; }
+            .reel-item { flex: 0 0 320px; }
+            .reel-card { width: 320px; }
+            .reel-footer { width: 320px; }
+            .arrow-left { left: 40px; } .arrow-right { right: 40px; }
         }
-
-        @media (max-width: 640px) { .logo-wrapper { width: 95vw; height: 95vw; } .bio-text { margin-top: -120px; } .hero-content-block { transform: translateY(-50px); } }
     </style>
 </head>
 <body class="antialiased">
@@ -106,49 +125,22 @@
             <div class="logo-wrapper"><div class="logo-image-bg"></div><div class="logo-shine-overlay"></div></div>
             <div class="bio-text text-center px-6">
                 <p class="text-gray-400 text-lg mb-6 max-w-md mx-auto">From IIT-B to Beats!<br>Wavetable Synthesis Specialist 🔥</p>
-                <button onclick="scrollToId('reels')" class="bg-white text-black px-10 py-4 rounded-full font-bold hover:scale-105 transition-transform uppercase tracking-widest mb-10">View Reels</button>
+                <button onclick="scrollToId('reels')" class="bg-white text-black px-10 py-4 rounded-full font-bold hover:scale-105 transition-transform uppercase tracking-widest">View Reels</button>
             </div>
         </div>
     </section>
 
     <section id="reels">
-        <div class="swipe-hint pointer-events-none">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+        <div class="swipe-arrow arrow-left">
+            <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
         </div>
-        <h2 class="text-2xl font-bold mb-6 uppercase tracking-tighter">Process & Sound Design</h2>
-        <div class="reels-container" id="reels-list">
-            <div class="reel-card reel-1" onclick="toggleVideo(this)">
-                <video src="Oseanslo4.mp4" loop muted playsinline preload="auto"></video>
-                <div class="loading-spinner"></div>
-                <div class="video-ui"><div class="play-triangle"></div></div>
-                <div class="reel-info">
-                    <div class="reel-title">Oseanslo</div>
-                    <div class="reel-desc">Wavetable Texture Design</div>
-                    <div class="reel-popup">⚡ Fast-Load Preview: Audio compressed for performance. Swipe to the next page for higher audio quality.</div>
-                </div>
-            </div>
-            <div class="reel-card reel-2" onclick="toggleVideo(this)">
-                <video src="Seegrande4.mp4" loop muted playsinline preload="auto"></video>
-                <div class="loading-spinner"></div>
-                <div class="video-ui"><div class="play-triangle"></div></div>
-                <div class="reel-info">
-                    <div class="reel-title">Seegrande</div>
-                    <div class="reel-desc">Orchestral Trap Layering</div>
-                    <div class="reel-popup">⚡ Fast-Load Preview: Audio compressed for performance. Swipe to the next page for higher audio quality.</div>
-                </div>
-            </div>
-            <div class="reel-card reel-3" onclick="toggleVideo(this)">
-                <video src="Glitchuck4.mp4" loop muted playsinline preload="auto"></video>
-                <div class="loading-spinner"></div>
-                <div class="video-ui"><div class="play-triangle"></div></div>
-                <div class="reel-info">
-                    <div class="reel-title">Glitchuck</div>
-                    <div class="reel-desc">Granular Glitch Processing</div>
-                    <div class="reel-popup">⚡ Fast-Load Preview: Audio compressed for performance. Swipe to the next page for higher audio quality.</div>
-                </div>
-            </div>
+        <div class="swipe-arrow arrow-right">
+            <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
         </div>
-        <p class="mt-8 text-gray-600 text-[10px] animate-bounce uppercase tracking-[0.2em]">Swipe Left/Right. Down for Music ↓</p>
+
+        <h2 class="text-2xl font-bold mb-8 uppercase tracking-tighter">Process & Sound Design</h2>
+        <div class="reels-container" id="reels-list"></div>
+        <p class="mt-4 text-gray-600 text-[10px] animate-bounce uppercase tracking-[0.2em]">Swipe Left or Right ↓</p>
     </section>
 
     <section id="player">
@@ -198,21 +190,73 @@
             if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
 
-        // --- MASTER MEDIA ---
-        function pauseAndResetAllMedia(except) {
-            document.querySelectorAll('audio').forEach(a => { if(a !== except) { a.pause(); a.currentTime = 0; } });
-            document.querySelectorAll('video').forEach(v => { if(v !== except) { v.pause(); v.currentTime = 0; v.parentElement.classList.remove('video-moving', 'buffering'); } });
+        const reelData = [
+            { id: 1, title: 'Oseanslo', desc: 'Wavetable Texture Design', video: 'Oseanslo4.mp4', thumb: 't-1' },
+            { id: 2, title: 'Seegrande', desc: 'Orchestral Trap Layering', video: 'Seegrande4.mp4', thumb: 't-2' },
+            { id: 3, title: 'Glitchuck', desc: 'Granular Glitch Processing', video: 'Glitchuck4.mp4', thumb: 't-3' }
+        ];
+
+        const reelsList = document.getElementById('reels-list');
+
+        function createReelElement(data) {
+            return `
+                <div class="reel-item">
+                    <div class="reel-header">
+                        <div class="reel-title">${data.title}</div>
+                        <div class="reel-desc">${data.desc}</div>
+                    </div>
+                    <div class="reel-card ${data.thumb}" onclick="toggleVideo(this)">
+                        <video src="${data.video}" loop muted playsinline preload="auto"></video>
+                        <div class="loading-spinner"></div>
+                        <div class="video-ui"><div class="play-triangle"></div></div>
+                    </div>
+                    <div class="reel-footer">
+                        <div class="reel-popup">⚡ Fast-Load Preview: Audio compressed for performance. Swipe to the next page for higher audio quality.</div>
+                    </div>
+                </div>
+            `;
         }
 
-        // --- REELS LOGIC ---
+        // Setup Infinite Loop Clones (Adding multiple clones to ensure smooth loop for 3 items)
+        const fullContent = [...reelData, ...reelData, ...reelData]; 
+        reelsList.innerHTML = fullContent.map(createReelElement).join('');
+
+        // Invisible Snap for Infinite Loop
+        reelsList.addEventListener('scroll', () => {
+            const scrollPos = reelsList.scrollLeft;
+            const cardWidth = reelsList.querySelector('.reel-item').offsetWidth + 40;
+            const singleSetWidth = cardWidth * reelData.length;
+            
+            if (scrollPos < singleSetWidth - cardWidth) {
+                reelsList.scrollLeft += singleSetWidth;
+            } else if (scrollPos > singleSetWidth * 2 - cardWidth) {
+                reelsList.scrollLeft -= singleSetWidth;
+            }
+        });
+
+        window.onload = () => {
+            const cardWidth = reelsList.querySelector('.reel-item').offsetWidth + 40;
+            reelsList.scrollLeft = cardWidth * reelData.length;
+        };
+
+        function pauseAndResetAllMedia(except) {
+            document.querySelectorAll('audio').forEach(a => { if(a !== except) { a.pause(); a.currentTime = 0; } });
+            document.querySelectorAll('video').forEach(v => { 
+                if(v !== except) { 
+                    v.pause(); v.currentTime = 0; 
+                    v.parentElement.classList.remove('video-moving', 'buffering'); 
+                } 
+            });
+        }
+
         function toggleVideo(card) {
             const video = card.querySelector('video');
             if (video.paused) {
                 pauseAndResetAllMedia(video);
                 card.classList.add('buffering');
                 video.play();
-                const checkPlaying = setInterval(() => {
-                    if (video.currentTime > 0.1 && !video.paused) {
+                let checkPlaying = setInterval(() => {
+                    if (video.currentTime > 0.1) {
                         card.classList.remove('buffering');
                         card.classList.add('video-moving');
                         video.muted = false;
@@ -225,32 +269,21 @@
             }
         }
 
-        // Infinite Loop Detection
-        const reelsList = document.getElementById('reels-list');
-        reelsList.addEventListener('scroll', () => {
-            const threshold = 20;
-            if (reelsList.scrollLeft + reelsList.offsetWidth >= reelsList.scrollWidth - threshold) {
-                reelsList.scrollTo({ left: threshold, behavior: 'auto' });
-            } else if (reelsList.scrollLeft <= 0) {
-                reelsList.scrollTo({ left: reelsList.scrollWidth - reelsList.offsetWidth - threshold, behavior: 'auto' });
-            }
-        });
-
         const horizontalObserver = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
-                const video = entry.target.querySelector('video');
                 if (entry.isIntersecting) {
                     const pageInView = entry.target.closest('section').getBoundingClientRect().top === 0;
                     if (pageInView) toggleVideo(entry.target);
                 } else {
+                    const video = entry.target.querySelector('video');
                     video.pause(); video.currentTime = 0;
                     entry.target.classList.remove('video-moving', 'buffering');
                 }
             });
         }, { threshold: 0.8 });
+
         document.querySelectorAll('.reel-card').forEach(card => horizontalObserver.observe(card));
 
-        // --- AUDIO ---
         function toggleAudio(card) {
             const audio = card.querySelector('audio');
             if (audio.paused) {
@@ -258,10 +291,15 @@
                 audio.play();
                 document.querySelectorAll('.beat-card').forEach(c => c.classList.remove('active-track'));
                 card.classList.add('active-track');
-            } else {
-                audio.pause(); audio.currentTime = 0;
-                card.classList.remove('active-track');
-            }
+            } else { audio.pause(); audio.currentTime = 0; card.classList.remove('active-track'); }
+        }
+
+        function changeAudioPage(pageNum) {
+            document.querySelectorAll('.beat-page').forEach(p => p.classList.remove('active'));
+            document.getElementById('page-' + pageNum).classList.add('active');
+            document.getElementById('dot-1').className = (pageNum === 1) ? 'w-2.5 h-2.5 rounded-full bg-white' : 'w-2.5 h-2.5 rounded-full bg-gray-700';
+            document.getElementById('dot-2').className = (pageNum === 2) ? 'w-2.5 h-2.5 rounded-full bg-white' : 'w-2.5 h-2.5 rounded-full bg-gray-700';
+            pauseAndResetAllMedia();
         }
 
         const sectionObserver = new IntersectionObserver((entries) => {
