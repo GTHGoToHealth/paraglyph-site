@@ -42,6 +42,7 @@
         .reels-container::-webkit-scrollbar { display: none; }
         .reel-card { scroll-snap-align: center; flex: 0 0 280px; aspect-ratio: 9/16; background: #111; border-radius: 24px; overflow: hidden; border: 1px solid rgba(255,255,255,0.1); position: relative; cursor: pointer; }
         .reel-card video { width: 100%; height: 100%; object-fit: cover; }
+        
         .video-ui { position: absolute; inset: 0; display: flex; justify-content: center; align-items: center; background: rgba(0,0,0,0.1); transition: opacity 0.3s; }
         .play-triangle { width: 0; height: 0; border-style: solid; border-width: 20px 0 20px 35px; border-color: transparent transparent transparent rgba(255, 255, 255, 0.6); transition: transform 0.2s, opacity 0.2s; }
         .pause-icon { position: absolute; bottom: 15px; right: 15px; opacity: 0; width: 12px; height: 12px; border-left: 3px solid rgba(255,255,255,0.5); border-right: 3px solid rgba(255,255,255,0.5); }
@@ -60,19 +61,12 @@
             filter: brightness(1.3); background: rgba(255, 255, 255, 0.1); border-color: rgba(255, 255, 255, 0.2);
         }
         
-        /* Loading Shine Animation for Audio Tracks */
         .loading-track::after {
-            content: "";
-            position: absolute;
-            top: 0; left: -100%; width: 100%; height: 100%;
+            content: ""; position: absolute; top: 0; left: -100%; width: 100%; height: 100%;
             background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent);
             animation: audioLoading 1.5s infinite;
         }
-
-        @keyframes audioLoading {
-            0% { left: -100%; }
-            100% { left: 100%; }
-        }
+        @keyframes audioLoading { 0% { left: -100%; } 100% { left: 100%; } }
 
         audio { width: 100%; filter: invert(100%) hue-rotate(180deg) brightness(1.5); }
 
@@ -112,7 +106,7 @@
             <div class="reel-card" onclick="toggleVideo(this)"><video src="Seegrande4.mp4" loop muted playsinline preload="metadata" poster="Seegrande4Thumbnail.jpg"></video><div class="video-ui"><div class="play-triangle"></div><div class="pause-icon"></div></div></div>
             <div class="reel-card" onclick="toggleVideo(this)"><video src="Glitchuck4.mp4" loop muted playsinline preload="metadata" poster="Glitchuck4Thumbnail.jpg"></video><div class="video-ui"><div class="play-triangle"></div><div class="pause-icon"></div></div></div>
         </div>
-        <p class="mt-8 text-gray-600 text-[10px] animate-bounce uppercase tracking-[0.2em]">Tap to Play. Down for Music ↓</p>
+        <p class="mt-8 text-gray-600 text-[10px] animate-bounce uppercase tracking-[0.2em]">Swipe to auto-play ↓</p>
     </section>
 
     <section id="player">
@@ -133,7 +127,6 @@
                         <audio controls preload="metadata"><source src="https://www.dropbox.com/scl/fi/asm30wzqm5zami2wzhmxf/Central-Cee-Type-140BPM-Seegrande-For-DropBox-Mix-Master.wav?rlkey=8alm7lrmo377zb7ndaks8aujr&st=t0vd7i4g&raw=1" type="audio/mpeg"></audio>
                     </div>
                 </div>
-
                 <div class="beat-page" id="page-2">
                     <div class="beat-card p-4 bg-white/5 rounded-2xl border border-transparent transition">
                         <div class="flex-1"><p class="font-bold text-lg text-white">Glitchuck</p><p class="text-xs text-gray-500 uppercase">140 BPM - HyperPop</p></div>
@@ -146,13 +139,13 @@
                 </div>
             </div>
 
-            <div class="flex justify-center items-center gap-4 mt-6">
-                <button onclick="changeAudioPage(1)" class="text-gray-500 hover:text-white transition uppercase text-[10px] font-bold tracking-widest">Back</button>
-                <div class="flex gap-2"><span id="dot-1" class="w-1.5 h-1.5 rounded-full bg-white"></span><span id="dot-2" class="w-1.5 h-1.5 rounded-full bg-gray-700"></span></div>
-                <button onclick="changeAudioPage(2)" class="text-gray-500 hover:text-white transition uppercase text-[10px] font-bold tracking-widest">Next</button>
+            <div class="flex justify-center items-center gap-8 mt-10">
+                <button onclick="changeAudioPage(1)" class="bg-white/10 px-6 py-3 rounded-xl text-white hover:bg-white/20 transition uppercase text-xs font-black tracking-widest">Back</button>
+                <div class="flex gap-3"><span id="dot-1" class="w-2.5 h-2.5 rounded-full bg-white"></span><span id="dot-2" class="w-2.5 h-2.5 rounded-full bg-gray-700"></span></div>
+                <button onclick="changeAudioPage(2)" class="bg-white/10 px-6 py-3 rounded-xl text-white hover:bg-white/20 transition uppercase text-xs font-black tracking-widest">Next</button>
             </div>
 
-            <p class="mt-8 text-gray-500 text-[10px] animate-bounce uppercase tracking-[0.2em]">Scroll for Socials ↓</p>
+            <p class="mt-12 text-gray-500 text-[10px] animate-bounce uppercase tracking-[0.2em]">Scroll for Socials ↓</p>
         </div>
     </section>
 
@@ -179,8 +172,7 @@
             for(let a of allAudios) { if(a !== except) a.pause(); }
             for(let v of allVideos) { 
                 if(v !== except) { 
-                    v.pause(); 
-                    v.currentTime = 0; 
+                    v.pause(); v.currentTime = 0; 
                     v.parentElement.classList.remove('playing'); 
                 } 
             }
@@ -190,72 +182,72 @@
             const video = card.querySelector('video');
             if (video.paused) {
                 pauseAndResetAllMedia(video);
-                video.play();
-                video.muted = false;
+                video.play(); video.muted = false;
                 card.classList.add('playing');
             } else {
-                video.pause();
-                video.currentTime = 0;
+                video.pause(); video.currentTime = 0;
                 card.classList.remove('playing');
             }
         }
 
+        // --- HORIZONTAL AUTO-PLAY ON SWIPE ---
+        const horizontalObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                const video = entry.target.querySelector('video');
+                if (entry.isIntersecting) {
+                    // Only auto-play if the page itself is in view
+                    const pageInView = entry.target.closest('section').getBoundingClientRect().top === 0;
+                    if (pageInView) {
+                        pauseAndResetAllMedia(video);
+                        video.play(); video.muted = false;
+                        entry.target.classList.add('playing');
+                    }
+                } else {
+                    video.pause(); video.currentTime = 0;
+                    entry.target.classList.remove('playing');
+                }
+            });
+        }, { threshold: 0.8 }); // Trigger when 80% of reel is centered
+
+        document.querySelectorAll('.reel-card').forEach(card => horizontalObserver.observe(card));
+
+        // --- AUDIO PAGINATION ---
         function changeAudioPage(pageNum) {
             document.querySelectorAll('.beat-page').forEach(p => p.classList.remove('active'));
             document.getElementById('page-' + pageNum).classList.add('active');
-            document.getElementById('dot-1').className = (pageNum === 1) ? 'w-1.5 h-1.5 rounded-full bg-white' : 'w-1.5 h-1.5 rounded-full bg-gray-700';
-            document.getElementById('dot-2').className = (pageNum === 2) ? 'w-1.5 h-1.5 rounded-full bg-white' : 'w-1.5 h-1.5 rounded-full bg-gray-700';
+            document.getElementById('dot-1').className = (pageNum === 1) ? 'w-2.5 h-2.5 rounded-full bg-white' : 'w-2.5 h-2.5 rounded-full bg-gray-700';
+            document.getElementById('dot-2').className = (pageNum === 2) ? 'w-2.5 h-2.5 rounded-full bg-white' : 'w-2.5 h-2.5 rounded-full bg-gray-700';
             pauseAndResetAllMedia();
             document.querySelectorAll('.beat-card').forEach(c => c.classList.remove('active-track'));
         }
 
-        // --- AUDIO EVENTS (SHINE & HIGHLIGHT) ---
+        // Audio Listeners
         document.querySelectorAll('audio').forEach(audio => {
             const card = audio.closest('.beat-card');
-
-            // Start Shine when waiting for data
-            audio.addEventListener('waiting', () => {
-                card.classList.add('loading-track');
-            });
-
-            // Stop Shine when data is ready
-            audio.addEventListener('playing', () => {
-                card.classList.remove('loading-track');
-            });
-
-            // General Play Logic
+            audio.addEventListener('waiting', () => card.classList.add('loading-track'));
+            audio.addEventListener('playing', () => card.classList.remove('loading-track'));
             audio.addEventListener('play', (e) => {
-                const teaser = document.getElementById('teaser-message');
-                const shine = document.getElementById('shine-wrapper');
-                
                 pauseAndResetAllMedia(e.target);
-                
                 document.querySelectorAll('.beat-card').forEach(c => c.classList.remove('active-track'));
                 card.classList.add('active-track');
-                card.classList.remove('loading-track');
-
+                const teaser = document.getElementById('teaser-message');
                 teaser.classList.remove('animate-zoom-jolt');
-                void teaser.offsetWidth; 
-                teaser.classList.add('animate-zoom-jolt');
+                void teaser.offsetWidth; teaser.classList.add('animate-zoom-jolt');
+                const shine = document.getElementById('shine-wrapper');
                 shine.classList.remove('animate-shine-bright');
-                void shine.offsetWidth; 
-                shine.classList.add('animate-shine-bright');
+                void shine.offsetWidth; shine.classList.add('animate-shine-bright');
             });
         });
 
-        const videoObserver = new IntersectionObserver((entries) => {
+        // Vertical scroll observer to stop everything
+        const sectionObserver = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (!entry.isIntersecting) {
-                    const video = entry.target.querySelector('video');
-                    if (video) {
-                        video.pause();
-                        video.currentTime = 0;
-                        entry.target.classList.remove('playing');
-                    }
+                    pauseAndResetAllMedia();
                 }
             });
         }, { threshold: 0.1 });
-        document.querySelectorAll('.reel-card').forEach(card => videoObserver.observe(card));
+        document.querySelectorAll('section').forEach(s => sectionObserver.observe(s));
     </script>
 </body>
 </html>
