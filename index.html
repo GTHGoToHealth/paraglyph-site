@@ -31,7 +31,7 @@
         }
         @keyframes continuous-shine { 0% { left: -150%; } 100% { left: 150%; } }
 
-        /* --- REELS: NO-SKIP SLIDER --- */
+        /* --- REELS --- */
         .reels-viewport {
             width: 100%; overflow-x: auto; display: flex;
             scroll-snap-type: x mandatory; scrollbar-width: none;
@@ -40,8 +40,7 @@
         .reels-viewport::-webkit-scrollbar { display: none; }
         
         .reel-item { 
-            scroll-snap-align: center; 
-            scroll-snap-stop: always; /* STOPS THE SKIP */
+            scroll-snap-align: center; scroll-snap-stop: always;
             flex: 0 0 280px; display: flex; flex-direction: column; align-items: center; 
         }
         .reel-card { 
@@ -50,7 +49,6 @@
             border-radius: 24px; overflow: hidden; border: 1px solid rgba(255,255,255,0.1); position: relative; 
         }
 
-        /* Video UI Elements */
         .video-ui { position: absolute; inset: 0; display: flex; justify-content: center; align-items: center; z-index: 20; pointer-events: none; }
         .play-triangle { 
             width: 0; height: 0; border-style: solid; border-width: 18px 0 18px 30px; 
@@ -75,21 +73,25 @@
         .reel-card video { width: 100%; height: 100%; object-fit: cover; opacity: 0; transition: opacity 0.3s; z-index: 5; }
         .video-moving video { opacity: 1; }
 
-        /* Corrected Popup logic: Only shows when video-moving class is present on PARENT reel-card */
+        /* --- UPDATED POPUP LOGIC --- */
         .reel-popup { 
             font-size: 8.5px; color: #10b981; font-weight: 800; text-transform: uppercase; 
             background: rgba(0,0,0,0.8); border: 1px solid rgba(16, 185, 129, 0.3);
-            padding: 8px 12px; border-radius: 8px; opacity: 0; transition: opacity 0.4s; 
+            padding: 8px 12px; border-radius: 8px; opacity: 0; transition: all 0.3s ease; 
             margin-top: 15px; text-align: center; width: 260px; pointer-events: none;
+            transform: translateY(5px);
         }
-        .video-moving ~ .reel-popup { opacity: 1; }
+        /* Show only when parent card is moving */
+        .video-moving ~ .reel-popup { opacity: 1; transform: translateY(0); }
 
-        /* HINT ARROWS */
-        .hint-arrow { position: absolute; top: 50%; transform: translateY(-50%); z-index: 100; opacity: 0.4; pointer-events: none; }
-        .arrow-left { left: 10px; animation: pulseL 2s infinite; display: none; }
-        .arrow-right { right: 10px; animation: pulseR 2s infinite; }
-        @keyframes pulseL { 0%, 100% { transform: translate(0, -50%); } 50% { transform: translate(-8px, -50%); } }
-        @keyframes pulseR { 0%, 100% { transform: translate(0, -50%); } 50% { transform: translate(8px, -50%); } }
+        /* --- BIGGER ARROWS --- */
+        .hint-arrow { position: absolute; top: 50%; transform: translateY(-50%); z-index: 100; opacity: 0.5; pointer-events: none; }
+        .arrow-left { left: 5px; animation: pulseL 2s infinite; display: none; }
+        .arrow-right { right: 5px; animation: pulseR 2s infinite; }
+        .hint-arrow svg { width: 40px; height: 40px; } /* Increased from 30px */
+
+        @keyframes pulseL { 0%, 100% { transform: translate(0, -50%); } 50% { transform: translate(-12px, -50%); } }
+        @keyframes pulseR { 0%, 100% { transform: translate(0, -50%); } 50% { transform: translate(12px, -50%); } }
 
         /* --- AUDIO --- */
         .beat-page { display: none; flex-direction: column; gap: 0.75rem; width: 100%; }
@@ -104,18 +106,12 @@
         .active-track .condensed-popup { display: block; }
         audio { width: 100%; filter: invert(100%) brightness(1.5); margin-top: 8px; }
 
-        /* POP SHINE ANIMATIONS */
-        @keyframes zoom-jolt { 0% { transform: scale(1); } 30% { transform: scale(1.05); } 100% { transform: scale(1); } }
-        .animate-zoom-jolt { animation: zoom-jolt 0.5s ease-out; }
-        .shine-text { background: linear-gradient(to right, #6b7280 0%, #6b7280 45%, #ffffff 50%, #6b7280 55%, #6b7280 100%); background-size: 200% auto; color: transparent; -webkit-background-clip: text; display: inline-block; }
-        @keyframes shine-sweep { 0% { background-position: 200% center; } 100% { background-position: -200% center; } }
-        .animate-shine-bright { animation: shine-sweep 2s ease-in-out; }
-
         @media (min-width: 768px) {
             .beat-card { flex-direction: row; flex-wrap: wrap; justify-content: space-between; align-items: center; }
             .condensed-popup { width: 100%; order: 3; }
             .reel-item { flex: 0 0 320px; }
             .reel-card { width: 320px; }
+            .hint-arrow svg { width: 50px; height: 50px; }
         }
     </style>
 </head>
@@ -130,8 +126,8 @@
     </section>
 
     <section id="reels">
-        <div class="hint-arrow arrow-left" id="hint-L"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><polyline points="15 18 9 12 15 6"></polyline></svg></div>
-        <div class="hint-arrow arrow-right" id="hint-R"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg></div>
+        <div class="hint-arrow arrow-left" id="hint-L"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><polyline points="15 18 9 12 15 6"></polyline></svg></div>
+        <div class="hint-arrow arrow-right" id="hint-R"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg></div>
 
         <h2 class="text-2xl font-bold mb-4 uppercase tracking-tighter text-gray-500">Process</h2>
         <div class="reels-viewport" id="reels-list">
@@ -170,7 +166,7 @@
         <div class="glass p-6 md:p-10 rounded-[2.5rem] text-center w-[92%] max-w-4xl">
             <h2 class="text-2xl font-bold mb-2 italic underline uppercase text-white">Latest Drops</h2>
             <div id="teaser-message" class="text-sm font-medium italic mb-6 inline-block">
-                <span id="shine-wrapper" class="shine-text text-center px-2">‼️ Arrangement Preview Mode Active</span>
+                <span id="shine-wrapper" class="shine-text text-center px-2 text-gray-400">‼️ Arrangement Preview Mode Active</span>
             </div>
             
             <div id="audio-pages-container">
@@ -226,8 +222,8 @@
         reelsViewport.addEventListener('scroll', () => {
             const pos = reelsViewport.scrollLeft;
             const max = reelsViewport.scrollWidth - reelsViewport.clientWidth;
-            document.getElementById('hint-L').style.display = pos > 20 ? 'block' : 'none';
-            document.getElementById('hint-R').style.display = pos < max - 20 ? 'block' : 'none';
+            document.getElementById('hint-L').style.display = pos > 30 ? 'block' : 'none';
+            document.getElementById('hint-R').style.display = pos < max - 30 ? 'block' : 'none';
         });
 
         // --- MEDIA CONTROL ---
@@ -240,12 +236,18 @@
         function toggleVideo(card) {
             const v = card.querySelector('video');
             if (v.paused) {
-                // Keep audio playing if it was started, but kill other videos
-                document.querySelectorAll('video').forEach(vid => { if(vid!==v){vid.pause(); vid.currentTime=0; vid.parentElement.classList.remove('video-moving','buffering');}});
+                document.querySelectorAll('video').forEach(vid => { 
+                    if(vid!==v){vid.pause(); vid.currentTime=0; vid.parentElement.classList.remove('video-moving','buffering');}
+                });
                 card.classList.add('buffering');
                 v.play().then(() => {
                     let itv = setInterval(() => {
-                        if (v.currentTime > 0.05) { card.classList.remove('buffering'); card.classList.add('video-moving'); v.muted = false; clearInterval(itv); }
+                        if (v.currentTime > 0.05) { 
+                            card.classList.remove('buffering'); 
+                            card.classList.add('video-moving'); 
+                            v.muted = false; 
+                            clearInterval(itv); 
+                        }
                     }, 50);
                 });
             } else { v.pause(); v.currentTime = 0; card.classList.remove('video-moving'); }
@@ -259,8 +261,12 @@
                 pauseAll();
                 a.play();
                 card.classList.add('active-track');
-                teaser.classList.remove('animate-zoom-jolt'); void teaser.offsetWidth; teaser.classList.add('animate-zoom-jolt');
-                shine.classList.remove('animate-shine-bright'); void shine.offsetWidth; shine.classList.add('animate-shine-bright');
+                teaser.classList.add('animate-zoom-jolt'); 
+                shine.classList.add('animate-shine-bright');
+                setTimeout(() => {
+                    teaser.classList.remove('animate-zoom-jolt');
+                    shine.classList.remove('animate-shine-bright');
+                }, 2000);
             } else { a.pause(); a.currentTime = 0; card.classList.remove('active-track'); }
         }
 
@@ -280,12 +286,16 @@
 
         const reelAutoPlay = new IntersectionObserver(entries => {
             entries.forEach(e => {
+                const card = e.target.querySelector('.reel-card');
                 if (e.isIntersecting) {
                     const sectionRect = document.getElementById('reels').getBoundingClientRect();
-                    if (Math.abs(sectionRect.top) < 10) toggleVideo(e.target.querySelector('.reel-card'));
+                    if (Math.abs(sectionRect.top) < 10) toggleVideo(card);
+                } else {
+                    const v = card.querySelector('video');
+                    v.pause(); v.currentTime = 0; card.classList.remove('video-moving', 'buffering');
                 }
             });
-        }, { threshold: 0.9 });
+        }, { threshold: 0.95 });
         document.querySelectorAll('.reel-item').forEach(i => reelAutoPlay.observe(i));
     </script>
 </body>
