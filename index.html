@@ -6,7 +6,7 @@
     <title>Paraglyph | Official Beats</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        /* --- CORE --- */
+        /* --- CORE ARCHITECTURE --- */
         html, body {
             height: 100%; margin: 0; padding: 0;
             background-color: #0a0a0a; color: white;
@@ -40,14 +40,11 @@
             touch-action: pan-x pan-y; 
         }
         .reels-viewport::-webkit-scrollbar { display: none; }
-        
         .reel-item { scroll-snap-align: center; scroll-snap-stop: always; flex: 0 0 280px; display: flex; flex-direction: column; align-items: center; }
-        
         .reel-card { 
             width: 280px; aspect-ratio: 9/16; background-color: #111; 
             border-radius: 24px; overflow: hidden; border: 1px solid rgba(255,255,255,0.1); 
             position: relative; cursor: pointer;
-            /* FIX: Ensure thumbnails are not cropped */
             background-size: contain; background-position: center; background-repeat: no-repeat;
         }
 
@@ -63,24 +60,30 @@
         .reel-card video { width: 100%; height: 100%; object-fit: cover; opacity: 0; transition: opacity 0.3s; z-index: 5; }
         .video-moving video { opacity: 1; }
 
-        /* POPUP: Visibility strictly controlled by 'popup-visible' class via JS */
+        /* POPUP FIX: State strictly controlled by class */
         .reel-popup { 
             font-size: 8.5px; color: #10b981; font-weight: 800; text-transform: uppercase; 
             background: rgba(0,0,0,0.8); border: 1px solid rgba(16, 185, 129, 0.3);
-            padding: 8px 12px; border-radius: 8px; opacity: 0; transition: all 0.3s ease; 
+            padding: 8px 12px; border-radius: 8px; opacity: 0; transition: opacity 0.3s ease; 
             margin-top: 15px; text-align: center; width: 260px; pointer-events: none;
+            visibility: hidden;
         }
-        .popup-visible { opacity: 1; }
+        .reel-popup.active { opacity: 1; visibility: visible; }
 
+        /* HINT ARROWS */
         .hint-arrow { position: absolute; top: 50%; transform: translateY(-50%); z-index: 100; opacity: 0.5; pointer-events: none; }
         .arrow-left { left: 5px; animation: pulseL 2s infinite; display: none; }
         .arrow-right { right: 5px; animation: pulseR 2s infinite; }
         .hint-arrow svg { width: 40px; height: 40px; } 
+        @keyframes pulseL { 0%, 100% { transform: translate(0, -50%); } 50% { transform: translate(-12px, -50%); } }
+        @keyframes pulseR { 0%, 100% { transform: translate(0, -50%); } 50% { transform: translate(12px, -50%); } }
 
         /* --- AUDIO --- */
-        .beat-page { display: none; flex-direction: column; gap: 0.75rem; width: 100%; }
-        .beat-page.active { display: flex; }
-        .beat-card { display: flex; flex-direction: column; width: 100%; transition: all 0.3s ease; filter: brightness(0.9); padding: 1.1rem; background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255,255,255,0.05); border-radius: 1.5rem; cursor: pointer; position: relative; }
+        .beat-card { 
+            display: flex; flex-direction: column; width: 100%; transition: all 0.3s ease; 
+            filter: brightness(0.9); padding: 1.1rem; background: rgba(255, 255, 255, 0.04); 
+            border: 1px solid rgba(255,255,255,0.05); border-radius: 1.5rem; cursor: pointer; position: relative; 
+        }
         .beat-card.active-track { filter: brightness(1.3); background: rgba(255, 255, 255, 0.1); border-color: rgba(255,255,255,0.3); }
         .condensed-popup { display: none; font-size: 9px; color: #10b981; font-weight: 800; text-transform: uppercase; margin-top: 10px; text-align: center; }
         .active-track .condensed-popup { display: block; }
@@ -95,8 +98,6 @@
         @media (min-width: 768px) {
             .beat-card { flex-direction: row; flex-wrap: wrap; justify-content: space-between; align-items: center; }
             .condensed-popup { width: 100%; order: 3; }
-            .reel-item { flex: 0 0 320px; }
-            .reel-card { width: 320px; }
         }
     </style>
 </head>
@@ -155,22 +156,20 @@
             </div>
             
             <div id="audio-pages-container">
-                <div class="beat-page active" id="page-1">
-                    <div class="beat-card" onclick="handleCardClick(this)">
-                        <div class="flex-1 text-left"><p class="font-bold text-lg text-white">Oseanslo</p><p class="text-xs text-gray-500 uppercase">140 BPM - DARK TRAP</p></div>
-                        <audio controls preload="metadata" onplay="handleAudioTrigger(this)" onpause="handleAudioPause(this)"><source src="https://www.dropbox.com/scl/fi/7lvw70kqbjlllw8113o6v/Oseanslo-UK-Drill-With-Hat-Movement-26-feb-26.wav?rlkey=wrak59iy3rbd6adv3u5laalo1&st=6j8ge1zf&raw=1" type="audio/mpeg"></audio>
-                        <div class="condensed-popup">⚡ Condensed Arrangement: Intro, Drop, Bridge & Switch-ups in short. DM for full beat!</div>
-                    </div>
-                    <div class="beat-card" onclick="handleCardClick(this)">
-                        <div class="flex-1 text-left"><p class="font-bold text-lg text-white">Seegrande</p><p class="text-xs text-gray-500 uppercase">140 BPM - ORCHESTRAL TRAP</p></div>
-                        <audio controls preload="metadata" onplay="handleAudioTrigger(this)" onpause="handleAudioPause(this)"><source src="https://www.dropbox.com/scl/fi/asm30wzqm5zami2wzhmxf/Central-Cee-Type-140BPM-Seegrande-For-DropBox-Mix-Master.wav?rlkey=8alm7lrmo377zb7ndaks8aujr&st=t0vd7i4g&raw=1" type="audio/mpeg"></audio>
-                        <div class="condensed-popup">⚡ Condensed Arrangement: Intro, Drop, Bridge & Switch-ups in short. DM for full beat!</div>
-                    </div>
-                    <div class="beat-card" onclick="handleCardClick(this)">
-                        <div class="flex-1 text-left"><p class="font-bold text-lg text-white">Glitchuck</p><p class="text-xs text-gray-500 uppercase">140 BPM - HYPERPOP</p></div>
-                        <audio controls preload="metadata" onplay="handleAudioTrigger(this)" onpause="handleAudioPause(this)"><source src="https://www.dropbox.com/scl/fi/kzcns9tm01ylp597ktt41/Glitch-140-BPM-RnB-Beat-DropBox-Master.wav?rlkey=ertxg6bfxmf7mxaczu2128md6&st=bpmhjwub&raw=1" type="audio/mpeg"></audio>
-                        <div class="condensed-popup">⚡ Condensed Arrangement: Intro, Drop, Bridge & Switch-ups in short. DM for full beat!</div>
-                    </div>
+                <div class="beat-card mb-3" onclick="handleCardClick(this)">
+                    <div class="flex-1 text-left"><p class="font-bold text-lg text-white">Oseanslo</p><p class="text-xs text-gray-500 uppercase">140 BPM - DARK TRAP</p></div>
+                    <audio controls preload="metadata" onplay="handleAudioTrigger(this)" onpause="handleAudioPause(this)"><source src="https://www.dropbox.com/scl/fi/7lvw70kqbjlllw8113o6v/Oseanslo-UK-Drill-With-Hat-Movement-26-feb-26.wav?rlkey=wrak59iy3rbd6adv3u5laalo1&st=6j8ge1zf&raw=1" type="audio/mpeg"></audio>
+                    <div class="condensed-popup">⚡ Condensed Arrangement: Intro, Drop, Bridge & Switch-ups in short. DM for full beat!</div>
+                </div>
+                <div class="beat-card mb-3" onclick="handleCardClick(this)">
+                    <div class="flex-1 text-left"><p class="font-bold text-lg text-white">Seegrande</p><p class="text-xs text-gray-500 uppercase">140 BPM - ORCHESTRAL TRAP</p></div>
+                    <audio controls preload="metadata" onplay="handleAudioTrigger(this)" onpause="handleAudioPause(this)"><source src="https://www.dropbox.com/scl/fi/asm30wzqm5zami2wzhmxf/Central-Cee-Type-140BPM-Seegrande-For-DropBox-Mix-Master.wav?rlkey=8alm7lrmo377zb7ndaks8aujr&st=t0vd7i4g&raw=1" type="audio/mpeg"></audio>
+                    <div class="condensed-popup">⚡ Condensed Arrangement: Intro, Drop, Bridge & Switch-ups in short. DM for full beat!</div>
+                </div>
+                <div class="beat-card mb-3" onclick="handleCardClick(this)">
+                    <div class="flex-1 text-left"><p class="font-bold text-lg text-white">Glitchuck</p><p class="text-xs text-gray-500 uppercase">140 BPM - HYPERPOP</p></div>
+                    <audio controls preload="metadata" onplay="handleAudioTrigger(this)" onpause="handleAudioPause(this)"><source src="https://www.dropbox.com/scl/fi/kzcns9tm01ylp597ktt41/Glitch-140-BPM-RnB-Beat-DropBox-Master.wav?rlkey=ertxg6bfxmf7mxaczu2128md6&st=bpmhjwub&raw=1" type="audio/mpeg"></audio>
+                    <div class="condensed-popup">⚡ Condensed Arrangement: Intro, Drop, Bridge & Switch-ups in short. DM for full beat!</div>
                 </div>
             </div>
         </div>
@@ -189,24 +188,31 @@
     <script>
         function scrollToId(id) { document.getElementById(id).scrollIntoView({ behavior: 'smooth' }); }
 
-        // --- MASTER MEDIA KILL ---
+        // --- GLOBAL CLEANUP ---
+        function clearAllPopups() {
+            document.querySelectorAll('.reel-popup').forEach(p => p.classList.remove('active'));
+        }
+
         function pauseAllMedia() {
             document.querySelectorAll('video, audio').forEach(m => { m.pause(); m.currentTime = 0; });
             document.querySelectorAll('.reel-card').forEach(c => c.classList.remove('video-moving', 'buffering'));
             document.querySelectorAll('.beat-card').forEach(b => b.classList.remove('active-track'));
-            // Hard kill all popups
-            document.querySelectorAll('.reel-popup').forEach(p => p.classList.remove('popup-visible'));
+            clearAllPopups();
         }
 
-        // --- REELS ---
+        // --- REEL LOGIC ---
         function toggleVideo(card) {
             const v = card.querySelector('video');
-            const popup = card.nextElementSibling; // The popup is the next sibling
+            const popup = card.parentElement.querySelector('.reel-popup');
             
             if (v.paused) {
-                // DON'T pause all here, handle other videos in section
+                // Stop other videos in the section
                 document.querySelectorAll('video').forEach(vid => { 
-                    if(vid!==v){vid.pause(); vid.currentTime=0; vid.parentElement.classList.remove('video-moving','buffering'); vid.parentElement.nextElementSibling.classList.remove('popup-visible');}
+                    if(vid !== v) {
+                        vid.pause(); vid.currentTime = 0; 
+                        vid.parentElement.classList.remove('video-moving', 'buffering');
+                        vid.parentElement.parentElement.querySelector('.reel-popup').classList.remove('active');
+                    }
                 });
                 
                 card.classList.add('buffering');
@@ -215,7 +221,7 @@
                         if (v.currentTime > 0.05) { 
                             card.classList.remove('buffering'); 
                             card.classList.add('video-moving'); 
-                            popup.classList.add('popup-visible'); // Show Popup
+                            popup.classList.add('active'); // Final fix for visibility
                             v.muted = false; 
                             clearInterval(itv); 
                         }
@@ -224,11 +230,11 @@
             } else { 
                 v.pause(); v.currentTime = 0; 
                 card.classList.remove('video-moving'); 
-                popup.classList.remove('popup-visible'); // Hide Popup
+                popup.classList.remove('active');
             }
         }
 
-        // --- AUDIO ---
+        // --- AUDIO LOGIC ---
         function handleCardClick(card) {
             const audio = card.querySelector('audio');
             if (audio.paused) { audio.play(); } else { audio.pause(); audio.currentTime = 0; }
@@ -238,15 +244,20 @@
             const card = audio.closest('.beat-card');
             const teaser = document.getElementById('teaser-message');
             const shine = document.getElementById('shine-wrapper');
-            // Pause others
+            
             document.querySelectorAll('audio').forEach(a => { if(a !== audio) { a.pause(); a.currentTime = 0; } });
             document.querySelectorAll('video').forEach(v => { v.pause(); v.currentTime = 0; });
             document.querySelectorAll('.reel-card').forEach(c => c.classList.remove('video-moving','buffering'));
-            document.querySelectorAll('.reel-popup').forEach(p => p.classList.remove('popup-visible'));
+            clearAllPopups();
+            
             document.querySelectorAll('.beat-card').forEach(b => b.classList.remove('active-track'));
             card.classList.add('active-track');
-            teaser.classList.add('pop-active'); shine.classList.add('shine-active');
-            setTimeout(() => { teaser.classList.remove('pop-active'); shine.classList.remove('shine-active'); }, 2000);
+
+            teaser.classList.remove('pop-active');
+            shine.classList.remove('shine-active');
+            void teaser.offsetWidth;
+            teaser.classList.add('pop-active');
+            shine.classList.add('shine-active');
         }
 
         function handleAudioPause(audio) {
@@ -271,14 +282,15 @@
         const reelAutoPlay = new IntersectionObserver(entries => {
             entries.forEach(e => {
                 const card = e.target.querySelector('.reel-card');
+                const popup = e.target.querySelector('.reel-popup');
                 if (e.isIntersecting) {
                     const sectionRect = document.getElementById('reels').getBoundingClientRect();
                     if (Math.abs(sectionRect.top) < 10) toggleVideo(card);
                 } else {
                     const v = card.querySelector('video');
-                    v.pause(); v.currentTime = 0; card.classList.remove('video-moving', 'buffering');
-                    // Ensure popup closes when swiped away
-                    card.nextElementSibling.classList.remove('popup-visible');
+                    v.pause(); v.currentTime = 0; 
+                    card.classList.remove('video-moving', 'buffering');
+                    popup.classList.remove('active'); // Clean exit for popups
                 }
             });
         }, { threshold: 0.95 });
