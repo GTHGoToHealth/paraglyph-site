@@ -6,7 +6,7 @@
     <title>Paraglyph | Sound Design</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        /* --- CORE PHYSICS (DO NOT TOUCH) --- */
+        /* --- CORE PHYSICS (PRESERVED) --- */
         html, body {
             height: 100%; margin: 0; padding: 0;
             background-color: #0a0a0a; color: white;
@@ -35,10 +35,13 @@
         }
         @keyframes continuous-shine { 0% { left: -150%; } 100% { left: 150%; } }
 
-        /* --- REEL TITLES SAFETY FIX --- */
+        /* --- REELS LAYOUT FIX --- */
+        #reels {
+            justify-content: space-evenly; /* Better vertical distribution to fit bottom text */
+        }
+        
         .reel-section-header {
-            margin-bottom: 1.5rem;
-            padding-top: 10px; /* Ensures 'Process' isn't chopped */
+            margin-top: 20px; /* Safety from top notch */
         }
 
         .reels-viewport {
@@ -55,13 +58,12 @@
             flex: 0 0 280px; display: flex; flex-direction: column; align-items: center; 
         }
 
-        /* Added specific height for title block to prevent layout jumping */
         .reel-title-block {
-            height: 60px;
+            height: 55px;
             display: flex;
             flex-direction: column;
             justify-content: flex-end;
-            margin-bottom: 15px;
+            margin-bottom: 12px;
             text-align: center;
         }
 
@@ -94,13 +96,20 @@
         }
         .reel-popup.active { opacity: 1; transform: translateY(0); }
 
-        /* ARROWS */
+        /* HINT ARROWS */
         .hint-arrow { position: absolute; top: 50%; transform: translateY(-50%); z-index: 100; opacity: 0.5; pointer-events: none; }
         .hint-arrow svg { width: 45px; height: 45px; } 
         .arrow-left { left: 5px; animation: pulseL 2s infinite; display: none; }
         .arrow-right { right: 5px; animation: pulseR 2s infinite; }
         @keyframes pulseL { 0%, 100% { transform: translate(0, -50%); opacity: 0.3; } 50% { transform: translate(-10px, -50%); opacity: 0.8; } }
         @keyframes pulseR { 0%, 100% { transform: translate(0, -50%); opacity: 0.3; } 50% { transform: translate(10px, -50%); opacity: 0.8; } }
+
+        /* BOTTOM TEXT FIX */
+        .bottom-hint {
+            margin-bottom: 20px;
+            z-index: 50;
+            position: relative;
+        }
 
         /* --- AUDIO & SHINE --- */
         .beat-card { display: flex; flex-direction: column; width: 100%; transition: all 0.3s ease; filter: brightness(0.9); padding: 1.1rem; background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255,255,255,0.05); border-radius: 1.5rem; cursor: pointer; }
@@ -118,7 +127,6 @@
         @media (min-width: 768px) {
             .beat-card { flex-direction: row; flex-wrap: wrap; justify-content: space-between; align-items: center; }
             .condensed-popup { width: 100%; order: 3; }
-            .reel-title-block { height: 70px; }
         }
     </style>
 </head>
@@ -178,7 +186,10 @@
                 <div class="reel-popup">⚡ Fast-Load Preview: Audio compressed for performance. Swipe down for studio quality.</div>
             </div>
         </div>
-        <p class="mt-6 text-gray-600 text-[10px] animate-bounce uppercase tracking-widest">Swipe for more ↓</p>
+        
+        <div class="bottom-hint">
+            <p class="text-gray-600 text-[10px] animate-bounce uppercase tracking-widest">Swipe for more ↓</p>
+        </div>
     </section>
 
     <section id="player">
@@ -200,6 +211,7 @@
         <div class="flex flex-col space-y-4 w-full max-w-[280px]">
             <a href="https://wa.me/917021539281" target="_blank" class="glass py-5 rounded-2xl text-center font-bold uppercase hover:bg-white hover:text-black transition">WhatsApp</a>
             <a href="https://www.instagram.com/theparaglyph/" target="_blank" class="glass py-5 rounded-2xl text-center font-bold uppercase hover:bg-white hover:text-black transition">Instagram</a>
+            <a href="mailto:theparaglyph@gmail.com" class="glass py-5 rounded-2xl text-center font-bold uppercase hover:bg-white hover:text-black transition">Email</a>
         </div>
         <div class="mt-20 text-center text-gray-600 text-[10px] uppercase">© PARAGLYPH 2026</div>
     </section>
@@ -207,7 +219,7 @@
     <script>
         function scrollToId(id) { document.getElementById(id).scrollIntoView({ behavior: 'smooth' }); }
 
-        // --- THE "TOUCH BRIDGE" (LOGIC PRESERVED) ---
+        // PRESERVED TOUCH BRIDGE LOGIC
         let touchStartY = 0;
         let touchStartX = 0;
         const reelsView = document.getElementById('reels-list');
@@ -279,7 +291,7 @@
         });
 
         const globalObserver = new IntersectionObserver(entries => {
-            entries.forEach(e => { if (!e.isIntersecting) pauseAllMedia(); });
+            entries.forEach(e => { if (!e.isIntersecting) pauseAll(); });
         }, { threshold: 0.1 });
         document.querySelectorAll('section').forEach(s => globalObserver.observe(s));
 
@@ -291,7 +303,8 @@
                     if (Math.abs(sectionRect.top) < 10) toggleVideo(card);
                 } else {
                     const v = card.querySelector('video');
-                    v.pause(); v.currentTime = 0; card.classList.remove('video-moving');
+                    v.pause(); v.currentTime = 0; 
+                    card.classList.remove('video-moving');
                     card.parentElement.querySelector('.reel-popup').classList.remove('active');
                 }
             });
