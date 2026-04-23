@@ -6,7 +6,7 @@
     <title>Paraglyph | Sound Design</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        /* --- CORE PHYSICS (PRESERVED) --- */
+        /* --- CORE PHYSICS --- */
         html, body {
             height: 100%; margin: 0; padding: 0;
             background-color: #0a0a0a; color: white;
@@ -35,13 +35,14 @@
         }
         @keyframes continuous-shine { 0% { left: -150%; } 100% { left: 150%; } }
 
-        /* --- REELS LAYOUT FIX --- */
+        /* --- REELS LAYOUT LIFT --- */
         #reels {
-            justify-content: space-evenly; /* Better vertical distribution to fit bottom text */
+            justify-content: flex-start; /* Shift everything to the top */
+            padding-top: 5vh; /* Small gap from the very top */
         }
         
         .reel-section-header {
-            margin-top: 20px; /* Safety from top notch */
+            margin-bottom: 0.5rem; /* Tighter gap */
         }
 
         .reels-viewport {
@@ -59,11 +60,11 @@
         }
 
         .reel-title-block {
-            height: 55px;
+            height: 45px; /* More compact title block */
             display: flex;
             flex-direction: column;
-            justify-content: flex-end;
-            margin-bottom: 12px;
+            justify-content: center;
+            margin-bottom: 8px;
             text-align: center;
         }
 
@@ -90,23 +91,22 @@
         .reel-popup { 
             font-size: 8.5px; color: #10b981; font-weight: 800; text-transform: uppercase; 
             background: rgba(0,0,0,0.8); border: 1px solid rgba(16, 185, 129, 0.3);
-            padding: 8px 12px; border-radius: 8px; margin-top: 15px; text-align: center; width: 260px; 
+            padding: 6px 12px; border-radius: 8px; margin-top: 10px; text-align: center; width: 250px; 
             opacity: 0; transform: translateY(10px);
-            transition: opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1), transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: opacity 0.4s ease, transform 0.4s ease;
         }
         .reel-popup.active { opacity: 1; transform: translateY(0); }
 
-        /* HINT ARROWS */
+        /* ARROWS */
         .hint-arrow { position: absolute; top: 50%; transform: translateY(-50%); z-index: 100; opacity: 0.5; pointer-events: none; }
-        .hint-arrow svg { width: 45px; height: 45px; } 
+        .hint-arrow svg { width: 40px; height: 40px; } 
         .arrow-left { left: 5px; animation: pulseL 2s infinite; display: none; }
         .arrow-right { right: 5px; animation: pulseR 2s infinite; }
         @keyframes pulseL { 0%, 100% { transform: translate(0, -50%); opacity: 0.3; } 50% { transform: translate(-10px, -50%); opacity: 0.8; } }
         @keyframes pulseR { 0%, 100% { transform: translate(0, -50%); opacity: 0.3; } 50% { transform: translate(10px, -50%); opacity: 0.8; } }
 
-        /* BOTTOM TEXT FIX */
         .bottom-hint {
-            margin-bottom: 20px;
+            margin-top: 15px;
             z-index: 50;
             position: relative;
         }
@@ -213,13 +213,13 @@
             <a href="https://www.instagram.com/theparaglyph/" target="_blank" class="glass py-5 rounded-2xl text-center font-bold uppercase hover:bg-white hover:text-black transition">Instagram</a>
             <a href="mailto:theparaglyph@gmail.com" class="glass py-5 rounded-2xl text-center font-bold uppercase hover:bg-white hover:text-black transition">Email</a>
         </div>
-        <div class="mt-20 text-center text-gray-600 text-[10px] uppercase">© PARAGLYPH 2026</div>
+        <div class="mt-16 text-center text-gray-600 text-[10px] uppercase">© PARAGLYPH 2026</div>
     </section>
 
     <script>
         function scrollToId(id) { document.getElementById(id).scrollIntoView({ behavior: 'smooth' }); }
 
-        // PRESERVED TOUCH BRIDGE LOGIC
+        // --- THE "TOUCH BRIDGE" (FIXES SWIPE-UP ON CAROUSEL) ---
         let touchStartY = 0;
         let touchStartX = 0;
         const reelsView = document.getElementById('reels-list');
@@ -235,13 +235,13 @@
             let yDiff = touchStartY - touchEndY;
             let xDiff = touchStartX - touchEndX;
 
-            if (Math.abs(yDiff) > Math.abs(xDiff) + 10) {
-                if (yDiff > 20) scrollToId('player');
-                if (yDiff < -20) scrollToId('hero');
+            if (Math.abs(yDiff) > Math.abs(xDiff) + 15) {
+                if (yDiff > 40) scrollToId('player');
+                if (yDiff < -40) scrollToId('hero');
             }
         }, { passive: true });
 
-        function pauseAll() {
+        function pauseAllMedia() {
             document.querySelectorAll('video, audio').forEach(m => { m.pause(); m.currentTime = 0; });
             document.querySelectorAll('.reel-card').forEach(c => c.classList.remove('video-moving', 'buffering'));
             document.querySelectorAll('.reel-popup').forEach(p => p.classList.remove('active'));
@@ -291,7 +291,7 @@
         });
 
         const globalObserver = new IntersectionObserver(entries => {
-            entries.forEach(e => { if (!e.isIntersecting) pauseAll(); });
+            entries.forEach(e => { if (!e.isIntersecting) pauseAllMedia(); });
         }, { threshold: 0.1 });
         document.querySelectorAll('section').forEach(s => globalObserver.observe(s));
 
