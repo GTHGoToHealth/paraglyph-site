@@ -40,9 +40,17 @@
             touch-action: pan-x pan-y; 
         }
         .reels-viewport::-webkit-scrollbar { display: none; }
-        .reel-item { scroll-snap-align: center; scroll-snap-stop: always; flex: 0 0 280px; display: flex; flex-direction: column; align-items: center; }
-        .reel-card { width: 280px; aspect-ratio: 9/16; background-color: #111; border-radius: 24px; overflow: hidden; border: 1px solid rgba(255,255,255,0.1); position: relative; cursor: pointer; }
         
+        .reel-item { scroll-snap-align: center; scroll-snap-stop: always; flex: 0 0 280px; display: flex; flex-direction: column; align-items: center; }
+        
+        .reel-card { 
+            width: 280px; aspect-ratio: 9/16; background-color: #111; 
+            border-radius: 24px; overflow: hidden; border: 1px solid rgba(255,255,255,0.1); 
+            position: relative; cursor: pointer;
+            /* FIX: Ensure thumbnails are not cropped */
+            background-size: contain; background-position: center; background-repeat: no-repeat;
+        }
+
         .video-ui { position: absolute; inset: 0; display: flex; justify-content: center; align-items: center; z-index: 20; pointer-events: none; }
         .play-triangle { width: 0; height: 0; border-style: solid; border-width: 18px 0 18px 30px; border-color: transparent transparent transparent rgba(255, 255, 255, 0.6); transition: opacity 0.3s; }
         .pause-icon { position: absolute; bottom: 15px; right: 15px; opacity: 0; width: 12px; height: 12px; border-left: 3px solid #fff; border-right: 3px solid #fff; transition: opacity 0.3s; z-index: 30; }
@@ -55,29 +63,28 @@
         .reel-card video { width: 100%; height: 100%; object-fit: cover; opacity: 0; transition: opacity 0.3s; z-index: 5; }
         .video-moving video { opacity: 1; }
 
+        /* POPUP: Visibility strictly controlled by 'popup-visible' class via JS */
         .reel-popup { 
             font-size: 8.5px; color: #10b981; font-weight: 800; text-transform: uppercase; 
             background: rgba(0,0,0,0.8); border: 1px solid rgba(16, 185, 129, 0.3);
             padding: 8px 12px; border-radius: 8px; opacity: 0; transition: all 0.3s ease; 
             margin-top: 15px; text-align: center; width: 260px; pointer-events: none;
         }
-        .video-moving ~ .reel-popup { opacity: 1; }
+        .popup-visible { opacity: 1; }
 
         .hint-arrow { position: absolute; top: 50%; transform: translateY(-50%); z-index: 100; opacity: 0.5; pointer-events: none; }
         .arrow-left { left: 5px; animation: pulseL 2s infinite; display: none; }
         .arrow-right { right: 5px; animation: pulseR 2s infinite; }
         .hint-arrow svg { width: 40px; height: 40px; } 
 
-        /* --- AUDIO & POP-SHINE --- */
+        /* --- AUDIO --- */
         .beat-page { display: none; flex-direction: column; gap: 0.75rem; width: 100%; }
         .beat-page.active { display: flex; }
         .beat-card { display: flex; flex-direction: column; width: 100%; transition: all 0.3s ease; filter: brightness(0.9); padding: 1.1rem; background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255,255,255,0.05); border-radius: 1.5rem; cursor: pointer; position: relative; }
         .beat-card.active-track { filter: brightness(1.3); background: rgba(255, 255, 255, 0.1); border-color: rgba(255,255,255,0.3); }
         .condensed-popup { display: none; font-size: 9px; color: #10b981; font-weight: 800; text-transform: uppercase; margin-top: 10px; text-align: center; }
         .active-track .condensed-popup { display: block; }
-        
-        /* FIX: Ensure audio internal controls are visible and clickable */
-        audio { width: 100%; filter: invert(100%) brightness(1.5); margin-top: 8px; position: relative; z-index: 10; pointer-events: auto; }
+        audio { width: 100%; filter: invert(100%) brightness(1.5); margin-top: 8px; position: relative; z-index: 10; }
 
         .shine-text { background: linear-gradient(to right, #6b7280 0%, #6b7280 45%, #ffffff 50%, #6b7280 55%, #6b7280 100%); background-size: 200% auto; color: transparent; -webkit-background-clip: text; display: inline-block; }
         @keyframes zoom-jolt { 0% { transform: scale(1); } 30% { transform: scale(1.08); } 100% { transform: scale(1); } }
@@ -88,6 +95,8 @@
         @media (min-width: 768px) {
             .beat-card { flex-direction: row; flex-wrap: wrap; justify-content: space-between; align-items: center; }
             .condensed-popup { width: 100%; order: 3; }
+            .reel-item { flex: 0 0 320px; }
+            .reel-card { width: 320px; }
         }
     </style>
 </head>
@@ -104,6 +113,7 @@
     <section id="reels">
         <div class="hint-arrow arrow-left" id="hint-L"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><polyline points="15 18 9 12 15 6"></polyline></svg></div>
         <div class="hint-arrow arrow-right" id="hint-R"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg></div>
+
         <h2 class="text-2xl font-bold mb-4 uppercase tracking-tighter text-gray-500">Process</h2>
         <div class="reels-viewport" id="reels-list">
             <div class="reel-item">
@@ -162,19 +172,6 @@
                         <div class="condensed-popup">⚡ Condensed Arrangement: Intro, Drop, Bridge & Switch-ups in short. DM for full beat!</div>
                     </div>
                 </div>
-                <div class="beat-page" id="page-2">
-                    <div class="beat-card" onclick="handleCardClick(this)">
-                        <div class="flex-1 text-left"><p class="font-bold text-lg text-white">Oseanslo (Alt Mix)</p><p class="text-xs text-gray-500 uppercase">140 BPM - DARK TRAP</p></div>
-                        <audio controls preload="metadata" onplay="handleAudioTrigger(this)" onpause="handleAudioPause(this)"><source src="https://www.dropbox.com/scl/fi/7lvw70kqbjlllw8113o6v/Oseanslo-UK-Drill-With-Hat-Movement-26-feb-26.wav?rlkey=wrak59iy3rbd6adv3u5laalo1&st=6j8ge1zf&raw=1" type="audio/mpeg"></audio>
-                        <div class="condensed-popup">⚡ Condensed Arrangement: Intro, Drop, Bridge & Switch-ups in short. DM for full beat!</div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="flex justify-center items-center gap-8 mt-6">
-                <button onclick="changeAudioPage(1)" class="bg-white/10 px-6 py-3 rounded-xl text-white font-black uppercase text-xs">Back</button>
-                <div class="flex gap-3"><span id="dot-1" class="w-2.5 h-2.5 rounded-full bg-white"></span><span id="dot-2" class="w-2.5 h-2.5 rounded-full bg-gray-700"></span></div>
-                <button onclick="changeAudioPage(2)" class="bg-white/10 px-6 py-3 rounded-xl text-white font-black uppercase text-xs">Next</button>
             </div>
         </div>
     </section>
@@ -192,26 +189,33 @@
     <script>
         function scrollToId(id) { document.getElementById(id).scrollIntoView({ behavior: 'smooth' }); }
 
-        // --- MEDIA CONTROL ---
+        // --- MASTER MEDIA KILL ---
         function pauseAllMedia() {
             document.querySelectorAll('video, audio').forEach(m => { m.pause(); m.currentTime = 0; });
             document.querySelectorAll('.reel-card').forEach(c => c.classList.remove('video-moving', 'buffering'));
             document.querySelectorAll('.beat-card').forEach(b => b.classList.remove('active-track'));
+            // Hard kill all popups
+            document.querySelectorAll('.reel-popup').forEach(p => p.classList.remove('popup-visible'));
         }
 
         // --- REELS ---
         function toggleVideo(card) {
             const v = card.querySelector('video');
+            const popup = card.nextElementSibling; // The popup is the next sibling
+            
             if (v.paused) {
+                // DON'T pause all here, handle other videos in section
                 document.querySelectorAll('video').forEach(vid => { 
-                    if(vid!==v){vid.pause(); vid.currentTime=0; vid.parentElement.classList.remove('video-moving','buffering');}
+                    if(vid!==v){vid.pause(); vid.currentTime=0; vid.parentElement.classList.remove('video-moving','buffering'); vid.parentElement.nextElementSibling.classList.remove('popup-visible');}
                 });
+                
                 card.classList.add('buffering');
                 v.play().then(() => {
                     let itv = setInterval(() => {
                         if (v.currentTime > 0.05) { 
                             card.classList.remove('buffering'); 
                             card.classList.add('video-moving'); 
+                            popup.classList.add('popup-visible'); // Show Popup
                             v.muted = false; 
                             clearInterval(itv); 
                         }
@@ -219,51 +223,35 @@
                 });
             } else { 
                 v.pause(); v.currentTime = 0; 
-                card.classList.remove('video-moving', 'buffering'); 
+                card.classList.remove('video-moving'); 
+                popup.classList.remove('popup-visible'); // Hide Popup
             }
         }
 
         // --- AUDIO ---
         function handleCardClick(card) {
             const audio = card.querySelector('audio');
-            if (audio.paused) {
-                audio.play();
-            } else {
-                audio.pause();
-                audio.currentTime = 0;
-            }
+            if (audio.paused) { audio.play(); } else { audio.pause(); audio.currentTime = 0; }
         }
 
         function handleAudioTrigger(audio) {
             const card = audio.closest('.beat-card');
             const teaser = document.getElementById('teaser-message');
             const shine = document.getElementById('shine-wrapper');
-            
             // Pause others
             document.querySelectorAll('audio').forEach(a => { if(a !== audio) { a.pause(); a.currentTime = 0; } });
             document.querySelectorAll('video').forEach(v => { v.pause(); v.currentTime = 0; });
-            
+            document.querySelectorAll('.reel-card').forEach(c => c.classList.remove('video-moving','buffering'));
+            document.querySelectorAll('.reel-popup').forEach(p => p.classList.remove('popup-visible'));
             document.querySelectorAll('.beat-card').forEach(b => b.classList.remove('active-track'));
             card.classList.add('active-track');
-
-            teaser.classList.remove('pop-active');
-            shine.classList.remove('shine-active');
-            void teaser.offsetWidth;
-            teaser.classList.add('pop-active');
-            shine.classList.add('shine-active');
+            teaser.classList.add('pop-active'); shine.classList.add('shine-active');
+            setTimeout(() => { teaser.classList.remove('pop-active'); shine.classList.remove('shine-active'); }, 2000);
         }
 
         function handleAudioPause(audio) {
             const card = audio.closest('.beat-card');
             card.classList.remove('active-track');
-        }
-
-        function changeAudioPage(p) {
-            document.querySelectorAll('.beat-page').forEach(pg => pg.classList.remove('active'));
-            document.getElementById('page-' + p).classList.add('active');
-            document.getElementById('dot-1').className = (p===1)?'w-2.5 h-2.5 rounded-full bg-white':'w-2.5 h-2.5 rounded-full bg-gray-700';
-            document.getElementById('dot-2').className = (p===2)?'w-2.5 h-2.5 rounded-full bg-white':'w-2.5 h-2.5 rounded-full bg-gray-700';
-            pauseAllMedia();
         }
 
         // --- OBSERVERS ---
@@ -289,6 +277,8 @@
                 } else {
                     const v = card.querySelector('video');
                     v.pause(); v.currentTime = 0; card.classList.remove('video-moving', 'buffering');
+                    // Ensure popup closes when swiped away
+                    card.nextElementSibling.classList.remove('popup-visible');
                 }
             });
         }, { threshold: 0.95 });
