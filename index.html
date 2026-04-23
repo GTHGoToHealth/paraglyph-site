@@ -6,7 +6,7 @@
     <title>Paraglyph | Official Beats</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        /* --- CORE --- */
+        /* --- CORE ARCHITECTURE --- */
         html, body {
             height: 100%; margin: 0; padding: 0;
             background-color: #0a0a0a; color: white;
@@ -32,18 +32,29 @@
         }
         @keyframes continuous-shine { 0% { left: -150%; } 100% { left: 150%; } }
 
-        /* --- REELS: VERTICAL SWIPE ENABLED --- */
+        /* --- REELS: VERTICAL LOCK + SNAP ENABLED --- */
+        #reels {
+            /* This allows the section to catch the vertical swipe even if the viewport blocks it */
+            touch-action: pan-y; 
+        }
+
         .reels-viewport {
             width: 100%; overflow-x: auto; display: flex;
             scroll-snap-type: x mandatory; scrollbar-width: none;
-            padding: 0 45px; gap: 25px; 
+            padding: 20px 45px; gap: 25px; 
             -webkit-overflow-scrolling: touch;
-            /* CHANGE: pan-y allows the vertical snap of the body to trigger */
-            touch-action: pan-x pan-y; 
-            overscroll-behavior-x: contain;
+            /* CRITICAL: Locks vertical drift on the carousel itself */
+            touch-action: pan-x; 
+            overscroll-behavior-y: auto;
         }
         .reels-viewport::-webkit-scrollbar { display: none; }
-        .reel-item { scroll-snap-align: center; scroll-snap-stop: always; flex: 0 0 280px; display: flex; flex-direction: column; align-items: center; }
+
+        .reel-item { 
+            scroll-snap-align: center; scroll-snap-stop: always; 
+            flex: 0 0 280px; display: flex; flex-direction: column; align-items: center; 
+            padding-top: 10px; /* Safety margin for titles */
+        }
+
         .reel-card { 
             width: 280px; aspect-ratio: 9/16; background-color: #111; 
             border-radius: 24px; overflow: hidden; border: 1px solid rgba(255,255,255,0.1); 
@@ -53,21 +64,18 @@
 
         /* Video UI */
         .video-ui { position: absolute; inset: 0; display: flex; justify-content: center; align-items: center; z-index: 20; pointer-events: none; }
-        .play-triangle { 
-            width: 0; height: 0; border-style: solid; border-width: 18px 0 18px 30px; 
-            border-color: transparent transparent transparent rgba(255, 255, 255, 0.6); 
-            transition: opacity 0.2s ease;
-        }
+        .play-triangle { width: 0; height: 0; border-style: solid; border-width: 18px 0 18px 30px; border-color: transparent transparent transparent rgba(255, 255, 255, 0.6); transition: opacity 0.2s ease; }
         .buffering .play-triangle, .video-moving .play-triangle { opacity: 0 !important; }
         .pause-icon { position: absolute; bottom: 15px; right: 15px; opacity: 0; width: 12px; height: 12px; border-left: 3px solid #fff; border-right: 3px solid #fff; transition: opacity 0.3s; z-index: 30; }
         .video-moving .pause-icon { opacity: 1; }
         .loading-spinner { position: absolute; width: 45px; height: 45px; border: 4px solid rgba(255,255,255,0.1); border-top: 4px solid #fff; border-radius: 50%; display: none; animation: spin 0.8s linear infinite; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
         .buffering .loading-spinner { display: block; }
+
         .reel-card video { width: 100%; height: 100%; object-fit: cover; opacity: 0; transition: opacity 0.5s ease; z-index: 5; }
         .video-moving video { opacity: 1; }
 
-        /* POPUP */
+        /* POPUP: Smooth Transitions */
         .reel-popup { 
             font-size: 8.5px; color: #10b981; font-weight: 800; text-transform: uppercase; 
             background: rgba(0,0,0,0.8); border: 1px solid rgba(16, 185, 129, 0.3);
@@ -77,9 +85,9 @@
         }
         .reel-popup.active { opacity: 1; transform: translateY(0); }
 
-        /* ARROWS */
+        /* HINT ARROWS: Bigger and Pulsing */
         .hint-arrow { position: absolute; top: 50%; transform: translateY(-50%); z-index: 100; opacity: 0.5; pointer-events: none; }
-        .hint-arrow svg { width: 40px; height: 40px; } 
+        .hint-arrow svg { width: 45px; height: 45px; } 
         .arrow-left { left: 5px; animation: pulseL 2s infinite; display: none; }
         .arrow-right { right: 5px; animation: pulseR 2s infinite; }
         @keyframes pulseL { 0%, 100% { transform: translate(0, -50%); opacity: 0.3; } 50% { transform: translate(-10px, -50%); opacity: 0.8; } }
@@ -117,7 +125,9 @@
     <section id="reels">
         <div class="hint-arrow arrow-left" id="hint-L"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><polyline points="15 18 9 12 15 6"></polyline></svg></div>
         <div class="hint-arrow arrow-right" id="hint-R"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg></div>
+        
         <h2 class="text-2xl font-bold mb-4 uppercase tracking-tighter text-gray-500">Process</h2>
+        
         <div class="reels-viewport" id="reels-list">
             <div class="reel-item">
                 <div class="mb-3 text-center"><div class="font-black uppercase text-sm">Seegrande</div><div class="text-[10px] text-gray-500 uppercase">Orchestral Trap</div></div>
@@ -171,6 +181,7 @@
         <div class="flex flex-col space-y-4 w-full max-w-[280px]">
             <a href="https://wa.me/917021539281" target="_blank" class="glass py-5 rounded-2xl text-center font-bold uppercase hover:bg-white hover:text-black transition">WhatsApp</a>
             <a href="https://www.instagram.com/theparaglyph/" target="_blank" class="glass py-5 rounded-2xl text-center font-bold uppercase hover:bg-white hover:text-black transition">Instagram</a>
+            <a href="mailto:theparaglyph@gmail.com" class="glass py-5 rounded-2xl text-center font-bold uppercase hover:bg-white hover:text-black transition">Email</a>
         </div>
         <div class="mt-20 text-center text-gray-600 text-[10px] uppercase">© PARAGLYPH 2026</div>
     </section>
@@ -227,11 +238,13 @@
             document.getElementById('hint-R').style.display = pos < max - 30 ? 'block' : 'none';
         });
 
+        // SECTION WATCHER
         const globalObserver = new IntersectionObserver(entries => {
             entries.forEach(e => { if (!e.isIntersecting) pauseAllMedia(); });
         }, { threshold: 0.1 });
         document.querySelectorAll('section').forEach(s => globalObserver.observe(s));
 
+        // REEL AUTOPLAY
         const reelAutoPlay = new IntersectionObserver(entries => {
             entries.forEach(e => {
                 const card = e.target.querySelector('.reel-card');
@@ -240,7 +253,8 @@
                     if (Math.abs(sectionRect.top) < 10) toggleVideo(card);
                 } else {
                     const v = card.querySelector('video');
-                    v.pause(); v.currentTime = 0; card.classList.remove('video-moving');
+                    v.pause(); v.currentTime = 0; 
+                    card.classList.remove('video-moving');
                     card.parentElement.querySelector('.reel-popup').classList.remove('active');
                 }
             });
