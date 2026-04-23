@@ -24,7 +24,7 @@
         }
         .glass { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.1); }
 
-        /* --- LOGO: VIBRANT + CINEMATIC REFINED SHINE --- */
+        /* --- LOGO: VIBRANT + TRIPLE WIDTH SLOW SHINE --- */
         .logo-wrapper { 
             position: relative; 
             width: 92vw; 
@@ -46,25 +46,26 @@
         }
         .logo-shine-overlay {
             position: absolute; top: 0; 
-            width: 100%; height: 100%;
-            /* REFINED GRADIENT: Defined core with cinematic falloff */
+            width: 150%; height: 100%; /* Wider container for tripled shine */
+            /* TRIPLED WIDTH GRADIENT: 30% spread instead of 10% */
             background: linear-gradient(to right, 
                 transparent 0%, 
-                rgba(255,255,255,0) 40%, 
-                rgba(255,255,255,0.7) 50%, 
-                rgba(255,255,255,0) 60%, 
+                rgba(255,255,255,0) 20%, 
+                rgba(255,255,255,0.6) 50%, 
+                rgba(255,255,255,0) 80%, 
                 transparent 100%
             );
             transform: skewX(-25deg);
-            animation: cinematic-slow-shine 7s infinite ease-in-out;
+            /* SLOWED DOWN: 9s cycle for ultimate cinematic feel */
+            animation: cinematic-ultra-slow 9s infinite ease-in-out;
         }
         
-        @keyframes cinematic-slow-shine {
-            0% { left: -150%; }
-            45% { left: 150%; }
-            50% { left: 150%; }
-            95% { left: -150%; }
-            100% { left: -150%; } 
+        @keyframes cinematic-ultra-slow {
+            0% { left: -180%; }
+            45% { left: 150%; }  /* Smooth slow cross */
+            50% { left: 150%; }  /* Deliberate pause */
+            95% { left: -180%; } /* Smooth return */
+            100% { left: -180%; } 
         }
 
         /* --- HERO DESCRIPTION --- */
@@ -185,7 +186,7 @@
         <div class="flex flex-col space-y-4 w-full max-w-[280px]">
             <a href="https://wa.me/917021539281" target="_blank" class="glass py-5 rounded-2xl text-center font-bold uppercase tracking-widest hover:bg-white hover:text-black transition">WhatsApp</a>
             <a href="https://www.instagram.com/theparaglyph/" target="_blank" class="glass py-5 rounded-2xl text-center font-bold uppercase tracking-widest hover:bg-white hover:text-black transition">Instagram</a>
-            <a href="mailto:theparaglyph@gmail.com" class="glass py-5 rounded-2xl text-center font-bold uppercase tracking-widest hover:bg-white hover:text-black transition">Email</a>
+            <a href="mailto:theparaglyph@gmail.com" class="glass py-5 rounded-2xl text-center font-bold uppercase hover:bg-white hover:text-black transition">Email</a>
         </div>
         <div class="mt-20 text-center text-gray-600 text-[10px] uppercase">© PARAGLYPH 2026</div>
     </section>
