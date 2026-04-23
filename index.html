@@ -31,11 +31,14 @@
         }
         @keyframes continuous-shine { 0% { left: -150%; } 100% { left: 150%; } }
 
-        /* --- REELS --- */
+        /* --- REELS: TOUCH LOCK --- */
         .reels-viewport {
             width: 100%; overflow-x: auto; display: flex;
             scroll-snap-type: x mandatory; scrollbar-width: none;
-            padding: 0 45px; gap: 25px; -webkit-overflow-scrolling: touch;
+            padding: 0 45px; gap: 25px; 
+            -webkit-overflow-scrolling: touch;
+            /* CRITICAL: Prevents vertical drift while swiping horizontally */
+            touch-action: pan-x; 
         }
         .reels-viewport::-webkit-scrollbar { display: none; }
         
@@ -73,27 +76,24 @@
         .reel-card video { width: 100%; height: 100%; object-fit: cover; opacity: 0; transition: opacity 0.3s; z-index: 5; }
         .video-moving video { opacity: 1; }
 
-        /* --- UPDATED POPUP LOGIC --- */
+        /* Emerald Popup kept as is */
         .reel-popup { 
             font-size: 8.5px; color: #10b981; font-weight: 800; text-transform: uppercase; 
             background: rgba(0,0,0,0.8); border: 1px solid rgba(16, 185, 129, 0.3);
             padding: 8px 12px; border-radius: 8px; opacity: 0; transition: all 0.3s ease; 
             margin-top: 15px; text-align: center; width: 260px; pointer-events: none;
-            transform: translateY(5px);
         }
-        /* Show only when parent card is moving */
-        .video-moving ~ .reel-popup { opacity: 1; transform: translateY(0); }
+        .video-moving ~ .reel-popup { opacity: 1; }
 
-        /* --- BIGGER ARROWS --- */
         .hint-arrow { position: absolute; top: 50%; transform: translateY(-50%); z-index: 100; opacity: 0.5; pointer-events: none; }
         .arrow-left { left: 5px; animation: pulseL 2s infinite; display: none; }
         .arrow-right { right: 5px; animation: pulseR 2s infinite; }
-        .hint-arrow svg { width: 40px; height: 40px; } /* Increased from 30px */
+        .hint-arrow svg { width: 40px; height: 40px; } 
 
         @keyframes pulseL { 0%, 100% { transform: translate(0, -50%); } 50% { transform: translate(-12px, -50%); } }
         @keyframes pulseR { 0%, 100% { transform: translate(0, -50%); } 50% { transform: translate(12px, -50%); } }
 
-        /* --- AUDIO --- */
+        /* --- AUDIO & POP-SHINE --- */
         .beat-page { display: none; flex-direction: column; gap: 0.75rem; width: 100%; }
         .beat-page.active { display: flex; }
         .beat-card { 
@@ -106,12 +106,19 @@
         .active-track .condensed-popup { display: block; }
         audio { width: 100%; filter: invert(100%) brightness(1.5); margin-top: 8px; }
 
+        /* Pop Shine Animation Classes */
+        .shine-text { background: linear-gradient(to right, #6b7280 0%, #6b7280 45%, #ffffff 50%, #6b7280 55%, #6b7280 100%); background-size: 200% auto; color: transparent; -webkit-background-clip: text; display: inline-block; }
+        @keyframes zoom-jolt { 0% { transform: scale(1); } 30% { transform: scale(1.08); } 100% { transform: scale(1); } }
+        @keyframes shine-sweep { 0% { background-position: 200% center; } 100% { background-position: -200% center; } }
+        
+        .pop-active { animation: zoom-jolt 0.5s ease-out; }
+        .shine-active { animation: shine-sweep 2s ease-in-out; }
+
         @media (min-width: 768px) {
             .beat-card { flex-direction: row; flex-wrap: wrap; justify-content: space-between; align-items: center; }
             .condensed-popup { width: 100%; order: 3; }
             .reel-item { flex: 0 0 320px; }
             .reel-card { width: 320px; }
-            .hint-arrow svg { width: 50px; height: 50px; }
         }
     </style>
 </head>
@@ -166,7 +173,7 @@
         <div class="glass p-6 md:p-10 rounded-[2.5rem] text-center w-[92%] max-w-4xl">
             <h2 class="text-2xl font-bold mb-2 italic underline uppercase text-white">Latest Drops</h2>
             <div id="teaser-message" class="text-sm font-medium italic mb-6 inline-block">
-                <span id="shine-wrapper" class="shine-text text-center px-2 text-gray-400">‼️ Arrangement Preview Mode Active</span>
+                <span id="shine-wrapper" class="shine-text text-center px-2">‼️ Arrangement Preview Mode Active</span>
             </div>
             
             <div id="audio-pages-container">
@@ -217,7 +224,7 @@
     <script>
         function scrollToId(id) { document.getElementById(id).scrollIntoView({ behavior: 'smooth' }); }
 
-        // --- REEL ARROW LOGIC ---
+        // REEL ARROW LOGIC
         const reelsViewport = document.getElementById('reels-list');
         reelsViewport.addEventListener('scroll', () => {
             const pos = reelsViewport.scrollLeft;
@@ -226,7 +233,7 @@
             document.getElementById('hint-R').style.display = pos < max - 30 ? 'block' : 'none';
         });
 
-        // --- MEDIA CONTROL ---
+        // MEDIA CONTROL
         function pauseAll() {
             document.querySelectorAll('video, audio').forEach(m => { m.pause(); m.currentTime = 0; });
             document.querySelectorAll('.reel-card').forEach(c => c.classList.remove('video-moving', 'buffering'));
@@ -257,17 +264,22 @@
             const a = card.querySelector('audio');
             const teaser = document.getElementById('teaser-message');
             const shine = document.getElementById('shine-wrapper');
+            
             if (a.paused) {
                 pauseAll();
                 a.play();
                 card.classList.add('active-track');
-                teaser.classList.add('animate-zoom-jolt'); 
-                shine.classList.add('animate-shine-bright');
-                setTimeout(() => {
-                    teaser.classList.remove('animate-zoom-jolt');
-                    shine.classList.remove('animate-shine-bright');
-                }, 2000);
-            } else { a.pause(); a.currentTime = 0; card.classList.remove('active-track'); }
+                
+                // Pop and Shine Trigger
+                teaser.classList.remove('pop-active');
+                shine.classList.remove('shine-active');
+                void teaser.offsetWidth; // Force reflow
+                teaser.classList.add('pop-active');
+                shine.classList.add('shine-active');
+            } else { 
+                a.pause(); a.currentTime = 0; 
+                card.classList.remove('active-track'); 
+            }
         }
 
         function changeAudioPage(p) {
@@ -278,12 +290,13 @@
             pauseAll();
         }
 
-        // --- OBSERVERS ---
+        // GLOBAL OBSERVER
         const globalObserver = new IntersectionObserver(entries => {
             entries.forEach(e => { if (!e.isIntersecting) pauseAll(); });
         }, { threshold: 0.1 });
         document.querySelectorAll('section').forEach(s => globalObserver.observe(s));
 
+        // REEL AUTOPLAY
         const reelAutoPlay = new IntersectionObserver(entries => {
             entries.forEach(e => {
                 const card = e.target.querySelector('.reel-card');
