@@ -53,7 +53,6 @@
             width: 100%; height: 100%;
             background: linear-gradient(to right, transparent, rgba(255,255,255,0.7), transparent);
             transform: skewX(-25deg);
-            /* SLOWED DOWN: 7s cycle for cinematic feel */
             animation: ultra-slow-shine 7s infinite ease-in-out;
         }
         
@@ -65,27 +64,27 @@
             100% { left: -150%; } 
         }
 
-        /* --- UNIFIED DESCRIPTION: NARROWER --- */
+        /* --- UNIFIED DESCRIPTION: NARROW + SINGLE LINE --- */
         .hero-content {
             text-align: center;
-            padding: 0 24px;
+            padding: 0 10px;
             margin-top: -120px; 
             z-index: 20;
-            /* Narrowing the container to match logo width */
-            max-width: 400px; 
-            width: 80%;
+            max-width: 100%; 
+            width: 100%;
         }
 
         .unified-desc {
-            font-size: 0.75rem; /* Reduced from 0.875rem to fit width */
+            font-size: 0.65rem; /* Reduced to ensure single line for the phrase */
             color: #9ca3af; 
             font-weight: 900;
             text-transform: uppercase;
-            letter-spacing: 0.15em;
-            line-height: 1.8;
+            letter-spacing: 0.08em; /* Slightly tighter for fit */
+            line-height: 2;
+            white-space: nowrap; /* Forces one line for the top phrase */
         }
 
-        /* --- REEL PAGE (PRESERVED LATEST SETTINGS) --- */
+        /* --- REEL PAGE (LOCKED) --- */
         #reels { justify-content: flex-start; padding-top: 5vh; }
         .reel-section-header { margin-bottom: 0.5rem; }
         .reels-viewport {
@@ -119,7 +118,7 @@
         @keyframes pulseR { 0%, 100% { transform: translate(0, -50%); opacity: 0.3; } 50% { transform: translate(10px, -50%); opacity: 0.8; } }
         .bottom-hint { margin-top: 15px; z-index: 50; position: relative; }
 
-        /* --- AUDIO --- */
+        /* --- AUDIO & SOCIALS --- */
         .beat-card { display: flex; flex-direction: column; width: 100%; transition: all 0.3s ease; filter: brightness(0.9); padding: 1.1rem; background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255,255,255,0.05); border-radius: 1.5rem; cursor: pointer; }
         .beat-card.active-track { filter: brightness(1.3); background: rgba(255, 255, 255, 0.1); border-color: rgba(255,255,255,0.3); }
         .condensed-popup { display: none; font-size: 9px; color: #10b981; font-weight: 800; text-transform: uppercase; margin-top: 10px; text-align: center; }
@@ -231,16 +230,12 @@
         }
 
         function handleAudioTrigger(audio) {
-            const card = audio.closest('.beat-card'), teaser = document.getElementById('teaser-message'), shine = document.getElementById('shine-wrapper');
+            const card = audio.closest('.beat-card');
             document.querySelectorAll('audio').forEach(a => { if(a !== audio) { a.pause(); a.currentTime = 0; } });
             document.querySelectorAll('video').forEach(v => { v.pause(); v.currentTime = 0; });
             document.querySelectorAll('.beat-card').forEach(b => b.classList.remove('active-track'));
             card.classList.add('active-track');
-            teaser.classList.add('pop-active'); shine.classList.add('shine-active');
-            setTimeout(() => { teaser.classList.remove('pop-active'); shine.classList.remove('shine-active'); }, 2000);
         }
-
-        function handleAudioPause(audio) { audio.closest('.beat-card').classList.remove('active-track'); }
 
         const reelsViewport = document.getElementById('reels-list');
         reelsViewport.addEventListener('scroll', () => {
