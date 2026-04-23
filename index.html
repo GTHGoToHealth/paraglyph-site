@@ -139,4 +139,87 @@
                 </div>
                 <div class="beat-card p-4 bg-white/5 rounded-2xl border border-transparent transition">
                     <div class="flex-1"><p class="font-bold text-lg text-white">Oseanslo (Alt)</p><p class="text-xs text-gray-500 uppercase">140 BPM - Dark Trap</p></div>
-                    <audio controls preload="none"><source src="
+                    <audio controls preload="none"><source src="https://www.dropbox.com/scl/fi/7lvw70kqbjlllw8113o6v/Oseanslo-UK-Drill-With-Hat-Movement-26-feb-26.wav?rlkey=wrak59iy3rbd6adv3u5laalo1&st=6j8ge1zf&raw=1" type="audio/mpeg"></audio>
+                </div>
+            </div>
+            <p class="mt-8 text-gray-500 text-[10px] animate-bounce uppercase tracking-[0.2em]">Scroll for Socials ↓</p>
+        </div>
+    </section>
+
+    <section id="socials">
+        <h2 class="text-4xl font-black mb-12 tracking-tighter uppercase">Connect</h2>
+        <div class="flex flex-col space-y-4 w-full max-w-[280px] items-center justify-center">
+            <a href="https://www.instagram.com/theparaglyph/" target="_blank" class="glass w-full py-5 rounded-2xl font-bold hover:bg-white hover:text-black transition-all flex items-center justify-center uppercase">INSTAGRAM</a>
+            <a href="https://wa.me/917021539281" target="_blank" class="glass w-full py-5 rounded-2xl font-bold hover:bg-white hover:text-black transition-all flex items-center justify-center uppercase">WHATSAPP</a>
+            <a href="mailto:theparaglyph@gmail.com" class="glass w-full py-5 rounded-2xl font-bold hover:bg-white hover:text-black transition-all flex items-center justify-center uppercase">EMAIL</a>
+        </div>
+        <div class="mt-20 text-center"><p class="text-[10px] text-gray-600 uppercase tracking-widest">© PARAGLYPH</p><button onclick="scrollToId('hero')" class="mt-6 text-gray-500 text-[10px] hover:text-white uppercase tracking-widest transition-colors">↑ Back to Top</button></div>
+    </section>
+
+    <script>
+        function scrollToId(id) {
+            const el = document.getElementById(id);
+            if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+
+        function pauseAllExcept(current) {
+            const allAudios = document.getElementsByTagName('audio');
+            const allVideos = document.getElementsByTagName('video');
+            for(let a of allAudios) { if(a !== current) a.pause(); }
+            for(let v of allVideos) { 
+                if(v !== current) { 
+                    v.pause(); 
+                    v.parentElement.classList.remove('playing'); 
+                } 
+            }
+        }
+
+        function toggleVideo(card) {
+            const video = card.querySelector('video');
+            if (video.paused) {
+                pauseAllExcept(video);
+                video.play();
+                video.muted = false;
+                card.classList.add('playing');
+            } else {
+                video.pause();
+                card.classList.remove('playing');
+            }
+        }
+
+        document.addEventListener('play', function(e){
+            const teaser = document.getElementById('teaser-message');
+            const shine = document.getElementById('shine-wrapper');
+            const cards = document.querySelectorAll('.beat-card');
+
+            pauseAllExcept(e.target);
+
+            if(e.target.tagName === 'AUDIO') {
+                cards.forEach(card => card.classList.remove('active-track'));
+                e.target.closest('.beat-card').classList.add('active-track');
+                
+                teaser.classList.remove('animate-zoom-jolt');
+                void teaser.offsetWidth; 
+                teaser.classList.add('animate-zoom-jolt');
+                shine.classList.remove('animate-shine-bright');
+                void shine.offsetWidth; 
+                shine.classList.add('animate-shine-bright');
+            }
+        }, true);
+
+        const videoObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (!entry.isIntersecting) {
+                    const video = entry.target.querySelector('video');
+                    if (video) {
+                        video.pause();
+                        entry.target.classList.remove('playing');
+                    }
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.reel-card').forEach(card => videoObserver.observe(card));
+    </script>
+</body>
+</html>
