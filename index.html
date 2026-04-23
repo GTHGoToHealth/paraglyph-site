@@ -24,13 +24,15 @@
         }
         .glass { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.1); }
 
-        /* --- LOGO: FINAL SIZE + SLOW RETURN SHINE --- */
+        /* --- LOGO: SHIFTED UP --- */
         .logo-wrapper { 
             position: relative; 
             width: 92vw; 
             max-width: 550px; 
             aspect-ratio: 1/1; 
             z-index: 10;
+            /* Shifted up to create gap below */
+            margin-top: -8vh; 
         }
         .logo-image-bg { 
             position: absolute; 
@@ -52,42 +54,35 @@
             width: 100%; height: 100%;
             background: linear-gradient(to right, transparent, rgba(255,255,255,0.7), transparent);
             transform: skewX(-25deg);
-            /* SLOWED DOWN: 5s cycle instead of 3s */
             animation: slow-return-shine 5s infinite ease-in-out;
         }
         
         @keyframes slow-return-shine {
             0% { left: -150%; }
-            45% { left: 150%; }  /* Slow swipe right */
-            50% { left: 150%; }  /* Brief hold */
-            95% { left: -150%; } /* Slow swipe back */
+            45% { left: 150%; }
+            50% { left: 150%; }
+            95% { left: -150%; }
             100% { left: -150%; } 
         }
 
-        /* --- HERO CONTENT: MIDDLE-THIRD POSITIONING --- */
-        #hero {
-            justify-content: flex-start; /* Switch from center to manual offset */
-            padding-top: 12vh; /* Lift entire block into center third */
-        }
-
+        /* --- UNIFIED DESCRIPTION --- */
         .hero-content {
             text-align: center;
             padding: 0 24px;
-            margin-top: -140px; /* Pulls text deep into the logo safe-zone */
+            margin-top: -120px; 
             z-index: 20;
         }
 
-        /* Unified Typography: Size of Wavetable, Color of Description */
-        .unified-text {
-            font-size: 0.875rem; /* ~14px (wavetable size) */
-            color: #9ca3af;     /* Gray-400 (original description color) */
+        .unified-desc {
+            font-size: 0.875rem; 
+            color: #9ca3af; /* Gray-400 */
             font-weight: 900;
             text-transform: uppercase;
-            letter-spacing: 0.1em;
-            line-height: 1.6;
+            letter-spacing: 0.12em;
+            line-height: 1.8;
         }
 
-        /* --- REEL PAGE (UNCHANGED) --- */
+        /* --- REEL PAGE (LOCKED) --- */
         #reels { justify-content: flex-start; padding-top: 5vh; }
         .reel-section-header { margin-bottom: 0.5rem; }
         .reels-viewport {
@@ -121,17 +116,12 @@
         @keyframes pulseR { 0%, 100% { transform: translate(0, -50%); opacity: 0.3; } 50% { transform: translate(10px, -50%); opacity: 0.8; } }
         .bottom-hint { margin-top: 15px; z-index: 50; position: relative; }
 
-        /* --- AUDIO & SOCIALS (RESTORED/UNCHANGED) --- */
+        /* --- AUDIO --- */
         .beat-card { display: flex; flex-direction: column; width: 100%; transition: all 0.3s ease; filter: brightness(0.9); padding: 1.1rem; background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255,255,255,0.05); border-radius: 1.5rem; cursor: pointer; }
         .beat-card.active-track { filter: brightness(1.3); background: rgba(255, 255, 255, 0.1); border-color: rgba(255,255,255,0.3); }
         .condensed-popup { display: none; font-size: 9px; color: #10b981; font-weight: 800; text-transform: uppercase; margin-top: 10px; text-align: center; }
         .active-track .condensed-popup { display: block; }
         audio { width: 100%; filter: invert(100%) brightness(1.5); margin-top: 8px; }
-        .shine-text { background: linear-gradient(to right, #6b7280 0%, #6b7280 45%, #ffffff 50%, #6b7280 55%, #6b7280 100%); background-size: 200% auto; color: transparent; -webkit-background-clip: text; display: inline-block; }
-        @keyframes zoom-jolt { 0% { transform: scale(1); } 30% { transform: scale(1.08); } 100% { transform: scale(1); } }
-        @keyframes shine-sweep { 0% { background-position: 200% center; } 100% { background-position: -200% center; } }
-        .pop-active { animation: zoom-jolt 0.5s ease-out; }
-        .shine-active { animation: shine-sweep 2s ease-in-out; }
     </style>
 </head>
 <body>
@@ -142,11 +132,11 @@
             <div class="logo-mask"><div class="logo-shine-overlay"></div></div>
         </div>
         <div class="hero-content">
-            <h1 class="text-white text-xl font-bold mb-4 tracking-tight">From IIT-Bombay to Bomb-ass Beats</h1>
-            <div class="unified-text mb-8">
-                <p>Crafting original sounds with</p>
-                <p>Wavetable Synthesis</p>
-                <p class="text-gray-500 italic mt-2">No Splice, Just Spice 🔥</p>
+            <div class="unified-desc mb-8">
+                <p>From IIT-Bombay to Bomb-ass Beats</p>
+                <p>CRAFTING ORIGINAL SOUNDS WITH</p>
+                <p>WAVETABLE SYNTHESIS</p>
+                <p>NO SPLICE, JUST SPICE 🔥</p>
             </div>
             <button onclick="scrollToId('reels')" class="bg-white text-black px-10 py-4 rounded-full font-bold uppercase tracking-widest text-sm">View Reels</button>
         </div>
