@@ -24,7 +24,7 @@
         }
         .glass { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.1); }
 
-        /* --- LOGO: FULL COLOR + ULTRA SLOW SHINE --- */
+        /* --- LOGO: VIBRANT + CINEMATIC REFINED SHINE --- */
         .logo-wrapper { 
             position: relative; 
             width: 92vw; 
@@ -34,29 +34,32 @@
             margin-top: -8vh; 
         }
         .logo-image-bg { 
-            position: absolute; 
-            inset: 0; 
+            position: absolute; inset: 0; 
             background: url('logo.png') center/contain no-repeat; 
-            z-index: 1; 
-            opacity: 1; 
+            z-index: 1; opacity: 1; 
         }
         .logo-mask { 
-            position: absolute; 
-            inset: 0; 
+            position: absolute; inset: 0; 
             -webkit-mask: url('logo.png') center/contain no-repeat; 
             mask: url('logo.png') center/contain no-repeat; 
             z-index: 2; 
         }
         .logo-shine-overlay {
-            position: absolute; 
-            top: 0; 
+            position: absolute; top: 0; 
             width: 100%; height: 100%;
-            background: linear-gradient(to right, transparent, rgba(255,255,255,0.7), transparent);
+            /* REFINED GRADIENT: Defined core with cinematic falloff */
+            background: linear-gradient(to right, 
+                transparent 0%, 
+                rgba(255,255,255,0) 40%, 
+                rgba(255,255,255,0.7) 50%, 
+                rgba(255,255,255,0) 60%, 
+                transparent 100%
+            );
             transform: skewX(-25deg);
-            animation: ultra-slow-shine 7s infinite ease-in-out;
+            animation: cinematic-slow-shine 7s infinite ease-in-out;
         }
         
-        @keyframes ultra-slow-shine {
+        @keyframes cinematic-slow-shine {
             0% { left: -150%; }
             45% { left: 150%; }
             50% { left: 150%; }
@@ -64,27 +67,25 @@
             100% { left: -150%; } 
         }
 
-        /* --- UNIFIED DESCRIPTION: NARROW + SINGLE LINE --- */
+        /* --- HERO DESCRIPTION --- */
         .hero-content {
             text-align: center;
             padding: 0 10px;
             margin-top: -120px; 
             z-index: 20;
-            max-width: 100%; 
             width: 100%;
         }
-
         .unified-desc {
-            font-size: 0.65rem; /* Reduced to ensure single line for the phrase */
+            font-size: 0.65rem; 
             color: #9ca3af; 
             font-weight: 900;
             text-transform: uppercase;
-            letter-spacing: 0.08em; /* Slightly tighter for fit */
+            letter-spacing: 0.08em; 
             line-height: 2;
-            white-space: nowrap; /* Forces one line for the top phrase */
+            white-space: nowrap; 
         }
 
-        /* --- REEL PAGE (LOCKED) --- */
+        /* --- REEL PAGE (LOCKED PHYSICS) --- */
         #reels { justify-content: flex-start; padding-top: 5vh; }
         .reel-section-header { margin-bottom: 0.5rem; }
         .reels-viewport {
@@ -170,11 +171,10 @@
 
     <section id="player">
         <div class="glass p-6 md:p-10 rounded-[2.5rem] text-center w-[92%] max-w-4xl">
-            <h2 class="text-2xl font-bold mb-2 italic underline uppercase text-white">Latest Drops</h2>
-            <div id="teaser-message" class="text-sm font-medium italic mb-6 inline-block"><span id="shine-wrapper" class="shine-text text-center px-2 text-gray-400">‼️ Arrangement Preview Mode Active</span></div>
+            <h2 class="text-2xl font-bold mb-6 italic underline uppercase text-white">Latest Drops</h2>
             <div class="beat-card mb-3" onclick="handleCardClick(this)">
                 <div class="flex-1 text-left"><p class="font-bold text-lg text-white">Oseanslo</p><p class="text-xs text-gray-500 uppercase">140 BPM - DARK TRAP</p></div>
-                <audio controls preload="metadata" onplay="handleAudioTrigger(this)" onpause="handleAudioPause(this)"><source src="https://www.dropbox.com/scl/fi/7lvw70kqbjlllw8113o6v/Oseanslo-UK-Drill-With-Hat-Movement-26-feb-26.wav?rlkey=wrak59iy3rbd6adv3u5laalo1&st=6j8ge1zf&raw=1" type="audio/mpeg"></audio>
+                <audio controls preload="metadata" onplay="handleAudioTrigger(this)"><source src="https://www.dropbox.com/scl/fi/7lvw70kqbjlllw8113o6v/Oseanslo-UK-Drill-With-Hat-Movement-26-feb-26.wav?rlkey=wrak59iy3rbd6adv3u5laalo1&st=6j8ge1zf&raw=1" type="audio/mpeg"></audio>
                 <div class="condensed-popup">⚡ Condensed Arrangement: Intro, Drop, Bridge & Switch-ups in short. DM for full beat!</div>
             </div>
         </div>
@@ -183,9 +183,9 @@
     <section id="socials">
         <h2 class="text-4xl font-black mb-12 uppercase tracking-tighter">Connect</h2>
         <div class="flex flex-col space-y-4 w-full max-w-[280px]">
-            <a href="https://wa.me/917021539281" target="_blank" class="glass py-5 rounded-2xl text-center font-bold uppercase hover:bg-white hover:text-black transition">WhatsApp</a>
-            <a href="https://www.instagram.com/theparaglyph/" target="_blank" class="glass py-5 rounded-2xl text-center font-bold uppercase hover:bg-white hover:text-black transition">Instagram</a>
-            <a href="mailto:theparaglyph@gmail.com" class="glass py-5 rounded-2xl text-center font-bold uppercase hover:bg-white hover:text-black transition">Email</a>
+            <a href="https://wa.me/917021539281" target="_blank" class="glass py-5 rounded-2xl text-center font-bold uppercase tracking-widest hover:bg-white hover:text-black transition">WhatsApp</a>
+            <a href="https://www.instagram.com/theparaglyph/" target="_blank" class="glass py-5 rounded-2xl text-center font-bold uppercase tracking-widest hover:bg-white hover:text-black transition">Instagram</a>
+            <a href="mailto:theparaglyph@gmail.com" class="glass py-5 rounded-2xl text-center font-bold uppercase tracking-widest hover:bg-white hover:text-black transition">Email</a>
         </div>
         <div class="mt-20 text-center text-gray-600 text-[10px] uppercase">© PARAGLYPH 2026</div>
     </section>
@@ -193,7 +193,7 @@
     <script>
         function scrollToId(id) { document.getElementById(id).scrollIntoView({ behavior: 'smooth' }); }
 
-        // --- TOUCH BRIDGE (PRESERVED) ---
+        // --- TOUCH BRIDGE (FIXES SWIPE-UP ON CAROUSEL) ---
         let touchStartY = 0, touchStartX = 0;
         const reelsView = document.getElementById('reels-list');
         reelsView.addEventListener('touchstart', (e) => { touchStartY = e.touches[0].clientY; touchStartX = e.touches[0].clientX; }, { passive: true });
