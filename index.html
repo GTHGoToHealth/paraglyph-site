@@ -6,6 +6,7 @@
     <title>Paraglyph | Official Beats</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
+        /* --- CORE --- */
         html, body {
             height: 100%; margin: 0; padding: 0;
             background-color: #0a0a0a; color: white;
@@ -15,11 +16,11 @@
         section {
             scroll-snap-align: start; height: 100vh; width: 100vw;
             display: flex; flex-direction: column; justify-content: center; align-items: center;
-            position: relative;
+            position: relative; overflow: hidden;
         }
         .glass { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.1); }
 
-        /* LOGO */
+        /* --- LOGO --- */
         .logo-wrapper { position: relative; width: 75vw; max-width: 400px; aspect-ratio: 1/1; }
         .logo-image-bg { position: absolute; inset: 0; background: url('logo.png') center/contain no-repeat; z-index: 1; }
         .logo-mask { position: absolute; inset: 0; -webkit-mask: url('logo.png') center/contain no-repeat; mask: url('logo.png') center/contain no-repeat; z-index: 2; }
@@ -30,47 +31,67 @@
         }
         @keyframes continuous-shine { 0% { left: -150%; } 100% { left: 150%; } }
 
-        /* SIMPLE REEL SLIDER */
-        .reels-container {
+        /* --- REELS: NO-SKIP SLIDER --- */
+        .reels-viewport {
             width: 100%; overflow-x: auto; display: flex;
             scroll-snap-type: x mandatory; scrollbar-width: none;
-            padding: 0 40px; gap: 20px;
+            padding: 0 45px; gap: 25px; -webkit-overflow-scrolling: touch;
         }
-        .reels-container::-webkit-scrollbar { display: none; }
+        .reels-viewport::-webkit-scrollbar { display: none; }
+        
         .reel-item { 
-            scroll-snap-align: center; flex: 0 0 280px; 
-            display: flex; flex-direction: column; align-items: center; 
+            scroll-snap-align: center; 
+            scroll-snap-stop: always; /* STOPS THE SKIP */
+            flex: 0 0 280px; display: flex; flex-direction: column; align-items: center; 
         }
         .reel-card { 
             width: 280px; aspect-ratio: 9/16; background-color: #111; 
             background-size: cover; background-position: center;
             border-radius: 24px; overflow: hidden; border: 1px solid rgba(255,255,255,0.1); position: relative; 
         }
-        .loading-spinner {
+
+        /* Video UI Elements */
+        .video-ui { position: absolute; inset: 0; display: flex; justify-content: center; align-items: center; z-index: 20; pointer-events: none; }
+        .play-triangle { 
+            width: 0; height: 0; border-style: solid; border-width: 18px 0 18px 30px; 
+            border-color: transparent transparent transparent rgba(255, 255, 255, 0.6); 
+            transition: opacity 0.3s;
+        }
+        .pause-icon { 
+            position: absolute; bottom: 15px; right: 15px; opacity: 0; 
+            width: 12px; height: 12px; border-left: 3px solid #fff; border-right: 3px solid #fff; 
+            transition: opacity 0.3s; z-index: 30;
+        }
+        .loading-spinner { 
             position: absolute; width: 45px; height: 45px; border: 4px solid rgba(255,255,255,0.1); 
-            border-top: 4px solid #fff; border-radius: 50%; display: none; animation: spin 0.8s linear infinite; z-index: 30;
+            border-top: 4px solid #fff; border-radius: 50%; display: none; animation: spin 0.8s linear infinite; 
         }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
         .buffering .loading-spinner { display: block; }
+        .buffering .play-triangle, .video-moving .play-triangle { opacity: 0; }
+        .video-moving .pause-icon { opacity: 1; }
 
         .reel-card video { width: 100%; height: 100%; object-fit: cover; opacity: 0; transition: opacity 0.3s; z-index: 5; }
         .video-moving video { opacity: 1; }
-        
-        .play-triangle { 
-            position: absolute; width: 0; height: 0; border-style: solid; 
-            border-width: 18px 0 18px 30px; border-color: transparent transparent transparent rgba(255, 255, 255, 0.6); 
-            z-index: 10; pointer-events: none;
-        }
-        .buffering .play-triangle, .video-moving .play-triangle { opacity: 0; }
 
+        /* Corrected Popup logic: Only shows when video-moving class is present on PARENT reel-card */
         .reel-popup { 
             font-size: 8.5px; color: #10b981; font-weight: 800; text-transform: uppercase; 
             background: rgba(0,0,0,0.8); border: 1px solid rgba(16, 185, 129, 0.3);
-            padding: 8px 12px; border-radius: 8px; opacity: 0; transition: opacity 0.4s; margin-top: 15px; text-align: center; width: 260px;
+            padding: 8px 12px; border-radius: 8px; opacity: 0; transition: opacity 0.4s; 
+            margin-top: 15px; text-align: center; width: 260px; pointer-events: none;
         }
-        .video-moving + .reel-popup { opacity: 1; }
+        .video-moving ~ .reel-popup { opacity: 1; }
 
-        /* AUDIO SECTION */
+        /* HINT ARROWS */
+        .hint-arrow { position: absolute; top: 50%; transform: translateY(-50%); z-index: 100; opacity: 0.4; pointer-events: none; }
+        .arrow-left { left: 10px; animation: pulseL 2s infinite; display: none; }
+        .arrow-right { right: 10px; animation: pulseR 2s infinite; }
+        @keyframes pulseL { 0%, 100% { transform: translate(0, -50%); } 50% { transform: translate(-8px, -50%); } }
+        @keyframes pulseR { 0%, 100% { transform: translate(0, -50%); } 50% { transform: translate(8px, -50%); } }
+
+        /* --- AUDIO --- */
         .beat-page { display: none; flex-direction: column; gap: 0.75rem; width: 100%; }
         .beat-page.active { display: flex; }
         .beat-card { 
@@ -83,12 +104,12 @@
         .active-track .condensed-popup { display: block; }
         audio { width: 100%; filter: invert(100%) brightness(1.5); margin-top: 8px; }
 
-        /* POP AND SHINE */
+        /* POP SHINE ANIMATIONS */
         @keyframes zoom-jolt { 0% { transform: scale(1); } 30% { transform: scale(1.05); } 100% { transform: scale(1); } }
         .animate-zoom-jolt { animation: zoom-jolt 0.5s ease-out; }
         .shine-text { background: linear-gradient(to right, #6b7280 0%, #6b7280 45%, #ffffff 50%, #6b7280 55%, #6b7280 100%); background-size: 200% auto; color: transparent; -webkit-background-clip: text; display: inline-block; }
         @keyframes shine-sweep { 0% { background-position: 200% center; } 100% { background-position: -200% center; } }
-        .animate-shine-bright { animation: shine-sweep 2.5s ease-in-out; }
+        .animate-shine-bright { animation: shine-sweep 2s ease-in-out; }
 
         @media (min-width: 768px) {
             .beat-card { flex-direction: row; flex-wrap: wrap; justify-content: space-between; align-items: center; }
@@ -103,43 +124,46 @@
     <section id="hero">
         <div class="logo-wrapper"><div class="logo-image-bg"></div><div class="logo-mask"><div class="logo-shine-overlay"></div></div></div>
         <div class="text-center mt-6 px-6">
-            <p class="text-gray-400 text-lg mb-6">Wavetable Synthesis Specialist 🔥</p>
+            <p class="text-gray-400 text-lg mb-6 tracking-wide">Wavetable Synthesis Specialist 🔥</p>
             <button onclick="scrollToId('reels')" class="bg-white text-black px-10 py-4 rounded-full font-bold uppercase tracking-widest text-sm">View Reels</button>
         </div>
     </section>
 
     <section id="reels">
+        <div class="hint-arrow arrow-left" id="hint-L"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><polyline points="15 18 9 12 15 6"></polyline></svg></div>
+        <div class="hint-arrow arrow-right" id="hint-R"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg></div>
+
         <h2 class="text-2xl font-bold mb-4 uppercase tracking-tighter text-gray-500">Process</h2>
-        <div class="reels-container">
+        <div class="reels-viewport" id="reels-list">
             <div class="reel-item">
-                <div class="mb-3 text-center"><div class="font-black uppercase text-sm">Oseanslo</div><div class="text-[10px] text-gray-400">Wavetable Texture</div></div>
+                <div class="mb-3 text-center"><div class="font-black uppercase text-sm">Oseanslo</div><div class="text-[10px] text-gray-500 uppercase">Wavetable Texture</div></div>
                 <div class="reel-card" style="background-image:url('Oseanslo4Thumbnail.jpg')" onclick="toggleVideo(this)">
                     <video src="Oseanslo4.mp4" loop muted playsinline preload="auto"></video>
-                    <div class="loading-spinner"></div>
-                    <div class="play-triangle"></div>
+                    <div class="video-ui"><div class="play-triangle"></div><div class="loading-spinner"></div></div>
+                    <div class="pause-icon"></div>
                 </div>
                 <div class="reel-popup">⚡ Fast-Load Preview: Audio compressed for performance. Swipe down for studio quality.</div>
             </div>
             <div class="reel-item">
-                <div class="mb-3 text-center"><div class="font-black uppercase text-sm">Seegrande</div><div class="text-[10px] text-gray-400">Orchestral Trap</div></div>
+                <div class="mb-3 text-center"><div class="font-black uppercase text-sm">Seegrande</div><div class="text-[10px] text-gray-500 uppercase">Orchestral Trap</div></div>
                 <div class="reel-card" style="background-image:url('Seegrande4Thumbnail.jpg')" onclick="toggleVideo(this)">
                     <video src="Seegrande4.mp4" loop muted playsinline preload="auto"></video>
-                    <div class="loading-spinner"></div>
-                    <div class="play-triangle"></div>
+                    <div class="video-ui"><div class="play-triangle"></div><div class="loading-spinner"></div></div>
+                    <div class="pause-icon"></div>
                 </div>
                 <div class="reel-popup">⚡ Fast-Load Preview: Audio compressed for performance. Swipe down for studio quality.</div>
             </div>
             <div class="reel-item">
-                <div class="mb-3 text-center"><div class="font-black uppercase text-sm">Glitchuck</div><div class="text-[10px] text-gray-400">Granular Processing</div></div>
+                <div class="mb-3 text-center"><div class="font-black uppercase text-sm">Glitchuck</div><div class="text-[10px] text-gray-500 uppercase">Granular Glitch</div></div>
                 <div class="reel-card" style="background-image:url('Glitchuck4Thumbnail.jpg')" onclick="toggleVideo(this)">
                     <video src="Glitchuck4.mp4" loop muted playsinline preload="auto"></video>
-                    <div class="loading-spinner"></div>
-                    <div class="play-triangle"></div>
+                    <div class="video-ui"><div class="play-triangle"></div><div class="loading-spinner"></div></div>
+                    <div class="pause-icon"></div>
                 </div>
                 <div class="reel-popup">⚡ Fast-Load Preview: Audio compressed for performance. Swipe down for studio quality.</div>
             </div>
         </div>
-        <p class="mt-4 text-gray-600 text-[10px] animate-bounce uppercase">Swipe for more ↓</p>
+        <p class="mt-6 text-gray-600 text-[10px] animate-bounce uppercase tracking-widest">Swipe for more ↓</p>
     </section>
 
     <section id="player">
@@ -154,24 +178,24 @@
                     <div class="beat-card" onclick="toggleAudio(this)">
                         <div class="flex-1 text-left"><p class="font-bold text-lg text-white">Oseanslo</p><p class="text-xs text-gray-500 uppercase">140 BPM - DARK TRAP</p></div>
                         <audio controls preload="metadata"><source src="https://www.dropbox.com/scl/fi/7lvw70kqbjlllw8113o6v/Oseanslo-UK-Drill-With-Hat-Movement-26-feb-26.wav?rlkey=wrak59iy3rbd6adv3u5laalo1&st=6j8ge1zf&raw=1" type="audio/mpeg"></audio>
-                        <div class="condensed-popup">⚡ Condensed Arrangement of the full beat: Intro, Drop, Bridge & Switch-ups in short. DM for full beat!</div>
+                        <div class="condensed-popup">⚡ Condensed Arrangement: Intro, Drop, Bridge & Switch-ups in short. DM for full beat!</div>
                     </div>
                     <div class="beat-card" onclick="toggleAudio(this)">
                         <div class="flex-1 text-left"><p class="font-bold text-lg text-white">Seegrande</p><p class="text-xs text-gray-500 uppercase">140 BPM - ORCHESTRAL TRAP</p></div>
                         <audio controls preload="metadata"><source src="https://www.dropbox.com/scl/fi/asm30wzqm5zami2wzhmxf/Central-Cee-Type-140BPM-Seegrande-For-DropBox-Mix-Master.wav?rlkey=8alm7lrmo377zb7ndaks8aujr&st=t0vd7i4g&raw=1" type="audio/mpeg"></audio>
-                        <div class="condensed-popup">⚡ Condensed Arrangement of the full beat: Intro, Drop, Bridge & Switch-ups in short. DM for full beat!</div>
+                        <div class="condensed-popup">⚡ Condensed Arrangement: Intro, Drop, Bridge & Switch-ups in short. DM for full beat!</div>
                     </div>
                     <div class="beat-card" onclick="toggleAudio(this)">
                         <div class="flex-1 text-left"><p class="font-bold text-lg text-white">Glitchuck</p><p class="text-xs text-gray-500 uppercase">140 BPM - HYPERPOP</p></div>
                         <audio controls preload="metadata"><source src="https://www.dropbox.com/scl/fi/kzcns9tm01ylp597ktt41/Glitch-140-BPM-RnB-Beat-DropBox-Master.wav?rlkey=ertxg6bfxmf7mxaczu2128md6&st=bpmhjwub&raw=1" type="audio/mpeg"></audio>
-                        <div class="condensed-popup">⚡ Condensed Arrangement of the full beat: Intro, Drop, Bridge & Switch-ups in short. DM for full beat!</div>
+                        <div class="condensed-popup">⚡ Condensed Arrangement: Intro, Drop, Bridge & Switch-ups in short. DM for full beat!</div>
                     </div>
                 </div>
                 <div class="beat-page" id="page-2">
                     <div class="beat-card" onclick="toggleAudio(this)">
                         <div class="flex-1 text-left"><p class="font-bold text-lg text-white">Oseanslo (Alt Mix)</p><p class="text-xs text-gray-500 uppercase">140 BPM - DARK TRAP</p></div>
                         <audio controls preload="metadata"><source src="https://www.dropbox.com/scl/fi/7lvw70kqbjlllw8113o6v/Oseanslo-UK-Drill-With-Hat-Movement-26-feb-26.wav?rlkey=wrak59iy3rbd6adv3u5laalo1&st=6j8ge1zf&raw=1" type="audio/mpeg"></audio>
-                        <div class="condensed-popup">⚡ Condensed Arrangement of the full beat: Intro, Drop, Bridge & Switch-ups in short. DM for full beat!</div>
+                        <div class="condensed-popup">⚡ Condensed Arrangement: Intro, Drop, Bridge & Switch-ups in short. DM for full beat!</div>
                     </div>
                 </div>
             </div>
@@ -197,7 +221,16 @@
     <script>
         function scrollToId(id) { document.getElementById(id).scrollIntoView({ behavior: 'smooth' }); }
 
-        // MEDIA CONTROL
+        // --- REEL ARROW LOGIC ---
+        const reelsViewport = document.getElementById('reels-list');
+        reelsViewport.addEventListener('scroll', () => {
+            const pos = reelsViewport.scrollLeft;
+            const max = reelsViewport.scrollWidth - reelsViewport.clientWidth;
+            document.getElementById('hint-L').style.display = pos > 20 ? 'block' : 'none';
+            document.getElementById('hint-R').style.display = pos < max - 20 ? 'block' : 'none';
+        });
+
+        // --- MEDIA CONTROL ---
         function pauseAll() {
             document.querySelectorAll('video, audio').forEach(m => { m.pause(); m.currentTime = 0; });
             document.querySelectorAll('.reel-card').forEach(c => c.classList.remove('video-moving', 'buffering'));
@@ -207,7 +240,8 @@
         function toggleVideo(card) {
             const v = card.querySelector('video');
             if (v.paused) {
-                pauseAll();
+                // Keep audio playing if it was started, but kill other videos
+                document.querySelectorAll('video').forEach(vid => { if(vid!==v){vid.pause(); vid.currentTime=0; vid.parentElement.classList.remove('video-moving','buffering');}});
                 card.classList.add('buffering');
                 v.play().then(() => {
                     let itv = setInterval(() => {
@@ -238,8 +272,13 @@
             pauseAll();
         }
 
-        // AUTO-PLAY REELS ON SWIPE
-        const reelObserver = new IntersectionObserver(entries => {
+        // --- OBSERVERS ---
+        const globalObserver = new IntersectionObserver(entries => {
+            entries.forEach(e => { if (!e.isIntersecting) pauseAll(); });
+        }, { threshold: 0.1 });
+        document.querySelectorAll('section').forEach(s => globalObserver.observe(s));
+
+        const reelAutoPlay = new IntersectionObserver(entries => {
             entries.forEach(e => {
                 if (e.isIntersecting) {
                     const sectionRect = document.getElementById('reels').getBoundingClientRect();
@@ -247,13 +286,7 @@
                 }
             });
         }, { threshold: 0.9 });
-        document.querySelectorAll('.reel-item').forEach(i => reelObserver.observe(i));
-
-        // GLOBAL KILL SWITCH
-        const globalObserver = new IntersectionObserver(entries => {
-            entries.forEach(e => { if (!e.isIntersecting) pauseAll(); });
-        }, { threshold: 0.01 });
-        document.querySelectorAll('section').forEach(s => globalObserver.observe(s));
+        document.querySelectorAll('.reel-item').forEach(i => reelAutoPlay.observe(i));
     </script>
 </body>
 </html>
