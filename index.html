@@ -6,18 +6,24 @@
     <title>Paraglyph | Sound Design</title>
     
     <link rel="preload" href="logo.png" as="image">
+    <link rel="preconnect" href="https://www.dropbox.com">
+    <link rel="dns-prefetch" href="https://www.dropbox.com">
     <script src="https://cdn.tailwindcss.com" defer></script>
 
     <style>
-        /* --- LOADING PHYSICS --- */
-        html, body { height: 100%; margin: 0; padding: 0; background-color: #0a0a0a; color: white; font-family: 'Inter', sans-serif; overflow: hidden; }
+        /* --- GLOBAL & LOADING PHYSICS --- */
+        html, body { height: 100%; margin: 0; padding: 0; background-color: #000; color: white; font-family: 'Inter', sans-serif; overflow: hidden; -webkit-font-smoothing: antialiased; }
+        body { overflow-y: scroll; scroll-snap-type: y mandatory; }
+        section { scroll-snap-align: start; height: 100vh; width: 100vw; display: flex; flex-direction: column; align-items: center; position: relative; overflow: hidden; }
+        
         #skeleton-loader { position: absolute; top: 40%; left: 50%; transform: translate(-50%, -50%); width: 150px; height: 150px; background: radial-gradient(circle, rgba(255,255,255,0.15) 0%, transparent 70%); border-radius: 50%; filter: blur(30px); animation: skeleton-pulse 1.2s infinite ease-in-out; z-index: 999; }
         @keyframes skeleton-pulse { 0%, 100% { opacity: 0.3; transform: translate(-50%, -50%) scale(1); } 50% { opacity: 0.8; transform: translate(-50%, -50%) scale(1.2); } }
+        
         #site-wrapper { opacity: 0; transition: opacity 0.6s ease-in-out; visibility: hidden; }
         body.loaded #site-wrapper { opacity: 1; visibility: visible; }
         body.loaded #skeleton-loader { display: none !important; }
 
-        /* --- PAGE 1: HERO (FROZEN) --- */
+        /* --- PAGE 1: HERO --- */
         .logo-wrapper { position: relative; width: 92vw; max-width: 550px; aspect-ratio: 1/1; z-index: 10; margin: 0 auto; margin-top: 10vh; }
         .logo-image-bg { position: absolute; inset: 0; background: url('logo.png') center/contain no-repeat; z-index: 1; }
         .logo-mask { position: absolute; inset: 0; -webkit-mask: url('logo.png') center/contain no-repeat; mask: url('logo.png') center/contain no-repeat; z-index: 2; }
@@ -26,12 +32,7 @@
         .hero-content { text-align: center; margin-top: -120px; z-index: 20; width: 100%; }
         .unified-desc { font-size: 11px; color: #9ca3af; font-weight: 900; text-transform: uppercase; letter-spacing: 0.08em; line-height: 2; white-space: nowrap; }
         .scroll-up-hint { position: absolute; bottom: 60px; left: 50%; transform: translateX(-50%); display: flex; flex-direction: column; align-items: center; gap: 10px; opacity: 0.9; z-index: 30; animation: bounce-strong 2s infinite; }
-        @keyframes bounce-strong { 0%, 20%, 50%, 80%, 100% { transform: translate(-50%, 0); } 40% { transform: translate(-50%, -15px); } 60% { transform: translate(-50%, -7px); } }
-
-        /* --- GLOBAL PHYSICS --- */
-        body { overflow-y: scroll; scroll-snap-type: y mandatory; }
-        section { scroll-snap-align: start; height: 100vh; width: 100vw; display: flex; flex-direction: column; align-items: center; position: relative; overflow: hidden; }
-        .glass { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.1); }
+        @keyframes bounce-strong { 0%, 20%, 50%, 80%, 100% { transform: translate(-50%, 0); } 40% { transform: translate(-50%, -15px); } }
 
         /* --- PAGE 2: REELS --- */
         #reels { justify-content: flex-start; padding-top: 1vh; } 
@@ -50,14 +51,37 @@
         .video-moving .pause-icon { opacity: 1; }
         .reel-card video { width: 100%; height: 100%; object-fit: cover; opacity: 0; transition: opacity 0.5s; z-index: 5; }
         .video-moving video { opacity: 1; }
-        .reel-popup { font-size: 8.5px; color: #10b981; font-weight: 800; text-transform: uppercase; background: rgba(0,0,0,0.8); border: 1px solid rgba(16, 185, 129, 0.3); padding: 8px 12px; border-radius: 8px; margin-top: 10px; text-align: center; width: 250px; opacity: 0; transform: translateY(10px); transition: opacity 0.4s ease, transform 0.4s ease; }
+        .reel-popup { font-size: 8.5px; color: #10b981; font-weight: 800; text-transform: uppercase; background: rgba(0,0,0,0.8); border: 1px solid rgba(16, 185, 129, 0.3); padding: 8px 12px; border-radius: 8px; margin-top: 10px; text-align: center; width: 250px; opacity: 0; transform: translateY(10px); transition: all 0.4s ease; }
         .reel-popup.active { opacity: 1; transform: translateY(0); }
-        .bottom-hint-reels { margin-top: 3vh; } 
 
-        /* --- PAGE 3: PLAYER --- */
-        .beat-card { display: flex; flex-direction: column; width: 100%; transition: all 0.3s ease; padding: 1.1rem; background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255,255,255,0.05); border-radius: 1.5rem; cursor: pointer; }
-        .beat-card.active-track { background: rgba(255, 255, 255, 0.1); border-color: rgba(255,255,255,0.3); }
-        audio { width: 100%; filter: invert(100%) brightness(1.5); margin-top: 8px; }
+        /* --- PAGE 3: PLAYER (NEW MASTER) --- */
+        #player { justify-content: space-between; padding: 2vh 0 4vh 0; }
+        .glass-player { background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.1); width: 92%; max-width: 390px; padding: 1.8rem 1.4rem; border-radius: 2.2rem; flex-shrink: 1; display: flex; flex-direction: column; }
+        #beat-list { contain: layout; min-height: 320px; }
+        .beat-card { 
+            transform: translateZ(0); will-change: background-color, border-color, transform; backface-visibility: hidden; 
+            transition: background-color 0.3s ease, border-color 0.3s ease, transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
+            background: #0d0d0d; border: 1px solid rgba(255,255,255,0.05); width: 100%; padding: 1.1rem; border-radius: 1.4rem; margin-bottom: 0.7rem; position: relative; contain: content;
+        }
+        .active-track { background: #1a1a1a !important; border-color: rgba(255, 215, 0, 0.6) !important; transform: scale(1.05) translateZ(0); z-index: 10; }
+        .beat-loader { width: 14px; height: 14px; border: 2px solid rgba(255, 215, 0, 0.1); border-top: 2px solid #FFD700; border-radius: 50%; display: none; animation: spin 0.8s linear infinite; position: absolute; top: 1.2rem; right: 1.2rem; }
+        .active-track.is-loading .beat-loader { display: block; }
+        .yellow-popup { background: #FFD700; color: #000; font-size: 8px; font-weight: 900; padding: 3px 8px; border-radius: 4px; text-transform: uppercase; margin-top: 8px; opacity: 0; transform: translateY(5px); transition: all 0.4s ease; display: inline-block; }
+        .active-track .yellow-popup { opacity: 1; transform: translateY(0); }
+        .shimmer-active { animation: subheading-glow 1.2s ease-in-out; }
+        @keyframes subheading-glow { 0% { color: #6b7280; text-shadow: none; transform: scale(1); } 30% { color: #FFD700; text-shadow: 0 0 15px rgba(255, 215, 0, 0.7); transform: scale(1.03); } 100% { color: #6b7280; text-shadow: none; transform: scale(1); } }
+        #prevBtn, #nextBtn { color: #ffffff; font-weight: 900; font-size: 12px; text-transform: uppercase; }
+        #prevBtn:disabled, #nextBtn:disabled { color: #888; }
+        .p-dot { width: 6px; height: 6px; border-radius: 50%; background: #222; transition: 0.3s; }
+        .p-dot.active { background: #FFD700; width: 18px; border-radius: 10px; }
+        #player audio { width: 100%; height: 35px; margin-top: 8px; filter: invert(100%) hue-rotate(180deg) brightness(1.6) contrast(1.1); opacity: 0.9; }
+        .active-track audio { filter: invert(100%) hue-rotate(180deg) brightness(2.0) contrast(1.2); opacity: 1; }
+        .swipe-hint-container { text-align: center; height: 40px; display: flex; align-items: center; justify-content: center; gap: 10px; margin-top: 15px; animation: jitter-swipe 3s infinite ease-in-out; }
+        @keyframes jitter-swipe { 0%, 100%, 20%, 50%, 80% { transform: translateY(0); } 10% { transform: translateY(-3px); } 40% { transform: translateY(-5px); } }
+        .swipe-text { font-weight: 900; font-size: 10px; text-transform: uppercase; tracking: 0.4em; color: #888; }
+
+        /* --- PAGE 4: SOCIALS --- */
+        .glass-social { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.1); }
     </style>
 </head>
 <body>
@@ -119,29 +143,41 @@
             <div class="bottom-hint-reels"><p class="text-gray-600 text-[10px] animate-bounce uppercase tracking-widest">Swipe for more ↓</p></div>
         </section>
 
-        <section id="player" class="justify-center">
-            <div class="glass p-6 md:p-10 rounded-[2.5rem] text-center w-[92%] max-w-4xl">
-                <h2 class="text-2xl font-bold mb-8 italic underline uppercase text-white">Latest Drops</h2>
-                <div class="beat-card mb-3" onclick="handleCardClick(this)">
-                    <div class="text-left"><p class="font-bold text-lg text-white">Oseanslo</p><p class="text-xs text-gray-500 uppercase">140 BPM - DARK TRAP</p></div>
-                    <audio controls preload="metadata" onplay="handleAudioTrigger(this)"><source src="https://www.dropbox.com/scl/fi/7lvw70kqbjlllw8113o6v/Oseanslo-UK-Drill-With-Hat-Movement-26-feb-26.wav?rlkey=wrak59iy3rbd6adv3u5laalo1&st=6j8ge1zf&raw=1" type="audio/mpeg"></audio>
+        <section id="player">
+            <div class="text-center py-5">
+                <h2 class="text-2xl font-black uppercase tracking-tighter mb-1">Latest Drops</h2>
+                <p id="subheading" class="text-[9px] tracking-[0.2em] text-gray-500 uppercase leading-relaxed font-bold px-6">
+                    condensed arrangement - DM for full beat
+                </p>
+            </div>
+
+            <div class="glass-player">
+                <div id="beat-list"></div>
+                <div class="flex items-center justify-center gap-10 mt-6 pb-1">
+                    <button id="prevBtn" aria-label="Previous Page">Back</button>
+                    <div id="pagination-dots" class="flex gap-2"></div>
+                    <button id="nextBtn" aria-label="Next Page">Next</button>
                 </div>
+            </div>
+
+            <div class="swipe-hint-container">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#888" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M18 15l-6-6-6 6"/></svg>
+                <span class="swipe-text">Contacts</span>
             </div>
         </section>
 
         <section id="socials" class="justify-center">
             <h2 class="text-4xl font-black mb-12 uppercase tracking-tighter">Connect</h2>
             <div class="flex flex-col space-y-4 w-full max-w-[280px]">
-                <a href="https://wa.me/917021539281" target="_blank" class="glass py-5 rounded-2xl text-center font-bold uppercase tracking-widest hover:bg-white hover:text-black transition">WhatsApp</a>
-                <a href="https://www.instagram.com/theparaglyph/" target="_blank" class="glass py-5 rounded-2xl text-center font-bold uppercase tracking-widest hover:bg-white hover:text-black transition">Instagram</a>
+                <a href="https://wa.me/917021539281" target="_blank" class="glass-social py-5 rounded-2xl text-center font-bold uppercase tracking-widest hover:bg-white hover:text-black transition">WhatsApp</a>
+                <a href="https://www.instagram.com/theparaglyph/" target="_blank" class="glass-social py-5 rounded-2xl text-center font-bold uppercase tracking-widest hover:bg-white hover:text-black transition">Instagram</a>
             </div>
             <div class="mt-20 text-gray-600 text-[10px] uppercase">© PARAGLYPH 2026</div>
         </section>
     </div>
 
     <script>
-        let hasEnteredReels = false;
-
+        // --- GLOBAL & PRELOAD ---
         const checkImage = setInterval(() => {
             const img = new Image(); img.src = "logo.png";
             if (img.complete) { document.body.classList.add('loaded'); clearInterval(checkImage); }
@@ -150,61 +186,101 @@
 
         function scrollToId(id) { document.getElementById(id).scrollIntoView({ behavior: 'smooth' }); }
 
-        // --- THE LOGIC FIX: Handles Tap vs Swipe correctly ---
+        // --- PAGE 2: REEL LOGIC ---
+        let hasEnteredReels = false;
         function toggleVideo(card, isUserTap = true) {
             const v = card.querySelector('video');
             const popup = card.parentElement.querySelector('.reel-popup');
-
-            // 1. If video is playing and USER TAPS -> STOP IT
             if (!v.paused && isUserTap) {
-                v.pause();
-                card.classList.remove('video-moving');
-                popup.classList.remove('active');
-                return;
+                v.pause(); card.classList.remove('video-moving'); popup.classList.remove('active'); return;
             }
-
-            // 2. If video is paused OR it's a swipe-based autoplay -> START FROM 0
             document.querySelectorAll('video').forEach(vid => { vid.pause(); vid.parentElement.classList.remove('video-moving','buffering'); });
             document.querySelectorAll('audio').forEach(aud => aud.pause());
-            
-            v.currentTime = 0; // Always start fresh
-            v.muted = false; 
-            card.classList.add('buffering');
-            
+            v.currentTime = 0; v.muted = false; card.classList.add('buffering');
             v.play().then(() => {
                 let itv = setInterval(() => { 
-                    if (v.currentTime > 0.1) { 
-                        card.classList.remove('buffering'); 
-                        card.classList.add('video-moving'); 
-                        popup.classList.add('active'); 
-                        clearInterval(itv); 
-                    } 
+                    if (v.currentTime > 0.1) { card.classList.remove('buffering'); card.classList.add('video-moving'); popup.classList.add('active'); clearInterval(itv); } 
                 }, 100);
             });
         }
 
-        function handleCardClick(card) { const audio = card.querySelector('audio'); if (audio.paused) audio.play(); else audio.pause(); }
-        function handleAudioTrigger(audio) { document.querySelectorAll('video').forEach(v => { v.pause(); v.parentElement.classList.remove('video-moving'); }); document.querySelectorAll('audio').forEach(a => { if(a !== audio) { a.pause(); a.currentTime = 0; } }); }
+        // --- PAGE 3: PLAYER DATA & LOGIC ---
+        const allBeats = [
+            { title: 'Oseanslo', bpm: '140', genre: 'Dark Trap', url: 'https://www.dropbox.com/scl/fi/7lvw70kqbjlllw8113o6v/Oseanslo-UK-Drill-With-Hat-Movement-26-feb-26.wav?rlkey=wrak59iy3rbd6adv3u5laalo1&st=6j8ge1zf&raw=1' },
+            { title: 'Seegrande', bpm: '130', genre: 'Orchestral', url: 'https://www.dropbox.com/scl/fi/7lvw70kqbjlllw8113o6v/Oseanslo-UK-Drill-With-Hat-Movement-26-feb-26.wav?rlkey=wrak59iy3rbd6adv3u5laalo1&st=6j8ge1zf&raw=1' },
+            { title: 'Glitchuck', bpm: '150', genre: 'Glitch', url: 'https://www.dropbox.com/scl/fi/7lvw70kqbjlllw8113o6v/Oseanslo-UK-Drill-With-Hat-Movement-26-feb-26.wav?rlkey=wrak59iy3rbd6adv3u5laalo1&st=6j8ge1zf&raw=1' },
+            { title: 'Wavetable', bpm: '128', genre: 'Electronic', url: 'https://www.dropbox.com/scl/fi/7lvw70kqbjlllw8113o6v/Oseanslo-UK-Drill-With-Hat-Movement-26-feb-26.wav?rlkey=wrak59iy3rbd6adv3u5laalo1&st=6j8ge1zf&raw=1' }
+        ];
 
-        const reelsSectionObserver = new IntersectionObserver(entries => {
-            if (entries[0].isIntersecting) {
-                setTimeout(() => { hasEnteredReels = true; }, 500); 
-            } else {
-                hasEnteredReels = false; 
+        let currentPage = 1;
+        const beatsPerPage = 3;
+
+        function renderBeats() {
+            const container = document.getElementById('beat-list');
+            const dotsContainer = document.getElementById('pagination-dots');
+            const fragment = document.createDocumentFragment();
+            const dotsFragment = document.createDocumentFragment();
+            const start = (currentPage - 1) * beatsPerPage;
+            const paginatedBeats = allBeats.slice(start, start + beatsPerPage);
+            const totalPages = Math.ceil(allBeats.length / beatsPerPage);
+
+            paginatedBeats.forEach(beat => {
+                const card = document.createElement('div');
+                card.className = 'beat-card flex flex-col items-center';
+                card.onclick = (e) => handleCardTap(e, card);
+                card.innerHTML = `<div class="beat-loader"></div><div class="flex justify-between w-full mb-1 pointer-events-none"><div class="text-left"><p class="font-black text-[12px] uppercase tracking-wider">${beat.title}</p><p class="text-[9px] text-gray-400 font-bold uppercase tracking-widest">${beat.bpm} BPM • ${beat.genre}</p></div></div><audio controls preload="metadata"><source src="${beat.url}" type="audio/mpeg"></audio><div class="yellow-popup">DM for full beat</div>`;
+                fragment.appendChild(card);
+                const audio = card.querySelector('audio');
+                audio.onplay = () => { 
+                    document.querySelectorAll('video').forEach(v => v.pause());
+                    syncAudioUI(audio); 
+                    card.classList.add('is-loading'); 
+                };
+                audio.onplaying = () => {
+                    const startPos = audio.currentTime;
+                    const wd = setInterval(() => { if (audio.currentTime !== startPos && !audio.paused) { card.classList.remove('is-loading'); fadeInAudio(audio); clearInterval(wd); } }, 50);
+                };
+                audio.onseeking = function() { this.volume = 0; if (card.classList.contains('active-track')) card.classList.add('is-loading'); if(!this.paused){this.pause(); this.wasPlaying=true;} };
+                audio.onseeked = function() { this.volume = 0; setTimeout(() => { if(this.wasPlaying){this.play(); this.wasPlaying=false;} else {card.classList.remove('is-loading');} }, 50); };
+            });
+
+            for (let i = 1; i <= totalPages; i++) {
+                const dot = document.createElement('div');
+                dot.className = `p-dot ${i === currentPage ? 'active' : ''}`;
+                dotsFragment.appendChild(dot);
             }
-        }, { threshold: 0.5 });
+            container.replaceChildren(fragment);
+            dotsContainer.replaceChildren(dotsFragment);
+            document.getElementById('prevBtn').disabled = currentPage === 1;
+            document.getElementById('nextBtn').disabled = start + beatsPerPage >= allBeats.length;
+        }
+
+        function fadeInAudio(audio) {
+            if (audio.fadeTimer) clearInterval(audio.fadeTimer);
+            audio.volume = 0; let vol = 0;
+            audio.fadeTimer = setInterval(() => { if (vol < 1) { vol += 0.05; audio.volume = Math.min(vol, 1); } else { clearInterval(audio.fadeTimer); } }, 10);
+        }
+
+        function handleCardTap(e, card) { const audio = card.querySelector('audio'); if (e.target.tagName === 'AUDIO') return; audio.paused ? audio.play() : audio.pause(); }
+
+        function syncAudioUI(currentAudio) {
+            const card = currentAudio.closest('.beat-card');
+            const subheading = document.getElementById('subheading');
+            document.querySelectorAll('audio').forEach(a => { if (a !== currentAudio) { a.pause(); a.currentTime = 0; a.closest('.beat-card').classList.remove('active-track', 'is-loading'); } });
+            card.classList.add('active-track');
+            requestAnimationFrame(() => { subheading.classList.remove('shimmer-active'); void subheading.offsetWidth; subheading.classList.add('shimmer-active'); });
+        }
+
+        // --- OBSERVERS & EVENTS ---
+        const reelsSectionObserver = new IntersectionObserver(entries => { hasEnteredReels = entries[0].isIntersecting; }, { threshold: 0.5 });
         reelsSectionObserver.observe(document.getElementById('reels'));
 
         const reelItemObserver = new IntersectionObserver(entries => {
             entries.forEach(e => {
                 const card = e.target.querySelector('.reel-card');
                 const v = e.target.querySelector('video');
-                if (e.isIntersecting) {
-                    // SWIPE Autoplay logic (isUserTap = false)
-                    if (hasEnteredReels) { toggleVideo(card, false); }
-                } else {
-                    if(v) { v.pause(); card.classList.remove('video-moving'); e.target.querySelector('.reel-popup').classList.remove('active'); }
-                }
+                if (e.isIntersecting && hasEnteredReels) { toggleVideo(card, false); } 
+                else if (v) { v.pause(); card.classList.remove('video-moving'); e.target.querySelector('.reel-popup').classList.remove('active'); }
             });
         }, { threshold: 0.8 });
         document.querySelectorAll('.reel-item').forEach(i => reelItemObserver.observe(i));
@@ -220,6 +296,11 @@
                 if (yDiff < -60) scrollToId('hero');
             }
         }, { passive: true });
+
+        document.getElementById('prevBtn').onclick = () => { if(currentPage > 1) { currentPage--; renderBeats(); } };
+        document.getElementById('nextBtn').onclick = () => { if(currentPage * beatsPerPage < allBeats.length) { currentPage++; renderBeats(); } };
+
+        renderBeats();
     </script>
 </body>
 </html>
