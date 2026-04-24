@@ -54,7 +54,7 @@
         .reel-popup { font-size: 8.5px; color: #10b981; font-weight: 800; text-transform: uppercase; background: rgba(0,0,0,0.8); border: 1px solid rgba(16, 185, 129, 0.3); padding: 8px 12px; border-radius: 8px; margin-top: 10px; text-align: center; width: 250px; opacity: 0; transform: translateY(10px); transition: all 0.4s ease; }
         .reel-popup.active { opacity: 1; transform: translateY(0); }
 
-        /* --- PAGE 3: PLAYER (NEW MASTER) --- */
+        /* --- PAGE 3: PLAYER --- */
         #player { justify-content: space-between; padding: 2vh 0 4vh 0; }
         .glass-player { background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.1); width: 92%; max-width: 390px; padding: 1.8rem 1.4rem; border-radius: 2.2rem; flex-shrink: 1; display: flex; flex-direction: column; }
         #beat-list { contain: layout; min-height: 320px; }
@@ -150,16 +150,14 @@
                     condensed arrangement - DM for full beat
                 </p>
             </div>
-
             <div class="glass-player">
                 <div id="beat-list"></div>
                 <div class="flex items-center justify-center gap-10 mt-6 pb-1">
-                    <button id="prevBtn" aria-label="Previous Page">Back</button>
+                    <button id="prevBtn">Back</button>
                     <div id="pagination-dots" class="flex gap-2"></div>
-                    <button id="nextBtn" aria-label="Next Page">Next</button>
+                    <button id="nextBtn">Next</button>
                 </div>
             </div>
-
             <div class="swipe-hint-container">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#888" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M18 15l-6-6-6 6"/></svg>
                 <span class="swipe-text">Contacts</span>
@@ -177,7 +175,7 @@
     </div>
 
     <script>
-        // --- GLOBAL & PRELOAD ---
+        // --- PRELOAD ---
         const checkImage = setInterval(() => {
             const img = new Image(); img.src = "logo.png";
             if (img.complete) { document.body.classList.add('loaded'); clearInterval(checkImage); }
@@ -186,8 +184,9 @@
 
         function scrollToId(id) { document.getElementById(id).scrollIntoView({ behavior: 'smooth' }); }
 
-        // --- PAGE 2: REEL LOGIC ---
-        let hasEnteredReels = false;
+        // --- REEL LOGIC ---
+        let hasEnteredReelsVertical = false; // Prevents autoplay on vertical scroll
+
         function toggleVideo(card, isUserTap = true) {
             const v = card.querySelector('video');
             const popup = card.parentElement.querySelector('.reel-popup');
@@ -204,7 +203,7 @@
             });
         }
 
-        // --- PAGE 3: PLAYER DATA & LOGIC ---
+        // --- PLAYER LOGIC ---
         const allBeats = [
             { title: 'Oseanslo', bpm: '140', genre: 'Dark Trap', url: 'https://www.dropbox.com/scl/fi/7lvw70kqbjlllw8113o6v/Oseanslo-UK-Drill-With-Hat-Movement-26-feb-26.wav?rlkey=wrak59iy3rbd6adv3u5laalo1&st=6j8ge1zf&raw=1' },
             { title: 'Seegrande', bpm: '130', genre: 'Orchestral', url: 'https://www.dropbox.com/scl/fi/7lvw70kqbjlllw8113o6v/Oseanslo-UK-Drill-With-Hat-Movement-26-feb-26.wav?rlkey=wrak59iy3rbd6adv3u5laalo1&st=6j8ge1zf&raw=1' },
@@ -231,11 +230,7 @@
                 card.innerHTML = `<div class="beat-loader"></div><div class="flex justify-between w-full mb-1 pointer-events-none"><div class="text-left"><p class="font-black text-[12px] uppercase tracking-wider">${beat.title}</p><p class="text-[9px] text-gray-400 font-bold uppercase tracking-widest">${beat.bpm} BPM • ${beat.genre}</p></div></div><audio controls preload="metadata"><source src="${beat.url}" type="audio/mpeg"></audio><div class="yellow-popup">DM for full beat</div>`;
                 fragment.appendChild(card);
                 const audio = card.querySelector('audio');
-                audio.onplay = () => { 
-                    document.querySelectorAll('video').forEach(v => v.pause());
-                    syncAudioUI(audio); 
-                    card.classList.add('is-loading'); 
-                };
+                audio.onplay = () => { document.querySelectorAll('video').forEach(v => v.pause()); syncAudioUI(audio); card.classList.add('is-loading'); };
                 audio.onplaying = () => {
                     const startPos = audio.currentTime;
                     const wd = setInterval(() => { if (audio.currentTime !== startPos && !audio.paused) { card.classList.remove('is-loading'); fadeInAudio(audio); clearInterval(wd); } }, 50);
@@ -271,20 +266,61 @@
             requestAnimationFrame(() => { subheading.classList.remove('shimmer-active'); void subheading.offsetWidth; subheading.classList.add('shimmer-active'); });
         }
 
-        // --- OBSERVERS & EVENTS ---
-        const reelsSectionObserver = new IntersectionObserver(entries => { hasEnteredReels = entries[0].isIntersecting; }, { threshold: 0.5 });
+        // --- OBSERVERS ---
+        const reelsSectionObserver = new IntersectionObserver(entries => { 
+            // If we leave the reels section, pause all videos
+            if (!entries[0].isIntersecting) {
+                document.querySelectorAll('video').forEach(v => { v.pause(); v.parentElement.classList.remove('video-moving'); v.parentElement.parentElement.querySelector('.reel-popup').classList.remove('active'); });
+                hasEnteredReelsVertical = false; // Reset vertical gate
+            } else {
+                // We entered the section vertically, set gate to false to block first autoplay
+                hasEnteredReelsVertical = true;
+            }
+        }, { threshold: 0.3 });
         reelsSectionObserver.observe(document.getElementById('reels'));
 
         const reelItemObserver = new IntersectionObserver(entries => {
             entries.forEach(e => {
                 const card = e.target.querySelector('.reel-card');
                 const v = e.target.querySelector('video');
-                if (e.isIntersecting && hasEnteredReels) { toggleVideo(card, false); } 
-                else if (v) { v.pause(); card.classList.remove('video-moving'); e.target.querySelector('.reel-popup').classList.remove('active'); }
+                if (e.isIntersecting) {
+                    // ONLY Autoplay if we are ALREADY inside the reels section (Horizontal Swipe)
+                    // If hasEnteredReelsVertical is true, it means we just scrolled in, so we stay paused.
+                    if (hasEnteredReelsVertical) {
+                        // After the first check, we allow subsequent horizontal autoplays
+                        // We reset this via a tiny timeout or simple logic check
+                    } else {
+                        toggleVideo(card, false); // This is a horizontal swipe
+                    }
+                } else {
+                    if (v) { v.pause(); card.classList.remove('video-moving'); e.target.querySelector('.reel-popup').classList.remove('active'); }
+                }
             });
         }, { threshold: 0.8 });
+        
+        // Initializing a flag to block the very first autoplay on vertical entry
+        let verticalGate = true;
+        const mainScrollObserver = new IntersectionObserver(entries => {
+            if(entries[0].isIntersecting) verticalGate = true; // Section entered
+        }, {threshold: 0.1});
+        mainScrollObserver.observe(document.getElementById('reels'));
+
         document.querySelectorAll('.reel-item').forEach(i => reelItemObserver.observe(i));
 
+        // Adjusting the Horizontal Observer to respect the Vertical Scroll
+        const horizontalObserver = new IntersectionObserver(entries => {
+            entries.forEach(e => {
+                if(e.isIntersecting) {
+                    if(!verticalGate) { // Only autoplay if NOT a fresh vertical entry
+                         toggleVideo(e.target.querySelector('.reel-card'), false);
+                    }
+                    verticalGate = false; // After first reel is seen, horizontal swipes will autoplay
+                }
+            });
+        }, {threshold: 0.8});
+        document.querySelectorAll('.reel-item').forEach(i => horizontalObserver.observe(i));
+
+        // --- NAVIGATION ---
         const reelsView = document.getElementById('reels-list');
         let touchStartX = 0, touchStartY = 0;
         reelsView.addEventListener('touchstart', (e) => { touchStartX = e.touches[0].clientX; touchStartY = e.touches[0].clientY; }, { passive: true });
