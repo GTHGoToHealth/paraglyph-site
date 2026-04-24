@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <link rel="preconnect" href="https://www.dropbox.com">
+    <link rel="dns-prefetch" href="https://www.dropbox.com">
+    
+    <title>ParaglyPH | Master Build</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* --- GLOBAL UI --- */
+        html, body { height: 100%; margin: 0; padding: 0; background-color: #000; color: #fff; font-family: 'Inter', sans-serif; overflow: hidden; -webkit-font-smoothing: antialiased; }
+        section { height: 100vh; width: 100vw; display: flex; flex-direction: column; align-items: center; justify-content: space-between; padding: 2vh 0 4vh 0; }
+        .glass { background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.1); width: 92%; max-width: 390px; padding: 1.8rem 1.4rem; border-radius: 2.2rem; flex-shrink: 1; display: flex; flex-direction: column; }
+        
+        /* --- CARDS (OPTIMIZATION 2: Fixed Aspect Ratio & Containment) --- */
+        #beat-list { contain: layout; min-height: 320px; } /* Prevents layout jumps during pagination */
+        
+        .beat-card { 
+            transform: translateZ(0); 
+            will-change: background-color, border-color, transform; 
+            backface-visibility: hidden; 
+            transition: background-color 0.3s ease, border-color 0.3s ease, transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
+            background: #0d0d0d; border: 1px solid rgba(255,255,255,0.05); 
+            width: 100%; padding: 1.1rem; border-radius: 1.4rem; margin-bottom: 0.7rem; position: relative; 
+            contain: content; /* Significant speed boost for mobile rendering */
+        }
+        
+        .active-track { background: #1a1a1a !important; border-color: rgba(255, 215, 0, 0.6) !important; transform: scale(1.05) translateZ(0); z-index: 10; }
+        
+        /* --- LOADER --- */
+        .loader { width: 14px; height: 14px; border: 2px solid rgba(255, 215, 0, 0.1); border-top: 2px solid #FFD700; border-radius: 50%; display: none; animation: spin 0.8s linear infinite; position: absolute; top: 1.2rem; right: 1.2rem; }
+        .active-track.is-loading .loader { display: block; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        /* --- UI ELEMENTS --- */
+        .yellow-popup { background: #FFD700; color: #000; font-size: 8px; font-weight: 900; padding: 3px 8px; border-radius: 4px; text-transform: uppercase; margin-top: 8px; opacity: 0; transform: translateY(5px); transition: all 0.4s ease; display: inline-block; }
+        .active-track .yellow-popup { opacity: 1; transform: translateY(0); }
+        .shimmer-active { animation: subheading-glow 1.2s ease-in-out; }
+        @keyframes subheading-glow { 0% { color: #6b7280; text-shadow: none; transform: scale(1); } 30% { color: #FFD700; text-shadow: 0 0 15px rgba(255, 215, 0, 0.7); transform: scale(1.03); } 100% { color: #6b7280; text-shadow: none; transform: scale(1); } }
+        #prevBtn, #nextBtn { color: #ffffff; font-weight: 900; font-size: 12px; text-transform: uppercase; cursor: pointer; }
+        #prevBtn:disabled, #nextBtn:disabled { color: #888; cursor: default; }
+        .p-dot { width: 6px; height: 6px; border-radius: 50%; background: #222; transition: 0.3s; }
+        .p-dot.active { background: #FFD700; width: 18px; border-radius: 10px; }
+        
+        /* --- AUDIO --- */
+        audio { width: 100%; height: 35px; margin-top: 8px; filter: invert(100%) hue-rotate(180deg) brightness(1.6) contrast(1.1); opacity: 0.9; }
+        .active-track audio { filter: invert(100%) hue-rotate(180deg) brightness(2.0) contrast(1.2); opacity: 1; }
+        
+        /* --- FOOTER --- */
+        .swipe-hint-container { text-align: center; height: 40px; display: flex; align-items: center; justify-content: center; gap: 10px; margin-top: 15px; animation: jitter-swipe 3s infinite ease-in-out; }
+        @keyframes jitter-swipe { 0%, 100%, 20%, 50%, 80% { transform: translateY(0); } 10% { transform: translateY(-3px); } 40% { transform: translateY(-5px); } }
+        .swipe-text { font-weight: 900; font-size: 10px; text-transform: uppercase; tracking: 0.4em; color: #888; }
+    </style>
+</head>
+<body>
+
+    <section>
+        <div class="text-center py-5">
+            <h2 class="text-2xl font-black uppercase tracking-tighter mb-1">Latest Drops</h2>
+            <p id="subheading" class="text-[9px] tracking-[0.2em] text-gray-500 uppercase leading-relaxed font-bold px-6">
+                condensed arrangement - DM for full beat
+            </p>
+        </div>
+
+        <div class="glass">
+            <div id="beat-list"></div>
+            <div class="flex items-center justify-center gap-10 mt-6 pb-1">
+                <button id="prevBtn" aria-label="Previous Page">Back</button>
+                <div id="pagination-dots" class="flex gap-2"></div>
+                <button id="nextBtn" aria-label="Next Page">Next</button>
+            </div>
+        </div>
+
+        <div class="swipe-hint-container">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#888" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M18 15l-6-6-6 6"/></svg>
+            <span class="swipe-text">Contacts</span>
+        </div>
+    </section>
+
+    <script>
+        // OPTIMIZATION 3: Use requestAnimationFrame for UI sync to prevent dropped frames
+        const allBeats = [
+            { title: 'Oseanslo', bpm: '140', genre: 'Dark Trap', url: 'https://www.dropbox.com/scl/fi/7lvw70kqbjlllw8113o6v/Oseanslo-UK-Drill-With-Hat-Movement-26-feb-26.wav?rlkey=wrak59iy3rbd6adv3u5laalo1&st=6j8ge1zf&raw=1' },
+            { title: 'Seegrande', bpm: '130', genre: 'Orchestral', url: 'https://www.dropbox.com/scl/fi/7lvw70kqbjlllw8113o6v/Oseanslo-UK-Drill-With-Hat-Movement-26-feb-26.wav?rlkey=wrak59iy3rbd6adv3u5laalo1&st=6j8ge1zf&raw=1' },
+            { title: 'Glitchuck', bpm: '150', genre: 'Glitch', url: 'https://www.dropbox.com/scl/fi/7lvw70kqbjlllw8113o6v/Oseanslo-UK-Drill-With-Hat-Movement-26-feb-26.wav?rlkey=wrak59iy3rbd6adv3u5laalo1&st=6j8ge1zf&raw=1' },
+            { title: 'Wavetable', bpm: '128', genre: 'Electronic', url: 'https://www.dropbox.com/scl/fi/7lvw70kqbjlllw8113o6v/Oseanslo-UK-Drill-With-Hat-Movement-26-feb-26.wav?rlkey=wrak59iy3rbd6adv3u5laalo1&st=6j8ge1zf&raw=1' }
+        ];
+
+        let currentPage = 1;
+        const beatsPerPage = 3;
+
+        function renderBeats() {
+            const container = document.getElementById('beat-list');
+            const dotsContainer = document.getElementById('pagination-dots');
+            
+            // Fragment usage for faster DOM injection
+            const fragment = document.createDocumentFragment();
+            const dotsFragment = document.createDocumentFragment();
+
+            const start = (currentPage - 1) * beatsPerPage;
+            const paginatedBeats = allBeats.slice(start, start + beatsPerPage);
+            const totalPages = Math.ceil(allBeats.length / beatsPerPage);
+
+            paginatedBeats.forEach(beat => {
+                const card = document.createElement('div');
+                card.className = 'beat-card flex flex-col items-center';
+                card.onclick = (e) => handleCardTap(e, card);
+                card.innerHTML = `
+                    <div class="loader"></div>
+                    <div class="flex justify-between w-full mb-1 pointer-events-none">
+                        <div class="text-left">
+                            <p class="font-black text-[12px] uppercase tracking-wider">${beat.title}</p>
+                            <p class="text-[9px] text-gray-400 font-bold uppercase tracking-widest">${beat.bpm} BPM • ${beat.genre}</p>
+                        </div>
+                    </div>
+                    <audio controls preload="metadata"><source src="${beat.url}" type="audio/mpeg"></audio>
+                    <div class="yellow-popup">DM for full beat</div>
+                `;
+                fragment.appendChild(card);
+                
+                const audio = card.querySelector('audio');
+                const stopLoaderOnMovement = () => {
+                    const startPos = audio.currentTime;
+                    const watchdog = setInterval(() => {
+                        if (audio.currentTime !== startPos && !audio.paused) {
+                            card.classList.remove('is-loading');
+                            fadeInAudio(audio);
+                            clearInterval(watchdog);
+                        }
+                    }, 50);
+                };
+
+                audio.onplay = () => { syncAudioUI(audio); card.classList.add('is-loading'); };
+                audio.onplaying = stopLoaderOnMovement;
+                audio.onwaiting = () => { if (card.classList.contains('active-track')) card.classList.add('is-loading'); };
+                audio.onseeking = function() { 
+                    this.volume = 0; 
+                    if (card.classList.contains('active-track')) card.classList.add('is-loading');
+                    if(!this.paused){this.pause(); this.wasPlaying=true;} 
+                };
+                audio.onseeked = function() { 
+                    this.volume = 0; 
+                    if(this.wasPlaying){ this.play(); this.wasPlaying=false; } 
+                    else { card.classList.remove('is-loading'); }
+                };
+            });
+
+            for (let i = 1; i <= totalPages; i++) {
+                const dot = document.createElement('div');
+                dot.className = `p-dot ${i === currentPage ? 'active' : ''}`;
+                dotsFragment.appendChild(dot);
+            }
+
+            container.replaceChildren(fragment);
+            dotsContainer.replaceChildren(dotsFragment);
+
+            document.getElementById('prevBtn').disabled = currentPage === 1;
+            document.getElementById('nextBtn').disabled = start + beatsPerPage >= allBeats.length;
+        }
+
+        function fadeInAudio(audio) {
+            if (audio.fadeTimer) clearInterval(audio.fadeTimer);
+            audio.volume = 0;
+            let vol = 0;
+            audio.fadeTimer = setInterval(() => {
+                if (vol < 1) { vol += 0.05; audio.volume = Math.min(vol, 1); } 
+                else { clearInterval(audio.fadeTimer); }
+            }, 10);
+        }
+
+        function handleCardTap(e, card) {
+            const audio = card.querySelector('audio');
+            if (e.target.tagName === 'AUDIO') return;
+            audio.paused ? audio.play() : audio.pause();
+        }
+
+        function syncAudioUI(currentAudio) {
+            const card = currentAudio.closest('.beat-card');
+            const subheading = document.getElementById('subheading');
+            document.querySelectorAll('audio').forEach(a => {
+                const c = a.closest('.beat-card');
+                if (a !== currentAudio) { 
+                    a.pause(); a.currentTime = 0; 
+                    c.classList.remove('active-track', 'is-loading'); 
+                }
+            });
+            card.classList.add('active-track');
+            requestAnimationFrame(() => {
+                subheading.classList.remove('shimmer-active');
+                void subheading.offsetWidth;
+                subheading.classList.add('shimmer-active');
+            });
+        }
+
+        document.getElementById('prevBtn').onclick = () => { if(currentPage > 1) { currentPage--; renderBeats(); } };
+        document.getElementById('nextBtn').onclick = () => { if(currentPage * beatsPerPage < allBeats.length) { currentPage++; renderBeats(); } };
+
+        renderBeats();
+    </script>
+</body>
+</html>
