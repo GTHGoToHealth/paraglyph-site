@@ -24,7 +24,7 @@
         }
         .glass { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.1); }
 
-        /* --- LOGO: REFINED SHINE TIMING --- */
+        /* --- LOGO: REFINED CONTINUOUS SHINE --- */
         .logo-wrapper { 
             position: relative; 
             width: 92vw; 
@@ -55,16 +55,16 @@
                 transparent 100%
             );
             transform: skewX(-25deg);
-            /* TIMING: Snappy return trip with less pause */
-            animation: snappy-cinematic-shine 6s infinite ease-in-out;
+            /* Total duration increased for slower movement, 1s park logic in keyframes */
+            animation: constant-cinematic-shine 10s infinite linear;
         }
         
-        @keyframes snappy-cinematic-shine {
+        @keyframes constant-cinematic-shine {
             0% { left: -150%; }
-            40% { left: 130%; }   /* Move Right */
-            45% { left: 130%; }   /* Tiny pause */
-            85% { left: -150%; }  /* Move Left (Fast Return) */
-            100% { left: -150%; } 
+            40% { left: 130%; }   /* Slower cross (4s travel) */
+            50% { left: 130%; }   /* 1 Second Park at right (10% of 10s) */
+            90% { left: -150%; }  /* Slower return (4s travel) */
+            100% { left: -150%; } /* 1 Second Park at left (10% of 10s) */
         }
 
         /* --- HERO DESCRIPTION --- */
@@ -88,12 +88,12 @@
         /* --- BRIGHTER SWIPE HINT --- */
         .scroll-up-hint {
             position: absolute;
-            bottom: 60px; /* Moved up from 30px */
+            bottom: 60px;
             display: flex;
             flex-direction: column;
             align-items: center;
             gap: 10px;
-            opacity: 0.9; /* Brightened from 0.6 */
+            opacity: 0.9;
             animation: bounce-strong 2s infinite;
         }
         @keyframes bounce-strong {
@@ -206,7 +206,7 @@
         <div class="flex flex-col space-y-4 w-full max-w-[280px]">
             <a href="https://wa.me/917021539281" target="_blank" class="glass py-5 rounded-2xl text-center font-bold uppercase tracking-widest hover:bg-white hover:text-black transition">WhatsApp</a>
             <a href="https://www.instagram.com/theparaglyph/" target="_blank" class="glass py-5 rounded-2xl text-center font-bold uppercase tracking-widest hover:bg-white hover:text-black transition">Instagram</a>
-            <a href="mailto:theparaglyph@gmail.com" class="glass py-5 rounded-2xl text-center font-bold uppercase hover:bg-white hover:text-black transition">Email</a>
+            <a href="mailto:theparaglyph@gmail.com" class="glass py-5 rounded-2xl text-center font-bold uppercase tracking-widest hover:bg-white hover:text-black transition">Email</a>
         </div>
         <div class="mt-20 text-center text-gray-600 text-[10px] uppercase">© PARAGLYPH 2026</div>
     </section>
@@ -221,10 +221,15 @@
         reelsView.addEventListener('touchmove', (e) => {
             let yDiff = touchStartY - e.touches[0].clientY, xDiff = touchStartX - e.touches[0].clientX;
             if (Math.abs(yDiff) > Math.abs(xDiff) + 15) {
-                if (yDiff > 40) scrollToId('player');
-                if (yDiff < -40) scrollToId('hero');
+                if (yDiff > 40) scrollToId('reels'); // Adjusted for Hero -> Page 2
+                if (yDiff > 40 && window.scrollY > window.innerHeight / 2) scrollToId('player');
             }
         }, { passive: true });
+
+        // Added scroll listener for manual snap support
+        window.addEventListener('scroll', () => {
+             // Optional logic for manual tracking
+        });
 
         // --- MEDIA CONTROL ---
         function pauseAllMedia() {
