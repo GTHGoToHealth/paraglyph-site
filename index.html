@@ -90,7 +90,7 @@
             <div class="reels-viewport" id="reels-list">
                 <div class="reel-item">
                     <div class="reel-title-block"><div class="font-black uppercase text-sm">Seegrande</div><div class="text-[10px] text-gray-500 uppercase">Orchestral Trap</div></div>
-                    <div class="reel-card" style="background-image:url('Seegrande4Thumbnail.jpg')" onclick="toggleVideo(this)">
+                    <div class="reel-card" style="background-image:url('Seegrande4Thumbnail.jpg')" onclick="toggleVideo(this, true)">
                         <video src="Seegrande4.mp4" loop playsinline preload="auto"></video>
                         <div class="video-ui"><div class="play-triangle"></div><div class="loading-spinner"></div></div>
                         <div class="pause-icon"></div>
@@ -99,7 +99,7 @@
                 </div>
                 <div class="reel-item">
                     <div class="reel-title-block"><div class="font-black uppercase text-sm">Oseanslo</div><div class="text-[10px] text-gray-500 uppercase">Wavetable Texture</div></div>
-                    <div class="reel-card" style="background-image:url('Oseanslo4Thumbnail.jpg')" onclick="toggleVideo(this)">
+                    <div class="reel-card" style="background-image:url('Oseanslo4Thumbnail.jpg')" onclick="toggleVideo(this, true)">
                         <video src="Oseanslo4.mp4" loop playsinline preload="auto"></video>
                         <div class="video-ui"><div class="play-triangle"></div><div class="loading-spinner"></div></div>
                         <div class="pause-icon"></div>
@@ -108,7 +108,7 @@
                 </div>
                 <div class="reel-item">
                     <div class="reel-title-block"><div class="font-black uppercase text-sm">Glitchuck</div><div class="text-[10px] text-gray-500 uppercase">Granular Glitch</div></div>
-                    <div class="reel-card" style="background-image:url('Glitchuck4Thumbnail.jpg')" onclick="toggleVideo(this)">
+                    <div class="reel-card" style="background-image:url('Glitchuck4Thumbnail.jpg')" onclick="toggleVideo(this, true)">
                         <video src="Glitchuck4.mp4" loop playsinline preload="auto"></video>
                         <div class="video-ui"><div class="play-triangle"></div><div class="loading-spinner"></div></div>
                         <div class="pause-icon"></div>
@@ -150,32 +150,47 @@
 
         function scrollToId(id) { document.getElementById(id).scrollIntoView({ behavior: 'smooth' }); }
 
-        function toggleVideo(card, forceRestart = true) {
+        // --- THE LOGIC FIX: Handles Tap vs Swipe correctly ---
+        function toggleVideo(card, isUserTap = true) {
             const v = card.querySelector('video');
             const popup = card.parentElement.querySelector('.reel-popup');
-            if (!v.paused && !forceRestart) {
-                v.pause(); card.classList.remove('video-moving'); popup.classList.remove('active');
-            } else {
-                document.querySelectorAll('video').forEach(vid => { vid.pause(); vid.parentElement.classList.remove('video-moving','buffering'); });
-                document.querySelectorAll('audio').forEach(aud => aud.pause());
-                if(forceRestart) v.currentTime = 0;
-                v.muted = false; card.classList.add('buffering');
-                v.play().then(() => {
-                    let itv = setInterval(() => { if (v.currentTime > 0.1) { card.classList.remove('buffering'); card.classList.add('video-moving'); popup.classList.add('active'); clearInterval(itv); } }, 100);
-                });
+
+            // 1. If video is playing and USER TAPS -> STOP IT
+            if (!v.paused && isUserTap) {
+                v.pause();
+                card.classList.remove('video-moving');
+                popup.classList.remove('active');
+                return;
             }
+
+            // 2. If video is paused OR it's a swipe-based autoplay -> START FROM 0
+            document.querySelectorAll('video').forEach(vid => { vid.pause(); vid.parentElement.classList.remove('video-moving','buffering'); });
+            document.querySelectorAll('audio').forEach(aud => aud.pause());
+            
+            v.currentTime = 0; // Always start fresh
+            v.muted = false; 
+            card.classList.add('buffering');
+            
+            v.play().then(() => {
+                let itv = setInterval(() => { 
+                    if (v.currentTime > 0.1) { 
+                        card.classList.remove('buffering'); 
+                        card.classList.add('video-moving'); 
+                        popup.classList.add('active'); 
+                        clearInterval(itv); 
+                    } 
+                }, 100);
+            });
         }
 
         function handleCardClick(card) { const audio = card.querySelector('audio'); if (audio.paused) audio.play(); else audio.pause(); }
         function handleAudioTrigger(audio) { document.querySelectorAll('video').forEach(v => { v.pause(); v.parentElement.classList.remove('video-moving'); }); document.querySelectorAll('audio').forEach(a => { if(a !== audio) { a.pause(); a.currentTime = 0; } }); }
 
-        // --- THE "SMART SWIPE" LOGIC ---
         const reelsSectionObserver = new IntersectionObserver(entries => {
             if (entries[0].isIntersecting) {
-                // User just arrived at the Reels page. Do nothing (No Autoplay).
                 setTimeout(() => { hasEnteredReels = true; }, 500); 
             } else {
-                hasEnteredReels = false; // Reset when leaving Reels page
+                hasEnteredReels = false; 
             }
         }, { threshold: 0.5 });
         reelsSectionObserver.observe(document.getElementById('reels'));
@@ -185,8 +200,8 @@
                 const card = e.target.querySelector('.reel-card');
                 const v = e.target.querySelector('video');
                 if (e.isIntersecting) {
-                    // ONLY autoplay if we are already inside the Reels section (i.e., user is swiping left/right)
-                    if (hasEnteredReels) { toggleVideo(card, true); }
+                    // SWIPE Autoplay logic (isUserTap = false)
+                    if (hasEnteredReels) { toggleVideo(card, false); }
                 } else {
                     if(v) { v.pause(); card.classList.remove('video-moving'); e.target.querySelector('.reel-popup').classList.remove('active'); }
                 }
