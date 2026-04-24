@@ -24,14 +24,14 @@
         }
         .glass { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.1); }
 
-        /* --- LOGO: 1.5x SHINE + ENHANCED GLOW --- */
+        /* --- LOGO: REFINED SHINE TIMING --- */
         .logo-wrapper { 
             position: relative; 
             width: 92vw; 
             max-width: 550px; 
             aspect-ratio: 1/1; 
             z-index: 10;
-            margin-top: -15vh; /* SHIFTED UP: Moves content closer to top */
+            margin-top: -15vh; 
         }
         .logo-image-bg { 
             position: absolute; inset: 0; 
@@ -47,7 +47,6 @@
         .logo-shine-overlay {
             position: absolute; top: 0; 
             width: 120%; height: 100%; 
-            /* 1.5x WIDTH + INCREASED GLOW (0.85 opacity) */
             background: linear-gradient(to right, 
                 transparent 0%, 
                 rgba(255,255,255,0) 35%, 
@@ -56,14 +55,15 @@
                 transparent 100%
             );
             transform: skewX(-25deg);
-            animation: cinematic-refined-slow 9s infinite ease-in-out;
+            /* TIMING: Snappy return trip with less pause */
+            animation: snappy-cinematic-shine 6s infinite ease-in-out;
         }
         
-        @keyframes cinematic-refined-slow {
+        @keyframes snappy-cinematic-shine {
             0% { left: -150%; }
-            45% { left: 130%; }  
-            50% { left: 130%; }  
-            95% { left: -150%; } 
+            40% { left: 130%; }   /* Move Right */
+            45% { left: 130%; }   /* Tiny pause */
+            85% { left: -150%; }  /* Move Left (Fast Return) */
             100% { left: -150%; } 
         }
 
@@ -85,24 +85,24 @@
             white-space: nowrap; 
         }
 
-        /* --- SCROLL HINT ANIMATION --- */
+        /* --- BRIGHTER SWIPE HINT --- */
         .scroll-up-hint {
             position: absolute;
-            bottom: 30px;
+            bottom: 60px; /* Moved up from 30px */
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 8px;
-            opacity: 0.6;
-            animation: bounce-slow 2s infinite;
+            gap: 10px;
+            opacity: 0.9; /* Brightened from 0.6 */
+            animation: bounce-strong 2s infinite;
         }
-        @keyframes bounce-slow {
-            0%, 20%, 50%, 80%, 100% {transform: translateY(0);}
-            40% {transform: translateY(-10px);}
-            60% {transform: translateY(-5px);}
+        @keyframes bounce-strong {
+            0%, 20%, 50%, 80%, 100% {transform: translateY(0); filter: brightness(1);}
+            40% {transform: translateY(-15px); filter: brightness(1.5);}
+            60% {transform: translateY(-7px);}
         }
 
-        /* --- PAGE 2: REELS (LOCKED PHYSICS) --- */
+        /* --- PAGE 2: REELS (LOCKED) --- */
         #reels { justify-content: flex-start; padding-top: 5vh; }
         .reel-section-header { margin-bottom: 0.5rem; }
         .reels-viewport {
@@ -136,7 +136,7 @@
         @keyframes pulseR { 0%, 100% { transform: translate(0, -50%); opacity: 0.3; } 50% { transform: translate(10px, -50%); opacity: 0.8; } }
         .bottom-hint { margin-top: 15px; z-index: 50; position: relative; }
 
-        /* --- AUDIO --- */
+        /* --- AUDIO & SOCIALS --- */
         .beat-card { display: flex; flex-direction: column; width: 100%; transition: all 0.3s ease; filter: brightness(0.9); padding: 1.1rem; background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255,255,255,0.05); border-radius: 1.5rem; cursor: pointer; }
         .beat-card.active-track { filter: brightness(1.3); background: rgba(255, 255, 255, 0.1); border-color: rgba(255,255,255,0.3); }
         .condensed-popup { display: none; font-size: 9px; color: #10b981; font-weight: 800; text-transform: uppercase; margin-top: 10px; text-align: center; }
@@ -161,8 +161,8 @@
             <button onclick="scrollToId('reels')" class="bg-white text-black px-10 py-4 rounded-full font-bold uppercase tracking-widest text-xs">View Reels</button>
         </div>
         <div class="scroll-up-hint">
-            <span class="text-[10px] tracking-[0.3em] uppercase text-gray-500">Swipe Up</span>
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#666" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 15l-6-6-6 6"/></svg>
+            <span class="text-[10px] font-bold tracking-[0.4em] uppercase text-white">Swipe Up</span>
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M18 15l-6-6-6 6"/></svg>
         </div>
     </section>
 
@@ -206,7 +206,7 @@
         <div class="flex flex-col space-y-4 w-full max-w-[280px]">
             <a href="https://wa.me/917021539281" target="_blank" class="glass py-5 rounded-2xl text-center font-bold uppercase tracking-widest hover:bg-white hover:text-black transition">WhatsApp</a>
             <a href="https://www.instagram.com/theparaglyph/" target="_blank" class="glass py-5 rounded-2xl text-center font-bold uppercase tracking-widest hover:bg-white hover:text-black transition">Instagram</a>
-            <a href="mailto:theparaglyph@gmail.com" class="glass py-5 rounded-2xl text-center font-bold uppercase tracking-widest hover:bg-white hover:text-black transition">Email</a>
+            <a href="mailto:theparaglyph@gmail.com" class="glass py-5 rounded-2xl text-center font-bold uppercase hover:bg-white hover:text-black transition">Email</a>
         </div>
         <div class="mt-20 text-center text-gray-600 text-[10px] uppercase">© PARAGLYPH 2026</div>
     </section>
