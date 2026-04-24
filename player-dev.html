@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Player Development - Page 3</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            background-color: #0a0a0a;
+            color: white;
+            font-family: 'Inter', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+
+        /* --- THE STYLES WE NEED TO REFINE --- */
+        .glass { 
+            background: rgba(255, 255, 255, 0.03); 
+            backdrop-filter: blur(10px); 
+            border: 1px solid rgba(255,255,255,0.1); 
+        }
+
+        .beat-card {
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+
+        /* The 'Pop' effect when playing */
+        .active-track {
+            transform: scale(1.05);
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(16, 185, 129, 0.4);
+            filter: brightness(1.2);
+        }
+
+        /* Reacting Subheading Shimmer */
+        .subheading-shimmer {
+            transition: all 0.3s ease;
+        }
+        .shimmer-active {
+            animation: text-burst 0.6s ease-out;
+            color: #10b981;
+        }
+        @keyframes text-burst {
+            0% { transform: scale(1); text-shadow: 0 0 0px #fff; }
+            50% { transform: scale(1.05); text-shadow: 0 0 10px rgba(16, 185, 129, 0.8); }
+            100% { transform: scale(1); text-shadow: 0 0 0px #fff; }
+        }
+
+        /* Emerald Seeker Popup */
+        .emerald-popup {
+            background: #10b981;
+            color: #000;
+            font-size: 10px;
+            font-weight: 900;
+            padding: 2px 8px;
+            border-radius: 4px;
+            text-transform: uppercase;
+            margin-top: 8px;
+            opacity: 0;
+            transform: translateY(10px);
+            transition: all 0.4s ease;
+            display: inline-block;
+        }
+        .active-track .emerald-popup {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        audio {
+            width: 100%;
+            filter: invert(100%) brightness(1.5);
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="glass p-6 md:p-10 rounded-[2.5rem] text-center w-[92%] max-w-lg">
+        <h2 class="text-2xl font-bold uppercase tracking-tight text-white mb-2">Latest Drops</h2>
+        
+        <p id="subheading" class="text-[10px] tracking-widest text-gray-500 uppercase mb-8 subheading-shimmer">
+            Select a vibe to begin
+        </p>
+
+        <div id="beat-list" class="space-y-4">
+            </div>
+
+        <div class="flex justify-between mt-8 px-2">
+            <button id="prevBtn" class="text-[10px] font-black uppercase tracking-widest disabled:opacity-20">Back</button>
+            <button id="nextBtn" class="text-[10px] font-black uppercase tracking-widest disabled:opacity-20">Next</button>
+        </div>
+    </div>
+
+    <script>
+        // We will build the logic here next
+    </script>
+</body>
+</html>
