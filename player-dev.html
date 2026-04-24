@@ -97,8 +97,113 @@
         </div>
     </div>
 
+
+
+
+    
     <script>
-        // We will build the logic here next
+     // 1. DATA: Add your 4 audio tracks here
+const allBeats = [
+    { id: 1, title: 'Oseanslo', bpm: '140', genre: 'Dark Trap', url: 'audio1.mp3' },
+    { id: 2, title: 'Seegrande', bpm: '130', genre: 'Orchestral', url: 'audio2.mp3' },
+    { id: 3, title: 'Glitchuck', bpm: '150', genre: 'Glitch', url: 'audio3.mp3' },
+    { id: 4, title: 'Wavetable', bpm: '128', genre: 'Electronic', url: 'audio4.mp3' }
+];
+
+let currentPage = 1;
+const beatsPerPage = 3;
+
+// 2. RENDER ENGINE: Handles the 3-per-page logic
+function renderBeats() {
+    const container = document.getElementById('beat-list');
+    container.innerHTML = ''; // Clear previous page
+
+    const start = (currentPage - 1) * beatsPerPage;
+    const end = start + beatsPerPage;
+    const paginatedBeats = allBeats.slice(start, end);
+
+    paginatedBeats.forEach(beat => {
+        const card = document.createElement('div');
+        card.className = 'beat-card p-4 rounded-2xl flex flex-col items-center';
+        card.onclick = (e) => handleCardClick(e, card);
+        
+        card.innerHTML = `
+            <div class="flex justify-between w-full mb-2 pointer-events-none">
+                <div class="text-left">
+                    <p class="font-bold text-sm uppercase">${beat.title}</p>
+                    <p class="text-[9px] text-gray-500 uppercase">${beat.bpm} BPM • ${beat.genre}</p>
+                </div>
+            </div>
+            <audio controls class="custom-audio" onplay="onAudioPlay(this, '${card}')">
+                <source src="${beat.url}" type="audio/mpeg">
+            </audio>
+            <div class="emerald-popup">Now Playing</div>
+        `;
+        container.appendChild(card);
+    });
+
+    // Update Button States
+    document.getElementById('prevBtn').disabled = currentPage === 1;
+    document.getElementById('nextBtn').disabled = end >= allBeats.length;
+}
+
+// 3. AUDIO LOGIC: Fixes the double-triggering glitch
+function handleCardClick(e, card) {
+    const audio = card.querySelector('audio');
+
+    // FIX: If user clicks the small triangle (native controls), 
+    // stop the card's onclick from firing and causing a double-pause.
+    if (e.target.tagName === 'AUDIO') return; 
+
+    if (audio.paused) {
+        audio.play();
+    } else {
+        audio.pause();
+    }
+}
+
+// 4. EFFECTS: The Emerald Popup & Subheading Shimmer
+function onAudioPlay(currentAudio) {
+    const card = currentAudio.closest('.beat-card');
+    const subheading = document.getElementById('subheading');
+
+    // Reset others
+    document.querySelectorAll('audio').forEach(a => {
+        if (a !== currentAudio) {
+            a.pause();
+            a.currentTime = 0;
+            a.closest('.beat-card').classList.remove('active-track');
+        }
+    });
+
+    // Activate Current
+    card.classList.add('active-track');
+    
+    // Trigger Subheading Pop & Shine
+    subheading.innerText = `Now Playing: ${card.querySelector('p').innerText}`;
+    subheading.classList.remove('shimmer-active');
+    void subheading.offsetWidth; // Force reflow for animation restart
+    subheading.classList.add('shimmer-active');
+}
+
+// 5. PAGINATION CONTROLS
+function changePage(direction) {
+    // Stop any playing audio before switching pages
+    document.querySelectorAll('audio').forEach(a => a.pause());
+    
+    currentPage += direction;
+    renderBeats();
+}
+
+document.getElementById('prevBtn').onclick = () => changePage(-1);
+document.getElementById('nextBtn').onclick = () => changePage(1);
+
+// Initialize
+renderBeats();
     </script>
+
+
+
+    
 </body>
 </html>
