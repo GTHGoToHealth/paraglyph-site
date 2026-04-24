@@ -9,25 +9,10 @@
     <script src="https://cdn.tailwindcss.com" defer></script>
 
     <style>
-        /* --- CRITICAL LOADING PHYSICS --- */
-        html, body {
-            height: 100%; margin: 0; padding: 0;
-            background-color: #0a0a0a; color: white;
-            font-family: 'Inter', sans-serif;
-            overflow: hidden;
-        }
-        #skeleton-loader {
-            position: absolute; top: 40%; left: 50%;
-            transform: translate(-50%, -50%); width: 150px; height: 150px;
-            background: radial-gradient(circle, rgba(255,255,255,0.15) 0%, transparent 70%);
-            border-radius: 50%; filter: blur(30px);
-            animation: skeleton-pulse 1.2s infinite ease-in-out;
-            z-index: 999;
-        }
-        @keyframes skeleton-pulse {
-            0%, 100% { opacity: 0.3; transform: translate(-50%, -50%) scale(1); }
-            50% { opacity: 0.8; transform: translate(-50%, -50%) scale(1.2); }
-        }
+        /* --- LOADING PHYSICS --- */
+        html, body { height: 100%; margin: 0; padding: 0; background-color: #0a0a0a; color: white; font-family: 'Inter', sans-serif; overflow: hidden; }
+        #skeleton-loader { position: absolute; top: 40%; left: 50%; transform: translate(-50%, -50%); width: 150px; height: 150px; background: radial-gradient(circle, rgba(255,255,255,0.15) 0%, transparent 70%); border-radius: 50%; filter: blur(30px); animation: skeleton-pulse 1.2s infinite ease-in-out; z-index: 999; }
+        @keyframes skeleton-pulse { 0%, 100% { opacity: 0.3; transform: translate(-50%, -50%) scale(1); } 50% { opacity: 0.8; transform: translate(-50%, -50%) scale(1.2); } }
         #site-wrapper { opacity: 0; transition: opacity 0.6s ease-in-out; visibility: hidden; }
         body.loaded #site-wrapper { opacity: 1; visibility: visible; }
         body.loaded #skeleton-loader { display: none !important; }
@@ -36,56 +21,37 @@
         .logo-wrapper { position: relative; width: 92vw; max-width: 550px; aspect-ratio: 1/1; z-index: 10; margin: 0 auto; margin-top: 10vh; }
         .logo-image-bg { position: absolute; inset: 0; background: url('logo.png') center/contain no-repeat; z-index: 1; }
         .logo-mask { position: absolute; inset: 0; -webkit-mask: url('logo.png') center/contain no-repeat; mask: url('logo.png') center/contain no-repeat; z-index: 2; }
-        .logo-shine-overlay {
-            position: absolute; top: 0; width: 120%; height: 100%; 
-            background: linear-gradient(to right, transparent 0%, rgba(255,255,255,0) 35%, rgba(255,255,255,0.85) 50%, rgba(255,255,255,0) 65%, transparent 100%);
-            transform: skewX(-25deg); animation: zero-park-shine 8s infinite ease-in-out;
-        }
+        .logo-shine-overlay { position: absolute; top: 0; width: 120%; height: 100%; background: linear-gradient(to right, transparent 0%, rgba(255,255,255,0) 35%, rgba(255,255,255,0.85) 50%, rgba(255,255,255,0) 65%, transparent 100%); transform: skewX(-25deg); animation: zero-park-shine 8s infinite ease-in-out; }
         @keyframes zero-park-shine { 0% { left: -150%; } 50% { left: 130%; } 100% { left: -150%; } }
         .hero-content { text-align: center; margin-top: -120px; z-index: 20; width: 100%; }
         .unified-desc { font-size: 11px; color: #9ca3af; font-weight: 900; text-transform: uppercase; letter-spacing: 0.08em; line-height: 2; white-space: nowrap; }
-        .scroll-up-hint {
-            position: absolute; bottom: 60px; left: 50%; transform: translateX(-50%);
-            display: flex; flex-direction: column; align-items: center; gap: 10px;
-            opacity: 0.9; z-index: 30; animation: bounce-strong 2s infinite;
-        }
-        @keyframes bounce-strong {
-            0%, 20%, 50%, 80%, 100% { transform: translate(-50%, 0); filter: brightness(1); }
-            40% { transform: translate(-50%, -15px); filter: brightness(1.5); }
-            60% { transform: translate(-50%, -7px); }
-        }
+        .scroll-up-hint { position: absolute; bottom: 60px; left: 50%; transform: translateX(-50%); display: flex; flex-direction: column; align-items: center; gap: 10px; opacity: 0.9; z-index: 30; animation: bounce-strong 2s infinite; }
+        @keyframes bounce-strong { 0%, 20%, 50%, 80%, 100% { transform: translate(-50%, 0); } 40% { transform: translate(-50%, -15px); } 60% { transform: translate(-50%, -7px); } }
 
         /* --- GLOBAL PHYSICS --- */
         body { overflow-y: scroll; scroll-snap-type: y mandatory; }
         section { scroll-snap-align: start; height: 100vh; width: 100vw; display: flex; flex-direction: column; align-items: center; position: relative; overflow: hidden; }
         .glass { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.1); }
 
-        /* --- PAGE 2: REELS (INTERACTIVE) --- */
+        /* --- PAGE 2: REELS --- */
         #reels { justify-content: flex-start; padding-top: 1vh; } 
         .reels-viewport { width: 100%; overflow-x: auto; display: flex; scroll-snap-type: x mandatory; scrollbar-width: none; padding: 0 45px; gap: 25px; -webkit-overflow-scrolling: touch; }
         .reels-viewport::-webkit-scrollbar { display: none; }
         .reel-item { scroll-snap-align: center; flex: 0 0 280px; display: flex; flex-direction: column; align-items: center; }
-        
         .reel-title-block { height: 60px; display: flex; flex-direction: column; justify-content: flex-end; margin-bottom: 15px; text-align: center; }
-        .reel-card { width: 280px; aspect-ratio: 9/16; background-color: #111; border-radius: 24px; overflow: hidden; border: 1px solid rgba(255,255,255,0.1); position: relative; cursor: pointer; }
-        
+        .reel-card { width: 280px; aspect-ratio: 9/16; background-color: #111; border-radius: 24px; overflow: hidden; border: 1px solid rgba(255,255,255,0.1); position: relative; cursor: pointer; background-size: contain; background-repeat: no-repeat; background-position: center; }
         .video-ui { position: absolute; inset: 0; display: flex; justify-content: center; align-items: center; z-index: 20; pointer-events: none; }
-        .play-triangle { width: 0; height: 0; border-style: solid; border-width: 18px 0 18px 30px; border-color: transparent transparent transparent rgba(255, 255, 255, 0.6); transition: opacity 0.2s ease; }
-        .buffering .play-triangle, .video-moving .play-triangle { opacity: 0 !important; }
-        
+        .play-triangle { width: 0; height: 0; border-style: solid; border-width: 18px 0 18px 30px; border-color: transparent transparent transparent rgba(255, 255, 255, 0.7); transition: opacity 0.2s ease; }
+        .video-moving .play-triangle, .buffering .play-triangle { opacity: 0 !important; }
         .loading-spinner { position: absolute; width: 45px; height: 45px; border: 4px solid rgba(255,255,255,0.1); border-top: 4px solid #fff; border-radius: 50%; display: none; animation: spin 0.8s linear infinite; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
         .buffering .loading-spinner { display: block; }
-        
         .pause-icon { position: absolute; bottom: 15px; right: 15px; opacity: 0; width: 12px; height: 12px; border-left: 3px solid #fff; border-right: 3px solid #fff; transition: opacity 0.3s; z-index: 30; }
         .video-moving .pause-icon { opacity: 1; }
-        
         .reel-card video { width: 100%; height: 100%; object-fit: cover; opacity: 0; transition: opacity 0.5s; z-index: 5; }
         .video-moving video { opacity: 1; }
-        
         .reel-popup { font-size: 8.5px; color: #10b981; font-weight: 800; text-transform: uppercase; background: rgba(0,0,0,0.8); border: 1px solid rgba(16, 185, 129, 0.3); padding: 8px 12px; border-radius: 8px; margin-top: 10px; text-align: center; width: 250px; opacity: 0; transform: translateY(10px); transition: opacity 0.4s ease, transform 0.4s ease; }
         .reel-popup.active { opacity: 1; transform: translateY(0); }
-
         .bottom-hint-reels { margin-top: 3vh; } 
 
         /* --- PAGE 3: PLAYER --- */
@@ -123,42 +89,31 @@
             <h2 class="text-2xl font-bold uppercase tracking-tighter text-gray-500 mb-6 mt-8">Process</h2>
             <div class="reels-viewport" id="reels-list">
                 <div class="reel-item">
-                    <div class="reel-title-block">
-                        <div class="font-black uppercase text-sm">Seegrande</div>
-                        <div class="text-[10px] text-gray-500 uppercase">Orchestral Trap</div>
-                    </div>
+                    <div class="reel-title-block"><div class="font-black uppercase text-sm">Seegrande</div><div class="text-[10px] text-gray-500 uppercase">Orchestral Trap</div></div>
                     <div class="reel-card" style="background-image:url('Seegrande4Thumbnail.jpg')" onclick="toggleVideo(this)">
                         <video src="Seegrande4.mp4" loop playsinline preload="auto"></video>
                         <div class="video-ui"><div class="play-triangle"></div><div class="loading-spinner"></div></div>
                         <div class="pause-icon"></div>
                     </div>
-                    <div class="reel-popup">⚡ Audio Active</div>
+                    <div class="reel-popup">⚡ Sound On</div>
                 </div>
-
                 <div class="reel-item">
-                    <div class="reel-title-block">
-                        <div class="font-black uppercase text-sm">Oseanslo</div>
-                        <div class="text-[10px] text-gray-500 uppercase">Wavetable Texture</div>
-                    </div>
+                    <div class="reel-title-block"><div class="font-black uppercase text-sm">Oseanslo</div><div class="text-[10px] text-gray-500 uppercase">Wavetable Texture</div></div>
                     <div class="reel-card" style="background-image:url('Oseanslo4Thumbnail.jpg')" onclick="toggleVideo(this)">
                         <video src="Oseanslo4.mp4" loop playsinline preload="auto"></video>
                         <div class="video-ui"><div class="play-triangle"></div><div class="loading-spinner"></div></div>
                         <div class="pause-icon"></div>
                     </div>
-                    <div class="reel-popup">⚡ Audio Active</div>
+                    <div class="reel-popup">⚡ Sound On</div>
                 </div>
-
                 <div class="reel-item">
-                    <div class="reel-title-block">
-                        <div class="font-black uppercase text-sm">Glitchuck</div>
-                        <div class="text-[10px] text-gray-500 uppercase">Granular Glitch</div>
-                    </div>
+                    <div class="reel-title-block"><div class="font-black uppercase text-sm">Glitchuck</div><div class="text-[10px] text-gray-500 uppercase">Granular Glitch</div></div>
                     <div class="reel-card" style="background-image:url('Glitchuck4Thumbnail.jpg')" onclick="toggleVideo(this)">
                         <video src="Glitchuck4.mp4" loop playsinline preload="auto"></video>
                         <div class="video-ui"><div class="play-triangle"></div><div class="loading-spinner"></div></div>
                         <div class="pause-icon"></div>
                     </div>
-                    <div class="reel-popup">⚡ Audio Active</div>
+                    <div class="reel-popup">⚡ Sound On</div>
                 </div>
             </div>
             <div class="bottom-hint-reels"><p class="text-gray-600 text-[10px] animate-bounce uppercase tracking-widest">Swipe for more ↓</p></div>
@@ -168,13 +123,8 @@
             <div class="glass p-6 md:p-10 rounded-[2.5rem] text-center w-[92%] max-w-4xl">
                 <h2 class="text-2xl font-bold mb-8 italic underline uppercase text-white">Latest Drops</h2>
                 <div class="beat-card mb-3" onclick="handleCardClick(this)">
-                    <div class="text-left">
-                        <p class="font-bold text-lg text-white">Oseanslo</p>
-                        <p class="text-xs text-gray-500 uppercase">140 BPM - DARK TRAP</p>
-                    </div>
-                    <audio controls preload="metadata" onplay="handleAudioTrigger(this)">
-                        <source src="https://www.dropbox.com/scl/fi/7lvw70kqbjlllw8113o6v/Oseanslo-UK-Drill-With-Hat-Movement-26-feb-26.wav?rlkey=wrak59iy3rbd6adv3u5laalo1&st=6j8ge1zf&raw=1" type="audio/mpeg">
-                    </audio>
+                    <div class="text-left"><p class="font-bold text-lg text-white">Oseanslo</p><p class="text-xs text-gray-500 uppercase">140 BPM - DARK TRAP</p></div>
+                    <audio controls preload="metadata" onplay="handleAudioTrigger(this)"><source src="https://www.dropbox.com/scl/fi/7lvw70kqbjlllw8113o6v/Oseanslo-UK-Drill-With-Hat-Movement-26-feb-26.wav?rlkey=wrak59iy3rbd6adv3u5laalo1&st=6j8ge1zf&raw=1" type="audio/mpeg"></audio>
                 </div>
             </div>
         </section>
@@ -190,71 +140,59 @@
     </div>
 
     <script>
+        let hasEnteredReels = false;
+
         const checkImage = setInterval(() => {
-            const img = new Image();
-            img.src = "logo.png";
+            const img = new Image(); img.src = "logo.png";
             if (img.complete) { document.body.classList.add('loaded'); clearInterval(checkImage); }
         }, 100);
         setTimeout(() => { document.body.classList.add('loaded'); }, 4000);
 
         function scrollToId(id) { document.getElementById(id).scrollIntoView({ behavior: 'smooth' }); }
 
-        // --- TAP TO STOP / TAP TO START FROM ZERO ---
-        function toggleVideo(card) {
+        function toggleVideo(card, forceRestart = true) {
             const v = card.querySelector('video');
             const popup = card.parentElement.querySelector('.reel-popup');
-            
-            if (!v.paused) {
-                v.pause();
-                card.classList.remove('video-moving');
-                popup.classList.remove('active');
+            if (!v.paused && !forceRestart) {
+                v.pause(); card.classList.remove('video-moving'); popup.classList.remove('active');
             } else {
                 document.querySelectorAll('video').forEach(vid => { vid.pause(); vid.parentElement.classList.remove('video-moving','buffering'); });
                 document.querySelectorAll('audio').forEach(aud => aud.pause());
-                
-                v.currentTime = 0; // RESTART FROM START
-                v.muted = false; 
-                card.classList.add('buffering');
-                
+                if(forceRestart) v.currentTime = 0;
+                v.muted = false; card.classList.add('buffering');
                 v.play().then(() => {
-                    let itv = setInterval(() => { 
-                        if (v.currentTime > 0.1) { 
-                            card.classList.remove('buffering'); 
-                            card.classList.add('video-moving'); 
-                            popup.classList.add('active');
-                            clearInterval(itv); 
-                        } 
-                    }, 100);
+                    let itv = setInterval(() => { if (v.currentTime > 0.1) { card.classList.remove('buffering'); card.classList.add('video-moving'); popup.classList.add('active'); clearInterval(itv); } }, 100);
                 });
             }
         }
 
-        function handleCardClick(card) {
-            const audio = card.querySelector('audio');
-            if (audio.paused) audio.play(); else audio.pause();
-        }
-        function handleAudioTrigger(audio) {
-            document.querySelectorAll('video').forEach(v => { v.pause(); v.parentElement.classList.remove('video-moving'); });
-            document.querySelectorAll('audio').forEach(a => { if(a !== audio) { a.pause(); a.currentTime = 0; } });
-        }
+        function handleCardClick(card) { const audio = card.querySelector('audio'); if (audio.paused) audio.play(); else audio.pause(); }
+        function handleAudioTrigger(audio) { document.querySelectorAll('video').forEach(v => { v.pause(); v.parentElement.classList.remove('video-moving'); }); document.querySelectorAll('audio').forEach(a => { if(a !== audio) { a.pause(); a.currentTime = 0; } }); }
 
-        // --- AUTOPLAY MUTES (Browser Compliance) ---
-        const observer = new IntersectionObserver(entries => {
+        // --- THE "SMART SWIPE" LOGIC ---
+        const reelsSectionObserver = new IntersectionObserver(entries => {
+            if (entries[0].isIntersecting) {
+                // User just arrived at the Reels page. Do nothing (No Autoplay).
+                setTimeout(() => { hasEnteredReels = true; }, 500); 
+            } else {
+                hasEnteredReels = false; // Reset when leaving Reels page
+            }
+        }, { threshold: 0.5 });
+        reelsSectionObserver.observe(document.getElementById('reels'));
+
+        const reelItemObserver = new IntersectionObserver(entries => {
             entries.forEach(e => {
                 const card = e.target.querySelector('.reel-card');
                 const v = e.target.querySelector('video');
-                if (e.isIntersecting) { 
-                    if(v) { 
-                        v.muted = true; // Auto-scroll remains muted
-                        v.play(); 
-                        card.classList.add('video-moving'); 
-                    }
+                if (e.isIntersecting) {
+                    // ONLY autoplay if we are already inside the Reels section (i.e., user is swiping left/right)
+                    if (hasEnteredReels) { toggleVideo(card, true); }
                 } else {
                     if(v) { v.pause(); card.classList.remove('video-moving'); e.target.querySelector('.reel-popup').classList.remove('active'); }
                 }
             });
         }, { threshold: 0.8 });
-        document.querySelectorAll('.reel-item').forEach(i => observer.observe(i));
+        document.querySelectorAll('.reel-item').forEach(i => reelItemObserver.observe(i));
 
         const reelsView = document.getElementById('reels-list');
         let touchStartX = 0, touchStartY = 0;
