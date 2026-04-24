@@ -9,46 +9,58 @@
     
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        /* --- GLOBAL PHYSICS --- */
+        /* --- CORE PHYSICS --- */
         html, body {
             height: 100%; margin: 0; padding: 0;
             background-color: #0a0a0a; color: white;
             font-family: 'Inter', sans-serif;
             overflow: hidden;
-            /* FIX 2: SMOOTH FADE-IN (Prevents text loading before image) */
-            animation: site-reveal 0.8s ease-out forwards;
-            opacity: 0;
-        }
-        @keyframes site-reveal {
-            from { opacity: 0; }
-            to { opacity: 1; }
         }
 
-        body {
-            overflow-y: scroll;
-            scroll-snap-type: y mandatory;
+        /* --- SKELETON & REVEAL LOGIC --- */
+        #site-wrapper {
+            opacity: 0;
+            transition: opacity 0.4s ease-in;
         }
+
+        /* Skeleton: A pulsing glow in the shape of your logo area */
+        #skeleton-loader {
+            position: absolute;
+            top: 42%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 80vw;
+            max-width: 400px;
+            aspect-ratio: 1/1;
+            background: radial-gradient(circle, rgba(255,255,255,0.05) 0%, transparent 70%);
+            border-radius: 50%;
+            filter: blur(40px);
+            animation: pulse-skeleton 1.5s infinite ease-in-out;
+            z-index: 5;
+        }
+
+        @keyframes pulse-skeleton {
+            0%, 100% { opacity: 0.3; transform: translate(-50%, -50%) scale(0.9); }
+            50% { opacity: 0.6; transform: translate(-50%, -50%) scale(1.1); }
+        }
+
+        /* Show content when this class is added */
+        body.loaded #site-wrapper { opacity: 1; }
+        body.loaded #skeleton-loader { display: none; }
+
+        body { overflow-y: scroll; scroll-snap-type: y mandatory; }
         section {
             scroll-snap-align: start; height: 100vh; width: 100vw;
             display: flex; flex-direction: column; justify-content: center; align-items: center;
             position: relative; overflow: hidden;
         }
-        .glass { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.1); }
 
-        /* --- LOGO: FROZEN AS REQUESTED --- */
+        /* --- FROZEN LOGO & SHINE --- */
         .logo-wrapper { 
-            position: relative; 
-            width: 92vw; 
-            max-width: 550px; 
-            aspect-ratio: 1/1; 
-            z-index: 10;
-            margin-top: -15vh; 
+            position: relative; width: 92vw; max-width: 550px; aspect-ratio: 1/1; 
+            z-index: 10; margin-top: -15vh; 
         }
-        .logo-image-bg { 
-            position: absolute; inset: 0; 
-            background: url('logo.png') center/contain no-repeat; 
-            z-index: 1; opacity: 1; 
-        }
+        .logo-image-bg { position: absolute; inset: 0; background: url('logo.png') center/contain no-repeat; z-index: 1; }
         .logo-mask { 
             position: absolute; inset: 0; 
             -webkit-mask: url('logo.png') center/contain no-repeat; 
@@ -56,15 +68,8 @@
             z-index: 2; 
         }
         .logo-shine-overlay {
-            position: absolute; top: 0; 
-            width: 120%; height: 100%; 
-            background: linear-gradient(to right, 
-                transparent 0%, 
-                rgba(255,255,255,0) 35%, 
-                rgba(255,255,255,0.85) 50%, 
-                rgba(255,255,255,0) 65%, 
-                transparent 100%
-            );
+            position: absolute; top: 0; width: 120%; height: 100%; 
+            background: linear-gradient(to right, transparent 0%, rgba(255,255,255,0) 35%, rgba(255,255,255,0.85) 50%, rgba(255,255,255,0) 65%, transparent 100%);
             transform: skewX(-25deg);
             animation: zero-park-shine 8s infinite ease-in-out;
         }
@@ -74,37 +79,13 @@
             100% { left: -150%; }
         }
 
-        /* --- HERO DESCRIPTION --- */
-        .hero-content {
-            text-align: center;
-            padding: 0 10px;
-            margin-top: -120px; 
-            z-index: 20;
-            width: 100%;
-        }
-        .unified-desc {
-            font-size: 0.65rem; 
-            color: #9ca3af; 
-            font-weight: 900;
-            text-transform: uppercase;
-            letter-spacing: 0.08em; 
-            line-height: 2;
-            white-space: nowrap; 
-        }
+        .hero-content { text-align: center; padding: 0 10px; margin-top: -120px; z-index: 20; width: 100%; }
+        .unified-desc { font-size: 0.65rem; color: #9ca3af; font-weight: 900; text-transform: uppercase; letter-spacing: 0.08em; line-height: 2; white-space: nowrap; }
 
-        /* --- SWIPE HINT --- */
         .scroll-up-hint {
-            position: absolute;
-            bottom: 60px;
-            left: 50%;
-            transform: translateX(-50%);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 10px;
-            opacity: 0.9;
-            z-index: 30;
-            animation: bounce-strong 2s infinite;
+            position: absolute; bottom: 60px; left: 50%; transform: translateX(-50%);
+            display: flex; flex-direction: column; align-items: center; gap: 10px;
+            opacity: 0.9; z-index: 30; animation: bounce-strong 2s infinite;
         }
         @keyframes bounce-strong {
             0%, 20%, 50%, 80%, 100% { transform: translate(-50%, 0); filter: brightness(1); }
@@ -112,177 +93,100 @@
             60% { transform: translate(-50%, -7px); }
         }
 
-        /* --- PAGE 2: REELS --- */
+        /* --- REELS VIEWPORT --- */
         #reels { justify-content: flex-start; padding-top: 5vh; }
-        .reel-section-header { margin-bottom: 0.5rem; }
         .reels-viewport {
             width: 100%; overflow-x: auto; display: flex;
             scroll-snap-type: x mandatory; scrollbar-width: none;
-            padding: 0 45px; gap: 25px; 
-            -webkit-overflow-scrolling: touch;
-            touch-action: pan-x; 
+            padding: 0 45px; gap: 25px; -webkit-overflow-scrolling: touch;
         }
-        .reels-viewport::-webkit-scrollbar { display: none; }
-        .reel-item { scroll-snap-align: center; scroll-snap-stop: always; flex: 0 0 280px; display: flex; flex-direction: column; align-items: center; }
-        .reel-title-block { height: 45px; display: flex; flex-direction: column; justify-content: center; margin-bottom: 8px; text-align: center; }
-        .reel-card { width: 280px; aspect-ratio: 9/16; background-color: #111; border-radius: 24px; overflow: hidden; border: 1px solid rgba(255,255,255,0.1); position: relative; cursor: pointer; background-size: contain; background-position: center; background-repeat: no-repeat; }
-        .video-ui { position: absolute; inset: 0; display: flex; justify-content: center; align-items: center; z-index: 20; pointer-events: none; }
-        .play-triangle { width: 0; height: 0; border-style: solid; border-width: 18px 0 18px 30px; border-color: transparent transparent transparent rgba(255, 255, 255, 0.6); transition: opacity 0.2s ease; }
-        .buffering .play-triangle, .video-moving .play-triangle { opacity: 0 !important; }
-        .pause-icon { position: absolute; bottom: 15px; right: 15px; opacity: 0; width: 12px; height: 12px; border-left: 3px solid #fff; border-right: 3px solid #fff; transition: opacity 0.3s; z-index: 30; }
-        .video-moving .pause-icon { opacity: 1; }
-        .loading-spinner { position: absolute; width: 45px; height: 45px; border: 4px solid rgba(255,255,255,0.1); border-top: 4px solid #fff; border-radius: 50%; display: none; animation: spin 0.8s linear infinite; }
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        .buffering .loading-spinner { display: block; }
-        .reel-card video { width: 100%; height: 100%; object-fit: cover; opacity: 0; transition: opacity 0.5s ease; z-index: 5; }
+        .reel-item { scroll-snap-align: center; flex: 0 0 280px; display: flex; flex-direction: column; align-items: center; }
+        .reel-card { width: 280px; aspect-ratio: 9/16; background-color: #111; border-radius: 24px; overflow: hidden; border: 1px solid rgba(255,255,255,0.1); position: relative; }
+        .reel-card video { width: 100%; height: 100%; object-fit: cover; opacity: 0; transition: opacity 0.5s; }
         .video-moving video { opacity: 1; }
-        .reel-popup { font-size: 8.5px; color: #10b981; font-weight: 800; text-transform: uppercase; background: rgba(0,0,0,0.8); border: 1px solid rgba(16, 185, 129, 0.3); padding: 8px 12px; border-radius: 8px; margin-top: 10px; text-align: center; width: 250px; opacity: 0; transform: translateY(10px); transition: opacity 0.4s ease, transform 0.4s ease; }
-        .reel-popup.active { opacity: 1; transform: translateY(0); }
-        .hint-arrow { position: absolute; top: 50%; transform: translateY(-50%); z-index: 100; opacity: 0.5; pointer-events: none; }
-        .hint-arrow svg { width: 40px; height: 40px; } 
-        .arrow-left { left: 5px; animation: pulseL 2s infinite; display: none; }
-        .arrow-right { right: 5px; animation: pulseR 2s infinite; }
-        @keyframes pulseL { 0%, 100% { transform: translate(0, -50%); opacity: 0.3; } 50% { transform: translate(-10px, -50%); opacity: 0.8; } }
-        @keyframes pulseR { 0%, 100% { transform: translate(0, -50%); opacity: 0.3; } 50% { transform: translate(10px, -50%); opacity: 0.8; } }
-        .bottom-hint { margin-top: 15px; z-index: 50; position: relative; }
-
-        /* --- AUDIO & SOCIALS --- */
-        .beat-card { display: flex; flex-direction: column; width: 100%; transition: all 0.3s ease; filter: brightness(0.9); padding: 1.1rem; background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255,255,255,0.05); border-radius: 1.5rem; cursor: pointer; }
-        .beat-card.active-track { filter: brightness(1.3); background: rgba(255, 255, 255, 0.1); border-color: rgba(255,255,255,0.3); }
-        .condensed-popup { display: none; font-size: 9px; color: #10b981; font-weight: 800; text-transform: uppercase; margin-top: 10px; text-align: center; }
-        .active-track .condensed-popup { display: block; }
-        audio { width: 100%; filter: invert(100%) brightness(1.5); margin-top: 8px; }
+        .beat-card { background: rgba(255, 255, 255, 0.04); border-radius: 1.5rem; padding: 1.1rem; cursor: pointer; }
     </style>
 </head>
 <body>
 
-    <section id="hero">
-        <div class="logo-wrapper">
-            <div class="logo-image-bg"></div>
-            <div class="logo-mask"><div class="logo-shine-overlay"></div></div>
-        </div>
-        <div class="hero-content">
-            <div class="unified-desc mb-10">
-                <p>From IIT-Bombay to Bomb-ass Beats</p>
-                <p>CRAFTING ORIGINAL SOUNDS WITH</p>
-                <p>WAVETABLE SYNTHESIS</p>
-                <p>LESS SPLICE, MORE SPICE 🔥</p>
-            </div>
-            <button onclick="scrollToId('reels')" class="bg-white text-black px-10 py-4 rounded-full font-bold uppercase tracking-widest text-xs">View Reels</button>
-        </div>
-        <div class="scroll-up-hint">
-            <span class="text-[10px] font-bold tracking-[0.4em] uppercase text-white">Swipe Up</span>
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M18 15l-6-6-6 6"/></svg>
-        </div>
-    </section>
+    <div id="skeleton-loader"></div>
 
-    <section id="reels">
-        <div class="hint-arrow arrow-left" id="hint-L"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><polyline points="15 18 9 12 15 6"></polyline></svg></div>
-        <div class="hint-arrow arrow-right" id="hint-R"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg></div>
-        <div class="reel-section-header"><h2 class="text-2xl font-bold uppercase tracking-tighter text-gray-500">Process</h2></div>
-        <div class="reels-viewport" id="reels-list">
-            <div class="reel-item">
-                <div class="reel-title-block"><div class="font-black uppercase text-sm">Seegrande</div><div class="text-[10px] text-gray-500 uppercase">Orchestral Trap</div></div>
-                <div class="reel-card" style="background-image:url('Seegrande4Thumbnail.jpg')" onclick="toggleVideo(this)"><video src="Seegrande4.mp4" loop muted playsinline preload="auto"></video><div class="video-ui"><div class="play-triangle"></div><div class="loading-spinner"></div></div><div class="pause-icon"></div></div>
-                <div class="reel-popup">⚡ Fast-Load Preview: Audio compressed for performance. Swipe down for studio quality.</div>
+    <div id="site-wrapper">
+        <section id="hero">
+            <div class="logo-wrapper">
+                <div class="logo-image-bg"></div>
+                <div class="logo-mask"><div class="logo-shine-overlay"></div></div>
             </div>
-            <div class="reel-item">
-                <div class="reel-title-block"><div class="font-black uppercase text-sm">Oseanslo</div><div class="text-[10px] text-gray-500 uppercase">Wavetable Texture</div></div>
-                <div class="reel-card" style="background-image:url('Oseanslo4Thumbnail.jpg')" onclick="toggleVideo(this)"><video src="Oseanslo4.mp4" loop muted playsinline preload="auto"></video><div class="video-ui"><div class="play-triangle"></div><div class="loading-spinner"></div></div><div class="pause-icon"></div></div>
-                <div class="reel-popup">⚡ Fast-Load Preview: Audio compressed for performance. Swipe down for studio quality.</div>
+            <div class="hero-content">
+                <div class="unified-desc mb-10">
+                    <p>From IIT-Bombay to Bomb-ass Beats</p>
+                    <p>CRAFTING ORIGINAL SOUNDS WITH</p>
+                    <p>WAVETABLE SYNTHESIS</p>
+                    <p>LESS SPLICE, MORE SPICE 🔥</p>
+                </div>
+                <button onclick="scrollToId('reels')" class="bg-white text-black px-10 py-4 rounded-full font-bold uppercase tracking-widest text-xs">View Reels</button>
             </div>
-            <div class="reel-item">
-                <div class="reel-title-block"><div class="font-black uppercase text-sm">Glitchuck</div><div class="text-[10px] text-gray-500 uppercase">Granular Glitch</div></div>
-                <div class="reel-card" style="background-image:url('Glitchuck4Thumbnail.jpg')" onclick="toggleVideo(this)"><video src="Glitchuck4.mp4" loop muted playsinline preload="auto"></video><div class="video-ui"><div class="play-triangle"></div><div class="loading-spinner"></div></div><div class="pause-icon"></div></div>
-                <div class="reel-popup">⚡ Fast-Load Preview: Audio compressed for performance. Swipe down for studio quality.</div>
+            <div class="scroll-up-hint">
+                <span class="text-[10px] font-bold tracking-[0.4em] uppercase text-white">Swipe Up</span>
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M18 15l-6-6-6 6"/></svg>
             </div>
-        </div>
-        <div class="bottom-hint"><p class="text-gray-600 text-[10px] animate-bounce uppercase tracking-widest">Swipe for more ↓</p></div>
-    </section>
+        </section>
 
-    <section id="player">
-        <div class="glass p-6 md:p-10 rounded-[2.5rem] text-center w-[92%] max-w-4xl">
-            <h2 class="text-2xl font-bold mb-6 italic underline uppercase text-white">Latest Drops</h2>
-            <div class="beat-card mb-3" onclick="handleCardClick(this)">
-                <div class="flex-1 text-left"><p class="font-bold text-lg text-white">Oseanslo</p><p class="text-xs text-gray-500 uppercase">140 BPM - DARK TRAP</p></div>
-                <audio controls preload="metadata" onplay="handleAudioTrigger(this)"><source src="https://www.dropbox.com/scl/fi/7lvw70kqbjlllw8113o6v/Oseanslo-UK-Drill-With-Hat-Movement-26-feb-26.wav?rlkey=wrak59iy3rbd6adv3u5laalo1&st=6j8ge1zf&raw=1" type="audio/mpeg"></audio>
-                <div class="condensed-popup">⚡ Condensed Arrangement: Intro, Drop, Bridge & Switch-ups in short. DM for full beat!</div>
+        <section id="reels">
+            <div class="reels-viewport" id="reels-list">
+                <div class="reel-item">
+                    <div class="reel-card" style="background-image:url('Seegrande4Thumbnail.jpg')" onclick="toggleVideo(this)"><video src="Seegrande4.mp4" loop muted playsinline></video></div>
+                </div>
+                <div class="reel-item">
+                    <div class="reel-card" style="background-image:url('Oseanslo4Thumbnail.jpg')" onclick="toggleVideo(this)"><video src="Oseanslo4.mp4" loop muted playsinline></video></div>
+                </div>
             </div>
-        </div>
-    </section>
+        </section>
 
-    <section id="socials">
-        <h2 class="text-4xl font-black mb-12 uppercase tracking-tighter">Connect</h2>
-        <div class="flex flex-col space-y-4 w-full max-w-[280px]">
-            <a href="https://wa.me/917021539281" target="_blank" class="glass py-5 rounded-2xl text-center font-bold uppercase tracking-widest hover:bg-white hover:text-black transition">WhatsApp</a>
-            <a href="https://www.instagram.com/theparaglyph/" target="_blank" class="glass py-5 rounded-2xl text-center font-bold uppercase tracking-widest hover:bg-white hover:text-black transition">Instagram</a>
-            <a href="mailto:theparaglyph@gmail.com" class="glass py-5 rounded-2xl text-center font-bold uppercase tracking-widest hover:bg-white hover:text-black transition">Email</a>
-        </div>
-        <div class="mt-20 text-center text-gray-600 text-[10px] uppercase">© PARAGLYPH 2026</div>
-    </section>
+        <section id="player">
+            <div class="glass p-6 md:p-10 rounded-[2.5rem] text-center w-[92%] max-w-4xl">
+                <h2 class="text-2xl font-bold mb-6 italic underline uppercase">Latest Drops</h2>
+                <div class="beat-card mb-3" onclick="handleCardClick(this)">
+                    <p class="font-bold">Oseanslo</p>
+                    <audio controls><source src="https://www.dropbox.com/scl/fi/7lvw70kqbjlllw8113o6v/Oseanslo-UK-Drill-With-Hat-Movement-26-feb-26.wav?rlkey=wrak59iy3rbd6adv3u5laalo1&st=6j8ge1zf&raw=1" type="audio/mpeg"></audio>
+                </div>
+            </div>
+        </section>
+    </div>
 
     <script>
+        // TRIGGER REVEAL AS SOON AS WINDOW LOADS
+        window.onload = function() {
+            document.body.classList.add('loaded');
+        };
+
         function scrollToId(id) { document.getElementById(id).scrollIntoView({ behavior: 'smooth' }); }
 
-        let touchStartY = 0, touchStartX = 0;
-        const reelsView = document.getElementById('reels-list');
-        reelsView.addEventListener('touchstart', (e) => { touchStartY = e.touches[0].clientY; touchStartX = e.touches[0].clientX; }, { passive: true });
-        reelsView.addEventListener('touchmove', (e) => {
-            let yDiff = touchStartY - e.touches[0].clientY, xDiff = touchStartX - e.touches[0].clientX;
-            if (Math.abs(yDiff) > Math.abs(xDiff) + 15) {
-                if (yDiff > 40) scrollToId('reels'); 
-            }
-        }, { passive: true });
-
-        function pauseAllMedia() {
-            document.querySelectorAll('video, audio').forEach(m => { m.pause(); m.currentTime = 0; });
-            document.querySelectorAll('.reel-card').forEach(c => c.classList.remove('video-moving', 'buffering'));
-            document.querySelectorAll('.reel-popup').forEach(p => p.classList.remove('active'));
-            document.querySelectorAll('.beat-card').forEach(b => b.classList.remove('active-track'));
-        }
-
         function toggleVideo(card) {
-            const v = card.querySelector('video'), popup = card.parentElement.querySelector('.reel-popup');
-            if (v.paused) {
-                document.querySelectorAll('video').forEach(vid => { if(vid!==v){vid.pause(); vid.currentTime=0; vid.parentElement.classList.remove('video-moving','buffering'); vid.parentElement.parentElement.querySelector('.reel-popup').classList.remove('active');} });
-                card.classList.add('buffering');
-                v.play().then(() => {
-                    let itv = setInterval(() => { if (v.currentTime > 0.05) { card.classList.remove('buffering'); card.classList.add('video-moving'); popup.classList.add('active'); v.muted = false; clearInterval(itv); } }, 50);
-                });
-            } else { v.pause(); v.currentTime = 0; card.classList.remove('video-moving'); popup.classList.remove('active'); }
+            const v = card.querySelector('video');
+            if (v.paused) { 
+                v.play(); 
+                card.classList.add('video-moving'); 
+            } else { 
+                v.pause(); 
+                card.classList.remove('video-moving'); 
+            }
         }
 
         function handleCardClick(card) {
             const audio = card.querySelector('audio');
-            if (audio.paused) { audio.play(); } else { audio.pause(); audio.currentTime = 0; }
+            if (audio.paused) audio.play(); else audio.pause();
         }
 
-        function handleAudioTrigger(audio) {
-            const card = audio.closest('.beat-card');
-            document.querySelectorAll('audio').forEach(a => { if(a !== audio) { a.pause(); a.currentTime = 0; } });
-            document.querySelectorAll('video').forEach(v => { v.pause(); v.currentTime = 0; });
-            document.querySelectorAll('.beat-card').forEach(b => b.classList.remove('active-track'));
-            card.classList.add('active-track');
-        }
-
-        const reelsViewport = document.getElementById('reels-list');
-        reelsViewport.addEventListener('scroll', () => {
-            const pos = reelsViewport.scrollLeft, max = reelsViewport.scrollWidth - reelsViewport.clientWidth;
-            document.getElementById('hint-L').style.display = pos > 30 ? 'block' : 'none';
-            document.getElementById('hint-R').style.display = pos < max - 30 ? 'block' : 'none';
-        });
-
-        const globalObserver = new IntersectionObserver(entries => { entries.forEach(e => { if (!e.isIntersecting) pauseAllMedia(); }); }, { threshold: 0.1 });
-        document.querySelectorAll('section').forEach(s => globalObserver.observe(s));
-
-        const reelAutoPlay = new IntersectionObserver(entries => {
+        const globalObserver = new IntersectionObserver(entries => {
             entries.forEach(e => {
-                const card = e.target.querySelector('.reel-card'), v = card.querySelector('video');
-                if (e.isIntersecting) { if (Math.abs(document.getElementById('reels').getBoundingClientRect().top) < 10) toggleVideo(card); } 
-                else { v.pause(); v.currentTime = 0; card.classList.remove('video-moving'); card.parentElement.querySelector('.reel-popup').classList.remove('active'); }
+                if (!e.isIntersecting) {
+                    const v = e.target.querySelector('video');
+                    if(v) { v.pause(); e.target.querySelector('.reel-card').classList.remove('video-moving'); }
+                }
             });
-        }, { threshold: 0.95 });
-        document.querySelectorAll('.reel-item').forEach(i => reelAutoPlay.observe(i));
+        }, { threshold: 0.1 });
+        document.querySelectorAll('.reel-item').forEach(i => globalObserver.observe(i));
     </script>
 </body>
 </html>
