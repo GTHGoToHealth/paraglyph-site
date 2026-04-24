@@ -24,7 +24,7 @@
         }
         .glass { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.1); }
 
-        /* --- LOGO: REFINED CONTINUOUS SHINE --- */
+        /* --- LOGO: ZERO-PARK CONTINUOUS SHINE --- */
         .logo-wrapper { 
             position: relative; 
             width: 92vw; 
@@ -55,16 +55,14 @@
                 transparent 100%
             );
             transform: skewX(-25deg);
-            /* Total duration increased for slower movement, 1s park logic in keyframes */
-            animation: constant-cinematic-shine 10s infinite linear;
+            /* Speed is consistent, zero parking logic */
+            animation: zero-park-shine 8s infinite ease-in-out;
         }
         
-        @keyframes constant-cinematic-shine {
+        @keyframes zero-park-shine {
             0% { left: -150%; }
-            40% { left: 130%; }   /* Slower cross (4s travel) */
-            50% { left: 130%; }   /* 1 Second Park at right (10% of 10s) */
-            90% { left: -150%; }  /* Slower return (4s travel) */
-            100% { left: -150%; } /* 1 Second Park at left (10% of 10s) */
+            50% { left: 130%; }   /* Continuous glide to right */
+            100% { left: -150%; } /* Continuous glide back to left */
         }
 
         /* --- HERO DESCRIPTION --- */
@@ -85,21 +83,24 @@
             white-space: nowrap; 
         }
 
-        /* --- BRIGHTER SWIPE HINT --- */
+        /* --- PERFECTLY CENTERED SWIPE HINT --- */
         .scroll-up-hint {
             position: absolute;
             bottom: 60px;
+            left: 50%;
+            transform: translateX(-50%); /* Force absolute horizontal center */
             display: flex;
             flex-direction: column;
             align-items: center;
             gap: 10px;
             opacity: 0.9;
+            z-index: 30;
             animation: bounce-strong 2s infinite;
         }
         @keyframes bounce-strong {
-            0%, 20%, 50%, 80%, 100% {transform: translateY(0); filter: brightness(1);}
-            40% {transform: translateY(-15px); filter: brightness(1.5);}
-            60% {transform: translateY(-7px);}
+            0%, 20%, 50%, 80%, 100% { transform: translate(-50%, 0); filter: brightness(1); }
+            40% { transform: translate(-50%, -15px); filter: brightness(1.5); }
+            60% { transform: translate(-50%, -7px); }
         }
 
         /* --- PAGE 2: REELS (LOCKED) --- */
@@ -214,22 +215,16 @@
     <script>
         function scrollToId(id) { document.getElementById(id).scrollIntoView({ behavior: 'smooth' }); }
 
-        // --- TOUCH BRIDGE (SWIPE-UP ON REELS) ---
+        // --- TOUCH BRIDGE ---
         let touchStartY = 0, touchStartX = 0;
         const reelsView = document.getElementById('reels-list');
         reelsView.addEventListener('touchstart', (e) => { touchStartY = e.touches[0].clientY; touchStartX = e.touches[0].clientX; }, { passive: true });
         reelsView.addEventListener('touchmove', (e) => {
             let yDiff = touchStartY - e.touches[0].clientY, xDiff = touchStartX - e.touches[0].clientX;
             if (Math.abs(yDiff) > Math.abs(xDiff) + 15) {
-                if (yDiff > 40) scrollToId('reels'); // Adjusted for Hero -> Page 2
-                if (yDiff > 40 && window.scrollY > window.innerHeight / 2) scrollToId('player');
+                if (yDiff > 40) scrollToId('reels'); 
             }
         }, { passive: true });
-
-        // Added scroll listener for manual snap support
-        window.addEventListener('scroll', () => {
-             // Optional logic for manual tracking
-        });
 
         // --- MEDIA CONTROL ---
         function pauseAllMedia() {
