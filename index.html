@@ -4,6 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Paraglyph | Sound Design</title>
+    
+    <link rel="preload" href="logo.png" as="image">
+    
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         /* --- GLOBAL PHYSICS --- */
@@ -12,7 +15,15 @@
             background-color: #0a0a0a; color: white;
             font-family: 'Inter', sans-serif;
             overflow: hidden;
+            /* FIX 2: SMOOTH FADE-IN (Prevents text loading before image) */
+            animation: site-reveal 0.8s ease-out forwards;
+            opacity: 0;
         }
+        @keyframes site-reveal {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
         body {
             overflow-y: scroll;
             scroll-snap-type: y mandatory;
@@ -24,7 +35,7 @@
         }
         .glass { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.1); }
 
-        /* --- LOGO: ZERO-PARK CONTINUOUS SHINE --- */
+        /* --- LOGO: FROZEN AS REQUESTED --- */
         .logo-wrapper { 
             position: relative; 
             width: 92vw; 
@@ -55,14 +66,12 @@
                 transparent 100%
             );
             transform: skewX(-25deg);
-            /* Speed is consistent, zero parking logic */
             animation: zero-park-shine 8s infinite ease-in-out;
         }
-        
         @keyframes zero-park-shine {
             0% { left: -150%; }
-            50% { left: 130%; }   /* Continuous glide to right */
-            100% { left: -150%; } /* Continuous glide back to left */
+            50% { left: 130%; }
+            100% { left: -150%; }
         }
 
         /* --- HERO DESCRIPTION --- */
@@ -83,12 +92,12 @@
             white-space: nowrap; 
         }
 
-        /* --- PERFECTLY CENTERED SWIPE HINT --- */
+        /* --- SWIPE HINT --- */
         .scroll-up-hint {
             position: absolute;
             bottom: 60px;
             left: 50%;
-            transform: translateX(-50%); /* Force absolute horizontal center */
+            transform: translateX(-50%);
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -103,7 +112,7 @@
             60% { transform: translate(-50%, -7px); }
         }
 
-        /* --- PAGE 2: REELS (LOCKED) --- */
+        /* --- PAGE 2: REELS --- */
         #reels { justify-content: flex-start; padding-top: 5vh; }
         .reel-section-header { margin-bottom: 0.5rem; }
         .reels-viewport {
@@ -215,7 +224,6 @@
     <script>
         function scrollToId(id) { document.getElementById(id).scrollIntoView({ behavior: 'smooth' }); }
 
-        // --- TOUCH BRIDGE ---
         let touchStartY = 0, touchStartX = 0;
         const reelsView = document.getElementById('reels-list');
         reelsView.addEventListener('touchstart', (e) => { touchStartY = e.touches[0].clientY; touchStartX = e.touches[0].clientX; }, { passive: true });
@@ -226,7 +234,6 @@
             }
         }, { passive: true });
 
-        // --- MEDIA CONTROL ---
         function pauseAllMedia() {
             document.querySelectorAll('video, audio').forEach(m => { m.pause(); m.currentTime = 0; });
             document.querySelectorAll('.reel-card').forEach(c => c.classList.remove('video-moving', 'buffering'));
