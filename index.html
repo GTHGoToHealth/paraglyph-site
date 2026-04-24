@@ -60,14 +60,14 @@
         section { scroll-snap-align: start; height: 100vh; width: 100vw; display: flex; flex-direction: column; align-items: center; position: relative; overflow: hidden; }
         .glass { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.1); }
 
-        /* --- PAGE 2: REELS (FIXED LAYOUT) --- */
-        #reels { justify-content: flex-start; padding-top: 2vh; } /* Reduced top padding to move everything up */
+        /* --- PAGE 2: REELS (INTERACTIVE) --- */
+        #reels { justify-content: flex-start; padding-top: 1vh; } 
         .reels-viewport { width: 100%; overflow-x: auto; display: flex; scroll-snap-type: x mandatory; scrollbar-width: none; padding: 0 45px; gap: 25px; -webkit-overflow-scrolling: touch; }
         .reels-viewport::-webkit-scrollbar { display: none; }
         .reel-item { scroll-snap-align: center; flex: 0 0 280px; display: flex; flex-direction: column; align-items: center; }
         
-        .reel-title-block { height: 50px; display: flex; flex-direction: column; justify-content: flex-end; margin-bottom: 12px; text-align: center; }
-        .reel-card { width: 280px; aspect-ratio: 9/16; background-color: #111; border-radius: 24px; overflow: hidden; border: 1px solid rgba(255,255,255,0.1); position: relative; cursor: pointer; background-size: cover; background-position: center; }
+        .reel-title-block { height: 60px; display: flex; flex-direction: column; justify-content: flex-end; margin-bottom: 15px; text-align: center; }
+        .reel-card { width: 280px; aspect-ratio: 9/16; background-color: #111; border-radius: 24px; overflow: hidden; border: 1px solid rgba(255,255,255,0.1); position: relative; cursor: pointer; }
         
         .video-ui { position: absolute; inset: 0; display: flex; justify-content: center; align-items: center; z-index: 20; pointer-events: none; }
         .play-triangle { width: 0; height: 0; border-style: solid; border-width: 18px 0 18px 30px; border-color: transparent transparent transparent rgba(255, 255, 255, 0.6); transition: opacity 0.2s ease; }
@@ -86,7 +86,7 @@
         .reel-popup { font-size: 8.5px; color: #10b981; font-weight: 800; text-transform: uppercase; background: rgba(0,0,0,0.8); border: 1px solid rgba(16, 185, 129, 0.3); padding: 8px 12px; border-radius: 8px; margin-top: 10px; text-align: center; width: 250px; opacity: 0; transform: translateY(10px); transition: opacity 0.4s ease, transform 0.4s ease; }
         .reel-popup.active { opacity: 1; transform: translateY(0); }
 
-        .bottom-hint-reels { margin-top: 2vh; } /* Explicit spacing for hint */
+        .bottom-hint-reels { margin-top: 3vh; } 
 
         /* --- PAGE 3: PLAYER --- */
         .beat-card { display: flex; flex-direction: column; width: 100%; transition: all 0.3s ease; padding: 1.1rem; background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255,255,255,0.05); border-radius: 1.5rem; cursor: pointer; }
@@ -128,14 +128,13 @@
                         <div class="text-[10px] text-gray-500 uppercase">Orchestral Trap</div>
                     </div>
                     <div class="reel-card" style="background-image:url('Seegrande4Thumbnail.jpg')" onclick="toggleVideo(this)">
-                        <video src="Seegrande4.mp4" loop playsinline preload="auto"></video> <div class="video-ui">
-                            <div class="play-triangle"></div>
-                            <div class="loading-spinner"></div>
-                        </div>
+                        <video src="Seegrande4.mp4" loop playsinline preload="auto"></video>
+                        <div class="video-ui"><div class="play-triangle"></div><div class="loading-spinner"></div></div>
                         <div class="pause-icon"></div>
                     </div>
-                    <div class="reel-popup">⚡ Tap for Audio</div>
+                    <div class="reel-popup">⚡ Audio Active</div>
                 </div>
+
                 <div class="reel-item">
                     <div class="reel-title-block">
                         <div class="font-black uppercase text-sm">Oseanslo</div>
@@ -143,14 +142,12 @@
                     </div>
                     <div class="reel-card" style="background-image:url('Oseanslo4Thumbnail.jpg')" onclick="toggleVideo(this)">
                         <video src="Oseanslo4.mp4" loop playsinline preload="auto"></video>
-                        <div class="video-ui">
-                            <div class="play-triangle"></div>
-                            <div class="loading-spinner"></div>
-                        </div>
+                        <div class="video-ui"><div class="play-triangle"></div><div class="loading-spinner"></div></div>
                         <div class="pause-icon"></div>
                     </div>
-                    <div class="reel-popup">⚡ Tap for Audio</div>
+                    <div class="reel-popup">⚡ Audio Active</div>
                 </div>
+
                 <div class="reel-item">
                     <div class="reel-title-block">
                         <div class="font-black uppercase text-sm">Glitchuck</div>
@@ -158,13 +155,10 @@
                     </div>
                     <div class="reel-card" style="background-image:url('Glitchuck4Thumbnail.jpg')" onclick="toggleVideo(this)">
                         <video src="Glitchuck4.mp4" loop playsinline preload="auto"></video>
-                        <div class="video-ui">
-                            <div class="play-triangle"></div>
-                            <div class="loading-spinner"></div>
-                        </div>
+                        <div class="video-ui"><div class="play-triangle"></div><div class="loading-spinner"></div></div>
                         <div class="pause-icon"></div>
                     </div>
-                    <div class="reel-popup">⚡ Tap for Audio</div>
+                    <div class="reel-popup">⚡ Audio Active</div>
                 </div>
             </div>
             <div class="bottom-hint-reels"><p class="text-gray-600 text-[10px] animate-bounce uppercase tracking-widest">Swipe for more ↓</p></div>
@@ -196,7 +190,6 @@
     </div>
 
     <script>
-        // --- PERFORMANCE LOAD ---
         const checkImage = setInterval(() => {
             const img = new Image();
             img.src = "logo.png";
@@ -206,18 +199,22 @@
 
         function scrollToId(id) { document.getElementById(id).scrollIntoView({ behavior: 'smooth' }); }
 
-        // --- VIDEO CONTROL (WITH AUDIO SUPPORT) ---
+        // --- TAP TO STOP / TAP TO START FROM ZERO ---
         function toggleVideo(card) {
             const v = card.querySelector('video');
             const popup = card.parentElement.querySelector('.reel-popup');
             
-            if (v.paused) {
-                // Pause other media
+            if (!v.paused) {
+                v.pause();
+                card.classList.remove('video-moving');
+                popup.classList.remove('active');
+            } else {
                 document.querySelectorAll('video').forEach(vid => { vid.pause(); vid.parentElement.classList.remove('video-moving','buffering'); });
                 document.querySelectorAll('audio').forEach(aud => aud.pause());
                 
+                v.currentTime = 0; // RESTART FROM START
+                v.muted = false; 
                 card.classList.add('buffering');
-                v.muted = false; // Ensure sound is on
                 
                 v.play().then(() => {
                     let itv = setInterval(() => { 
@@ -228,19 +225,10 @@
                             clearInterval(itv); 
                         } 
                     }, 100);
-                }).catch(err => {
-                    // Fallback if browser blocks unmuted autoplay
-                    v.muted = true;
-                    v.play();
                 });
-            } else {
-                v.pause();
-                card.classList.remove('video-moving');
-                popup.classList.remove('active');
             }
         }
 
-        // --- AUDIO CONTROL ---
         function handleCardClick(card) {
             const audio = card.querySelector('audio');
             if (audio.paused) audio.play(); else audio.pause();
@@ -250,14 +238,17 @@
             document.querySelectorAll('audio').forEach(a => { if(a !== audio) { a.pause(); a.currentTime = 0; } });
         }
 
-        // --- AUTOPLAY OBSERVER (REFINED) ---
+        // --- AUTOPLAY MUTES (Browser Compliance) ---
         const observer = new IntersectionObserver(entries => {
             entries.forEach(e => {
                 const card = e.target.querySelector('.reel-card');
                 const v = e.target.querySelector('video');
                 if (e.isIntersecting) { 
-                    // To comply with browser policy, autoplay is often muted until interaction
-                    if(v) { v.muted = true; v.play(); card.classList.add('video-moving'); }
+                    if(v) { 
+                        v.muted = true; // Auto-scroll remains muted
+                        v.play(); 
+                        card.classList.add('video-moving'); 
+                    }
                 } else {
                     if(v) { v.pause(); card.classList.remove('video-moving'); e.target.querySelector('.reel-popup').classList.remove('active'); }
                 }
@@ -265,7 +256,6 @@
         }, { threshold: 0.8 });
         document.querySelectorAll('.reel-item').forEach(i => observer.observe(i));
 
-        // --- GESTURE PHYSICS ---
         const reelsView = document.getElementById('reels-list');
         let touchStartX = 0, touchStartY = 0;
         reelsView.addEventListener('touchstart', (e) => { touchStartX = e.touches[0].clientX; touchStartY = e.touches[0].clientY; }, { passive: true });
