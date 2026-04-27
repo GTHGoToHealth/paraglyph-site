@@ -325,16 +325,28 @@ audio {
     
 
 /* --- UNIFIED TEXT-ONLY HINT --- */
-/* --- FIXED BOTTOM ANCHOR --- */
+/* --- FIXED BOTTOM ANCHOR --- *//* --- THE CORRECTED CENTERED HINT --- */
+@keyframes unified-swipe {
+    /* We must include -50% in every step to keep it centered horizontally */
+    0%, 100% { 
+        transform: translate(-50%, 0); 
+        opacity: 0.5; 
+    }
+    50% { 
+        transform: translate(-50%, -8px); 
+        opacity: 1; 
+    }
+}
+
 .unified-hint {
     position: absolute;
-    /* Anchors it 15px above the actual browser UI (nav bars, home indicators) */
-    bottom: calc(15px + env(safe-area-inset-bottom)); 
+    bottom: calc(20px + env(safe-area-inset-bottom)); 
     left: 50%;
-    z-index: 100; 
+    /* Remove the standalone transform here as the animation handles it */
+    z-index: 100;
     animation: unified-swipe 2s infinite ease-in-out;
     pointer-events: none;
-    width: 100%;
+    width: auto; /* Changed from 100% to auto to prevent stretching */
     text-align: center;
 }
 
@@ -345,7 +357,6 @@ audio {
     text-transform: uppercase;
     color: #8f8f8f;
     white-space: nowrap;
-    display: block;
 }
         
 
