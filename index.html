@@ -346,16 +346,16 @@ audio {
                     <p>WAVETABLE SYNTHESIS</p>
                     <p>LESS SPLICE, MORE SPICE 🔥</p>
                 </div>
-                <button onclick="scrollToId('reels')" style="background: white; color: black; padding: 15px 40px; border-radius: 50px; font-weight: 900; text-transform: uppercase; font-size: 10px; letter-spacing: 0.2em; border: none; cursor: pointer;">View Reels</button>
+                <button onclick="scrollToId('reels')" style="background: white; color: black; padding: 15px 40px; border-radius: 50px; font-weight: 900; text-transform: uppercase; font-size: 10px; letter-spacing: 0.2em; border: none; cursor: pointer;">Production Visualisers</button>
             </div>
             <div class="scroll-up-hint">
                 <span style="font-size: 10px; font-weight: 900; letter-spacing: 0.4em; text-transform: uppercase;">Swipe Up</span>
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M18 15l-6-6-6 6"/></svg>
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 15l-6-6-6 6"/></svg>
             </div>
         </section>
 
         <section id="reels">
-            <h2 class="text-2xl font-bold uppercase tracking-tighter text-gray-500 mb-6 mt-8">Process</h2>
+            <h2 class="text-2xl font-bold uppercase tracking-tighter text-gray-500 mb-6 mt-8">Production Visualiser</h2>
             <div class="reels-viewport" id="reels-list">
                 <div class="reel-item">
                     <div class="reel-title-block"><div class="font-black uppercase text-sm">Seegrande</div><div class="text-[10px] text-gray-500 uppercase">Orchestral Trap</div></div>
@@ -364,7 +364,7 @@ audio {
                         <div class="video-ui"><div class="play-triangle"></div><div class="loading-spinner"></div></div>
                         <div class="pause-icon"></div>
                     </div>
-                    <div class="reel-popup">⚡ Sound On</div>
+                    <div class="reel-popup">⚡ Web-compressed for faster loading. HQ Audio on next page 👇🏻</div>
                 </div>
                 <div class="reel-item">
                     <div class="reel-title-block"><div class="font-black uppercase text-sm">Oseanslo</div><div class="text-[10px] text-gray-500 uppercase">Wavetable Texture</div></div>
@@ -373,7 +373,7 @@ audio {
                         <div class="video-ui"><div class="play-triangle"></div><div class="loading-spinner"></div></div>
                         <div class="pause-icon"></div>
                     </div>
-                    <div class="reel-popup">⚡ Sound On</div>
+                    <div class="reel-popup">⚡ Web-compressed for faster loading. HQ Audio on next page 👇🏻</div>
                 </div>
                 <div class="reel-item">
                     <div class="reel-title-block"><div class="font-black uppercase text-sm">Glitchuck</div><div class="text-[10px] text-gray-500 uppercase">Granular Glitch</div></div>
@@ -382,10 +382,10 @@ audio {
                         <div class="video-ui"><div class="play-triangle"></div><div class="loading-spinner"></div></div>
                         <div class="pause-icon"></div>
                     </div>
-                    <div class="reel-popup">⚡ Sound On</div>
+                    <div class="reel-popup">⚡ Web-compressed for faster loading. HQ Audio on next page 👇🏻</div>
                 </div>
             </div>
-            <div class="bottom-hint-reels"><p class="text-gray-600 text-[10px] animate-bounce uppercase tracking-widest">Swipe for more ↓</p></div>
+            <div class="bottom-hint-reels"><p class="text-gray-600 text-[10px] animate-bounce uppercase tracking-widest">Swipe up for HQ Audio ↑</p></div>
         </section>
 
  <!--- Removed iframe for audio player page and added this from claude --->
@@ -393,7 +393,7 @@ audio {
             <div class="text-center py-5">
                 <h2 class="text-2xl font-black uppercase tracking-tighter mb-1">Latest Drops</h2>
                 <p id="subheading" class="text-[9px] tracking-[0.2em] text-gray-500 uppercase leading-relaxed font-bold px-6">
-                    condensed arrangement - DM for full beat
+                    condensed arrangement for quick preview of the full beat - DM for full beat
                 </p>
             </div>
             <div class="glass">
@@ -406,7 +406,7 @@ audio {
             </div>
             <div class="mt-8 flex flex-col items-center gap-2 opacity-50">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#888" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M18 15l-6-6-6 6"/></svg>
-                <span class="text-[9px] font-black uppercase tracking-[0.3em]">Connect</span>
+                <span class="text-[9px] font-black uppercase tracking-[0.3em]">Let's Connect ↓</span>
             </div>
         </section>
 
@@ -603,7 +603,7 @@ function renderBeats() {
                 <div class="loader"></div>
             </div>
             <audio controls preload="metadata"><source src="${beat.url}" type="audio/mpeg"></audio>
-            <div class="yellow-popup">DM for full beat</div>
+            <div class="yellow-popup">Condensed arrangement for quick preview. Contact for full-length HQ audio.</div>
         `;
         fragment.appendChild(card);
 
