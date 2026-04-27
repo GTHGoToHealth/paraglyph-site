@@ -324,38 +324,30 @@ audio {
     
     
 
-
-/* --- UNIFIED SWIPE HINT --- */
-@keyframes unified-swipe {
-    0%, 100% { transform: translate(-50%, 0); opacity: 0.5; }
-    50% { transform: translate(-50%, -8px); opacity: 1; }
+/* --- UNIFIED TEXT-ONLY HINT --- */
+@keyframes unified-text-pulse {
+    0%, 100% { transform: translate(-50%, 0); opacity: 0.4; }
+    50% { transform: translate(-50%, -6px); opacity: 0.9; }
 }
 
 .unified-hint {
     position: absolute;
-    bottom: 30px; /* Standard distance from bottom */
+    bottom: 35px; /* Aligned height for all pages */
     left: 50%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 8px;
     z-index: 40;
-    animation: unified-swipe 2s infinite ease-in-out;
+    animation: unified-text-pulse 2s infinite ease-in-out;
     pointer-events: none;
 }
 
 .unified-hint span {
     font-size: 9px;
     font-weight: 900;
-    letter-spacing: 0.3em;
+    letter-spacing: 0.4em;
     text-transform: uppercase;
-    color: #666;
+    color: #555; /* Subtle grey to not distract from content */
     white-space: nowrap;
 }
 
-.unified-hint svg {
-    stroke: #666;
-}
         
     
     
@@ -381,8 +373,7 @@ audio {
                 <button onclick="scrollToId('reels')" style="background: white; color: black; padding: 15px 40px; border-radius: 50px; font-weight: 900; text-transform: uppercase; font-size: 10px; letter-spacing: 0.2em; border: none; cursor: pointer;">Production Visualisers</button>
             </div>
             <div class="unified-hint">
-    <span>Swipe Up</span>
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M18 15l-6-6-6 6"/></svg>
+    <span>Swipe Up ↑</span>
 </div>
         </section>
  
@@ -419,7 +410,6 @@ audio {
             </div>
 <div class="unified-hint">
     <span>Swipe up for HQ Audio ↑</span>
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M18 15l-6-6-6 6"/></svg>
 </div>
 
             
@@ -444,7 +434,6 @@ audio {
 
 <div class="unified-hint">
     <span>Let's Connect ↓</span>
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M18 15l-6-6-6 6"/></svg>
 </div>
             
         </section>
