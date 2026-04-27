@@ -14,7 +14,19 @@
         /* --- GLOBAL & LOADING PHYSICS --- */
         html, body { height: 100%; margin: 0; padding: 0; background-color: #000; color: white; font-family: 'Inter', sans-serif; overflow: hidden; -webkit-font-smoothing: antialiased; }
         body { overflow-y: scroll; scroll-snap-type: y mandatory; }
-        section { scroll-snap-align: start; height: 100vh; width: 100vw; display: flex; flex-direction: column; align-items: center; position: relative; overflow: hidden; }
+
+       /* Modern fix for Safari/Chrome mobile height */ 
+section { 
+    scroll-snap-align: start; 
+    height: 100vh; 
+    height: 100dvh; /* Modern fix for Safari/Chrome mobile height */
+    width: 100vw; 
+    display: flex; 
+    flex-direction: column; 
+    align-items: center; 
+    position: relative; 
+    overflow: hidden; 
+}
         
         #skeleton-loader { position: absolute; top: 40%; left: 50%; transform: translate(-50%, -50%); width: 150px; height: 150px; background: radial-gradient(circle, rgba(255,255,255,0.15) 0%, transparent 70%); border-radius: 50%; filter: blur(30px); animation: skeleton-pulse 1.2s infinite ease-in-out; z-index: 999; }
         @keyframes skeleton-pulse { 0%, 100% { opacity: 0.3; transform: translate(-50%, -50%) scale(1); } 50% { opacity: 0.8; transform: translate(-50%, -50%) scale(1.2); } }
@@ -156,11 +168,15 @@
 
         
     /* --- PAGE 4: SOCIALS STYLES --- */
+        /* --- Safari was missing this page - fix added--- */
 #socials {
     justify-content: flex-start;
     padding-top: 4dvh;
     scroll-snap-align: start;
     height: 100vh;
+    height: 100dvh; /* Ensures the 4th page is exactly the visible height */
+    min-height: -webkit-fill-available; /* Specific Safari "kick" to show content */
+    overflow: visible; /* Prevents Safari from cutting off the section */
 }
 
 .s-logo-box {
@@ -232,9 +248,12 @@
 
 .s-footer {
     margin-top: auto;
-    padding-bottom: 3dvh;
-    font-size: 9px; font-weight: 900; color: #444;
-    letter-spacing: 0.3em; text-transform: uppercase;
+    padding-bottom: calc(3dvh + env(safe-area-inset-bottom)); /* Adds extra space for iPhone bars */
+    font-size: 9px; 
+    font-weight: 900; 
+    color: #444;
+    letter-spacing: 0.3em; 
+    text-transform: uppercase;
     width: 100%;
     text-align: center;
 }
