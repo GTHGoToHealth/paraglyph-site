@@ -312,6 +312,12 @@ section {
     padding: 3px 8px; border-radius: 4px; 
     text-transform: uppercase; margin-top: 8px; 
     opacity: 0; transition: all 0.4s ease; 
+    /* ADD THIS LINE */
+    text-align: center; 
+    
+    /* ADD THESE TO ENSURE THE BOX ITSELF CENTERS */
+    align-self: center; 
+    width: fit-content;
 }
 .active-track .yellow-popup { opacity: 1; }
 #prevBtn, #nextBtn { color: #ffffff; font-weight: 900; font-size: 12px; text-transform: uppercase; }
@@ -396,7 +402,7 @@ audio {
             <h2 class="text-2xl font-black uppercase tracking-tighter mb-1">Production Visualiser</h2>
             <div class="reels-viewport" id="reels-list">
                 <div class="reel-item">
-                    <div class="reel-title-block"><div class="font-black uppercase text-sm">Seegrande</div><div class="text-[10px] text-gray-500 uppercase">Orchestral Trap</div></div>
+                    <div class="reel-title-block"><div class="font-black uppercase text-sm">Seegrande</div><div class="text-[10px] text-gray-500 uppercase">140BPM Orchestral Trap</div></div>
                     <div class="reel-card" style="background-image:url('Seegrande4Thumbnail.jpg')" onclick="toggleVideo(this, true)">
                         <video src="Seegrande4.mp4" loop playsinline preload="auto"></video>
                         <div class="video-ui"><div class="play-triangle"></div><div class="loading-spinner"></div></div>
@@ -405,7 +411,7 @@ audio {
                     <div class="reel-popup">⚡ Web-compressed for faster loading.<br>HQ Audio on next page 👇🏻</div>
                 </div>
                 <div class="reel-item">
-                    <div class="reel-title-block"><div class="font-black uppercase text-sm">Oseanslo</div><div class="text-[10px] text-gray-500 uppercase">Wavetable Texture</div></div>
+                    <div class="reel-title-block"><div class="font-black uppercase text-sm">Oseanslo</div><div class="text-[10px] text-gray-500 uppercase">140BPM Dark Trap</div></div>
                     <div class="reel-card" style="background-image:url('Oseanslo4Thumbnail.jpg')" onclick="toggleVideo(this, true)">
                         <video src="Oseanslo4.mp4" loop playsinline preload="auto"></video>
                         <div class="video-ui"><div class="play-triangle"></div><div class="loading-spinner"></div></div>
@@ -414,7 +420,7 @@ audio {
                     <div class="reel-popup">⚡ Web-compressed for faster loading. HQ Audio on next page 👇🏻</div>
                 </div>
                 <div class="reel-item">
-                    <div class="reel-title-block"><div class="font-black uppercase text-sm">Glitchuck</div><div class="text-[10px] text-gray-500 uppercase">Granular Glitch</div></div>
+                    <div class="reel-title-block"><div class="font-black uppercase text-sm">Glitchuck</div><div class="text-[10px] text-gray-500 uppercase">140 BPM Glitch Pop</div></div>
                     <div class="reel-card" style="background-image:url('Glitchuck4Thumbnail.jpg')" onclick="toggleVideo(this, true)">
                         <video src="Glitchuck4.mp4" loop playsinline preload="auto"></video>
                         <div class="video-ui"><div class="play-triangle"></div><div class="loading-spinner"></div></div>
@@ -616,9 +622,9 @@ audio {
 // --- BEATS PLAYER LOGIC ---
 const allBeats = [
     { title: 'Oseanslo', bpm: '140', genre: 'Dark Trap', url: 'https://www.dropbox.com/scl/fi/7lvw70kqbjlllw8113o6v/Oseanslo-UK-Drill-With-Hat-Movement-26-feb-26.wav?rlkey=wrak59iy3rbd6adv3u5laalo1&st=6j8ge1zf&raw=1' },
-    { title: 'Seegrande', bpm: '130', genre: 'Orchestral', url: 'https://www.dropbox.com/scl/fi/7lvw70kqbjlllw8113o6v/Oseanslo-UK-Drill-With-Hat-Movement-26-feb-26.wav?rlkey=wrak59iy3rbd6adv3u5laalo1&st=6j8ge1zf&raw=1' },
-    { title: 'Glitchuck', bpm: '150', genre: 'Glitch', url: 'https://www.dropbox.com/scl/fi/7lvw70kqbjlllw8113o6v/Oseanslo-UK-Drill-With-Hat-Movement-26-feb-26.wav?rlkey=wrak59iy3rbd6adv3u5laalo1&st=6j8ge1zf&raw=1' },
-    { title: 'Wavetable', bpm: '128', genre: 'Electronic', url: 'https://www.dropbox.com/scl/fi/7lvw70kqbjlllw8113o6v/Oseanslo-UK-Drill-With-Hat-Movement-26-feb-26.wav?rlkey=wrak59iy3rbd6adv3u5laalo1&st=6j8ge1zf&raw=1' }
+    { title: 'Seegrande', bpm: '140', genre: 'Orchestral Trap', url: 'https://www.dropbox.com/scl/fi/7lvw70kqbjlllw8113o6v/Oseanslo-UK-Drill-With-Hat-Movement-26-feb-26.wav?rlkey=wrak59iy3rbd6adv3u5laalo1&st=6j8ge1zf&raw=1' },
+    { title: 'Glitchuck', bpm: '140', genre: 'Glitch Pop', url: 'https://www.dropbox.com/scl/fi/7lvw70kqbjlllw8113o6v/Oseanslo-UK-Drill-With-Hat-Movement-26-feb-26.wav?rlkey=wrak59iy3rbd6adv3u5laalo1&st=6j8ge1zf&raw=1' },
+    { title: 'Wavetable', bpm: '140', genre: 'Electronic', url: 'https://www.dropbox.com/scl/fi/7lvw70kqbjlllw8113o6v/Oseanslo-UK-Drill-With-Hat-Movement-26-feb-26.wav?rlkey=wrak59iy3rbd6adv3u5laalo1&st=6j8ge1zf&raw=1' }
 ];
 
 let currentPage = 1;
