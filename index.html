@@ -667,21 +667,24 @@ document.getElementById('nextBtn').onclick = () => { if (currentPage * beatsPerP
 
 renderBeats();
 
-// --- MASTER SCROLL OBSERVER ---
+
+// --- UPDATED MASTER SCROLL OBSERVER ---
 const mainObserver = new IntersectionObserver(entries => {
     entries.forEach(entry => {
-        // Left REELS → pause all videos
+        // CASE: User left REELS (Page 2)
         if (entry.target.id === 'reels' && !entry.isIntersecting) {
             document.querySelectorAll('video').forEach(v => {
                 v.pause();
                 v.parentElement.classList.remove('video-moving');
-                const popup = v.parentElement.parentElement.querySelector('.reel-popup');
-                if (popup) popup.classList.remove('active');
             });
         }
 
-// Left PLAYER → stop all audio directly
-if (entry.target.id === 'player' && !entry.isIntersecting) {
+        // CASE: User left PLAYER (Page 3) OR entered CONNECT-HUB (Page 4)
+        const isLeavingPlayer = (entry.target.id === 'player' && !entry.isIntersecting);
+        const isEnteringConnect = (entry.target.id === 'connect-hub' && entry.isIntersecting);
+
+        if (isLeavingPlayer || isEnteringConnect) {
+            // Kill all audio directly since the code is now in the same file
             document.querySelectorAll('#beat-list audio').forEach(a => {
                 a.pause();
                 a.currentTime = 0;
@@ -690,29 +693,16 @@ if (entry.target.id === 'player' && !entry.isIntersecting) {
                 card.classList.remove('active-track', 'is-loading');
             });
         }
-// Entered SOCIALS → also stop audio (belt and suspenders)
-        if (entry.target.id === 'connect-hub' && entry.isIntersecting) {
-            document.querySelectorAll('#beat-list audio').forEach(a => {
-                a.pause();
-                a.currentTime = 0;
-            });
-            document.querySelectorAll('#beat-list .beat-card').forEach(card => {
-                card.classList.remove('active-track', 'is-loading');
-            });
-        }
-
-        
-
     });
-}, { threshold: 0 });
+}, { threshold: 0.1 }); // Threshold increased slightly for better trigger reliability
 
+// Ensure all sections are being watched
 mainObserver.observe(document.getElementById('reels'));
 mainObserver.observe(document.getElementById('player'));
 mainObserver.observe(document.getElementById('connect-hub'));
 
 
-
-
+        
 
     </script>
 </body>
