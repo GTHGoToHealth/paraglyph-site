@@ -325,18 +325,17 @@ audio {
     
 
 /* --- UNIFIED TEXT-ONLY HINT --- */
-@keyframes unified-text-pulse {
-    0%, 100% { transform: translate(-50%, 0); opacity: 0.6; }
-    50% { transform: translate(-50%, 8px); opacity: 1; }
-}
-
+/* --- FIXED BOTTOM ANCHOR --- */
 .unified-hint {
     position: absolute;
-    bottom: 35px; /* Aligned height for all pages */
+    /* Anchors it 15px above the actual browser UI (nav bars, home indicators) */
+    bottom: calc(15px + env(safe-area-inset-bottom)); 
     left: 50%;
-    z-index: 40;
-    animation: unified-text-pulse 2s infinite ease-in-out;
+    z-index: 100; 
+    animation: unified-swipe 2s infinite ease-in-out;
     pointer-events: none;
+    width: 100%;
+    text-align: center;
 }
 
 .unified-hint span {
@@ -344,9 +343,11 @@ audio {
     font-weight: 900;
     letter-spacing: 0.4em;
     text-transform: uppercase;
-    color: #8f8f8f; /* 
+    color: #8f8f8f;
     white-space: nowrap;
+    display: block;
 }
+        
 
         
     
