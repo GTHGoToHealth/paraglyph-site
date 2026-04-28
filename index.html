@@ -42,7 +42,7 @@ section {
         .logo-shine-overlay { position: absolute; top: 0; width: 120%; height: 100%; background: linear-gradient(to right, transparent 0%, rgba(255,255,255,0) 35%, rgba(255,255,255,0.85) 50%, rgba(255,255,255,0) 65%, transparent 100%); transform: skewX(-25deg); animation: zero-park-shine 8s infinite ease-in-out; }
         @keyframes zero-park-shine { 0% { left: -150%; } 50% { left: 130%; } 100% { left: -150%; } }
         .hero-content { text-align: center; margin-top: -120px; z-index: 20; width: 100%; }
-        .unified-desc { font-size: 11px; color: #9ca3af; font-weight: 900; text-transform: uppercase; letter-spacing: 0.08em; line-height: 2; white-space: nowrap; }
+        .unified-desc { font-size: 11px; color: #9ca3af; font-weight: 900; text-transform: uppercase; letter-spacing: 0.12em; line-height: 2.2; white-space: nowrap; }
         .scroll-up-hint { position: absolute; bottom: 60px; left: 50%; transform: translateX(-50%); display: flex; flex-direction: column; align-items: center; gap: 10px; opacity: 0.9; z-index: 30; animation: bounce-strong 2s infinite; }
 
 
@@ -414,11 +414,16 @@ audio {
     color: #9ca3af; /* Matches your hero description color */
     font-weight: 700;
     text-transform: uppercase;
-    letter-spacing: 0.12em;
+    letter-spacing: 0.15em;
     line-height: 1.8;
     margin: 0;
 }
-    
+    /* Specific highlight for the credentials */
+.about-me-container p:first-child {
+    color: #fff; /* Makes the IIT-B credential pop slightly more */
+    letter-spacing: 0.2em;
+    margin-bottom: 8px;
+}
     
         </style>
 </head>
@@ -433,12 +438,12 @@ audio {
                 <div class="logo-mask"><div class="logo-shine-overlay"></div></div>
             </div>
             <div class="hero-content">
-                <div class="unified-desc" style="margin-bottom: 40px;">
-                    <p>From IIT-Bombay to Bomb-ass Beats</p>
-                    <p>CRAFTING ORIGINAL SOUNDS WITH</p>
-                    <p>WAVETABLE SYNTHESIS</p>
-                    <p>LESS SPLICE, MORE SPICE 🔥</p>
-                </div>
+              <div class="unified-desc" style="margin-bottom: 40px;">
+                <p>From IIT-Bombay to Bomb-ass Beats</p>
+                <p>SOUND DESIGN DRIVEN MUSIC PRODUCTION</p>
+                <p>USING WAVETABLE SYNTHESIS</p>
+                <p>LESS SPLICE, MORE SPICE 🔥</p>
+            </div>
                 <button onclick="scrollToId('reels')" style="background: white; color: black; padding: 15px 40px; border-radius: 50px; font-weight: 900; text-transform: uppercase; font-size: 10px; letter-spacing: 0.2em; border: none; cursor: pointer;">Production Visualisers</button>
             </div>
             <div class="unified-hint">
@@ -521,10 +526,11 @@ audio {
 
      <!--- New About Me Section --->
         <div class="about-me-container">
-        <p>Sound Designer & Music Producer based in Mumbai.</p>
-        <p>Specializing in Wavetable Synthesis and Granular Textures.</p>
-        <p>Bridging the gap between Engineering and Art.</p>
-        <p>From IIT-Bombay to crafting original sonic identities.</p>
+            <p>Alumnus of IIT Bombay — India’s Premier Technical Institute.</p>
+            <p>Architecting unique Sonic Identities for forward-thinking artists.</p>
+            <p>Ghost producer for global labels and industry-leading producers.</p>
+            <p>Specializing in the Physics of Synthesis & Signal Processing.</p>
+            <p>Translating complex engineering into raw, emotive soundscapes.</p>
         </div>
     
         <div class="c-links-area">
