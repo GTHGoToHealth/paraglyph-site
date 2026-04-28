@@ -399,49 +399,58 @@ audio {
 
 
 
+/* --- REFINED BIO SPACING LOGIC --- */
+        
+        /* 1. Global Paragraph logic for Bio sections */
+        .unified-desc p, .about-me-container p {
+            line-height: 1.3;      /* Tight spacing for internal lines */
+            margin: 0 auto;
+            white-space: normal;   /* Allows <br> to work */
+        }
 
-        /* --- UPDATED BIO SPACING LOGIC --- */
-.unified-desc p, .about-me-container p {
-    line-height: 1.4;      /* Tighter spacing for lines within the same block */
-    margin-bottom: 1.5rem; /* Wider gap between different sections/sentences */
-}
+        /* 2. Page 1 (Hero) Spacing: Reduced the gap here */
+        .unified-desc p {
+            margin-bottom: 18px;   /* Reduced from 1rem/24px to look tighter */
+        }
 
         .unified-desc {
-    font-size: 11px;
-    color: #9ca3af;
-    font-weight: 900;
-    text-transform: uppercase;
-    letter-spacing: 0.12em;
-    white-space: normal; /* Changed from nowrap to allow the <br> to work */
-}
+            font-size: 11px;
+            color: #9ca3af;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+        }
 
+        /* 3. Page 4 (About Me) Spacing: Added specific gap logic */
+        .about-me-container {
+            text-align: center;
+            margin-top: -12vh; 
+            margin-bottom: 2vh;
+            padding: 0 40px;
+            position: relative;
+            z-index: 20;
+        }
 
+        .about-me-container p {
+            font-size: 10px;
+            color: #9ca3af;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            margin-bottom: 20px !important; /* Forces the gap between your 3 main points */
+        }
 
-/* Page 4 Specific - Refined */
-.about-me-container {
-    text-align: center;
-    margin-top: -12vh; 
-    margin-bottom: 2vh;
-    padding: 0 40px;
-    position: relative;
-    z-index: 20;
-}
+        /* Highlight for the IIT-B line */
+        .about-me-container p:first-child {
+            color: #fff;
+            letter-spacing: 0.2em;
+        }
 
-.about-me-container p {
-    font-size: 10px;
-    color: #9ca3af; /* Matches your hero description color */
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.15em;
-    line-height: 1;
-    margin: 0;
-}
-    /* Specific highlight for the credentials */
-.about-me-container p:first-child {
-    color: #fff; /* Makes the IIT-B credential pop slightly more */
-    letter-spacing: 0.2em;
-    margin-bottom: 8px;
-}
+        /* Remove gap from the very last line of both pages */
+        .unified-desc p:last-child, .about-me-container p:last-child {
+            margin-bottom: 0 !important;
+        }
+        
     
         </style>
 </head>
@@ -544,13 +553,13 @@ audio {
         </div>
 
      <!--- New About Me Section --->
-        <div class="about-me-container">
-            <p style="color: #fff;">Alumnus of IIT Bombay<br>India’s Premier Technical University</p>
+    <div class="about-me-container">
+        <p style="color: #fff;">Alumnus of IIT Bombay<br>India’s Premier Technical University</p>
         
-            <p>Architecting unique Sonic Identities for artists<br>Ghost produced for several labels & producers</p>
-        
-            <p>Specializing in the Physics of Synthesis<br>Deep knowledge of Signal Processing</p>
-        </div>
+        <p>Architecting unique Sonic Identities for artists.</p>
+        <p>Ghost produced for several producers & labels.</p>
+        <p>Specializing in the Physics of Sound Synthesis<br>Deep knowledge of Signal Processing</p>
+    </div>
     
         <div class="c-links-area">
             <h2 class="text-3xl font-black uppercase tracking-tighter mb-4" style="text-shadow: 0 0 20px #000;">Connect</h2>
@@ -577,7 +586,7 @@ audio {
                 <svg class="c-arrow" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path d="M7 17L17 7M17 7H7M17 7V17"/></svg>
             </a>
 
-            <a href="mailto:theparaglyph@gmail.com" class="c-btn">
+            <a href="mailto:theparaglyph@gmail.com?subject=Let's%20create%20a%20unique%20Sonic%20Identity!&body=Hey%20Paraglyph,%0D%0AI'm%20interested%20in%20collaborating.%20Let's%20connect!" class="c-btn">
                 <div class="c-btn-left">
                     <svg class="c-app-icon" viewBox="0 0 24 24"><path d="M0 3v18h24v-18h-24zm21.518 2l-9.518 7.713-9.518-7.713h19.036zm-19.518 14v-11.817l10 8.104 10-8.104v11.817h-20z"/></svg>
                     <div class="c-text-stack">
