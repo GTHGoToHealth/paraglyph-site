@@ -503,7 +503,7 @@ audio {
                     <div class="reel-item">
                     <div class="reel-title-block"><div class="font-black uppercase text-sm">Seegrande</div><div class="text-[10px] text-gray-500 uppercase">140 BPM Orchestral Trap</div></div>
                     <div class="reel-card" style="background-image:url('Seegrande4Thumbnail.jpg')" onclick="toggleVideo(this, true)">
-                       <video src="https://res.cloudinary.com/dccob5e5s/video/upload/f_auto,q_auto:good,ac_aac,ar_44100/v1778180681/k0x8d3vejqkcchiicqp1.mp4" crossorigin="anonymous" loop playsinline preload="auto"></video>
+                   <video src="https://res.cloudinary.com/dccob5e5s/video/upload/f_mp4,q_auto:good,ac_aac,ar_44100/v1778180681/k0x8d3vejqkcchiicqp1.mp4" crossorigin="anonymous" loop playsinline preload="none"></video>
                         <div class="video-ui"><div class="play-triangle"></div><div class="loading-spinner"></div></div>
                         <div class="pause-icon"></div>
                     </div>
@@ -513,7 +513,7 @@ audio {
                 <div class="reel-item">
                     <div class="reel-title-block"><div class="font-black uppercase text-sm">Glitchuck</div><div class="text-[10px] text-gray-500 uppercase">140 BPM Glitch Pop</div></div>
                     <div class="reel-card" style="background-image:url('Glitchuck4Thumbnail.jpg')" onclick="toggleVideo(this, true)">
-                        <video src="https://res.cloudinary.com/dccob5e5s/video/upload/f_mp4,q_auto:good,ac_aac,ar_44100/v1778180580/faspsz7bt2qfextxe76j.mp4" crossorigin="anonymous" loop playsinline preload="auto"></video>
+                        <video src="https://res.cloudinary.com/dccob5e5s/video/upload/f_mp4,q_auto:good,ac_aac,ar_44100/v1778180580/faspsz7bt2qfextxe76j.mp4" crossorigin="anonymous" loop playsinline preload="none"></video>
                         <div class="video-ui"><div class="play-triangle"></div><div class="loading-spinner"></div></div>
                         <div class="pause-icon"></div>
                     </div>
@@ -523,7 +523,7 @@ audio {
                  <div class="reel-item">
                     <div class="reel-title-block"><div class="font-black uppercase text-sm">Dreesell</div><div class="text-[10px] text-gray-500 uppercase">140 BPM Dark Trap</div></div>
                     <div class="reel-card" style="background-image:url('DreesellThumbnail.jpeg')" onclick="toggleVideo(this, true)">
-                        <video src="https://res.cloudinary.com/dccob5e5s/video/upload/f_mp4,q_auto:good,ac_aac,ar_44100/v1778180695/zbqnnh7p2fayiljocw8c.mp4" crossorigin="anonymous" loop playsinline preload="auto"></video>
+                        <video src="https://res.cloudinary.com/dccob5e5s/video/upload/f_mp4,q_auto:good,ac_aac,ar_44100/v1778180695/zbqnnh7p2fayiljocw8c.mp4" crossorigin="anonymous" loop playsinline preload="none"></video>
                         <div class="video-ui"><div class="play-triangle"></div><div class="loading-spinner"></div></div>
                         <div class="pause-icon"></div>
                     </div>
@@ -689,6 +689,7 @@ audio {
             document.querySelectorAll('video').forEach(vid => { vid.pause(); vid.parentElement.classList.remove('video-moving','buffering'); });
             document.querySelectorAll('audio').forEach(aud => aud.pause());
             v.currentTime = 0; v.muted = false; card.classList.add('buffering');
+            v.load(); // ADD THIS LINE
             v.play().then(() => {
                 let itv = setInterval(() => { 
                     if (v.currentTime > 0.1) { card.classList.remove('buffering'); card.classList.add('video-moving'); popup.classList.add('active'); clearInterval(itv); } 
